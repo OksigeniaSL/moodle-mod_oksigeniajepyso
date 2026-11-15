@@ -1,0 +1,98 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_oksigeniajepyso/mobile_view
+
+    The page of the activity in the Moodle app. Everything here was made inert before (local\template::inert); the
+    description of the teacher comes as data (CONTENT_OTHERDATA.intro) and the app shows it.
+
+    Context variables required for this template:
+    * cmid, courseid - The activity and its course
+    * hasroutine - Whether there is a routine that can be done
+    * noroutine - What is said when there is none
+    * progress, last - How far the student has gone, or empty
+    * starturl, startlabel - The way into the player
+    * previewnote - Said to who tries the routine without keeping it, or empty
+    * howtohead, facts - How the routine is done
+    * exerciseshead, exercises - Each exercise with name and lines
+
+    Example context (json):
+    {
+        "cmid": 1,
+        "courseid": 2,
+        "hasroutine": true,
+        "noroutine": "Esta actividad no tiene una rutina que se pueda hacer.",
+        "progress": "Has hecho 2 de 6 sesiones",
+        "last": "Última sesión: 15 de noviembre de 2026",
+        "starturl": "https://example.com/mod/oksigeniajepyso/player.php?id=1",
+        "startlabel": "Empezar",
+        "previewnote": "",
+        "howtohead": "Cómo se hace",
+        "facts": ["Descanso entre series: 45 s", "Días a la semana: 3"],
+        "exerciseshead": "Ejercicios",
+        "exercises": [
+            {"name": "1. Puente de glúteo", "lines": ["3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s"]}
+        ]
+    }
+}}
+<div class="ion-padding">
+    <core-format-text [text]="CONTENT_OTHERDATA.intro" component="mod_oksigeniajepyso" [componentId]="{{cmid}}" contextLevel="module" [contextInstanceId]="{{cmid}}" [courseId]="{{courseid}}"></core-format-text>
+</div>
+{{#hasroutine}}
+{{#progress}}
+<ion-list>
+    <ion-item>
+        <ion-label class="ion-text-wrap">
+            <h2>{{progress}}</h2>
+            {{#last}}<p>{{last}}</p>{{/last}}
+        </ion-label>
+    </ion-item>
+</ion-list>
+{{/progress}}
+<div class="ion-padding">
+    <ion-button expand="block" core-link inApp="true" autoLogin="yes" href="{{starturl}}">{{startlabel}}</ion-button>
+    {{#previewnote}}<p>{{previewnote}}</p>{{/previewnote}}
+</div>
+<ion-list>
+    <ion-list-header>
+        <ion-label><h2>{{howtohead}}</h2></ion-label>
+    </ion-list-header>
+    {{#facts}}
+    <ion-item>
+        <ion-label class="ion-text-wrap">{{.}}</ion-label>
+    </ion-item>
+    {{/facts}}
+</ion-list>
+<ion-list>
+    <ion-list-header>
+        <ion-label><h2>{{exerciseshead}}</h2></ion-label>
+    </ion-list-header>
+    {{#exercises}}
+    <ion-item>
+        <ion-label class="ion-text-wrap">
+            <h3>{{name}}</h3>
+            {{#lines}}<p>{{.}}</p>{{/lines}}
+        </ion-label>
+    </ion-item>
+    {{/exercises}}
+</ion-list>
+{{/hasroutine}}
+{{^hasroutine}}
+<div class="ion-padding">
+    <p>{{noroutine}}</p>
+</div>
+{{/hasroutine}}
