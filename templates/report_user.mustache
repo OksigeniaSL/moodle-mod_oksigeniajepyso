@@ -1,0 +1,114 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_oksigeniajepyso/report_user
+
+    The days of one student, newest first.
+
+    Context variables required for this template:
+    * backurl - The follow-up of the whole activity
+    * picture - The picture of the student (HTML)
+    * fullname - The name of the student
+    * progress - How far the student has gone
+    * limit - The acceptable discomfort of the routine
+    * hasdays, days - Each day with date, time, flagged, withoutapp, corrected, nextmorning and exercises
+      (each with name, side, done, prescribed, discomfort, hard, couldnot and note)
+
+    Example context (json):
+    {
+        "backurl": "https://example.com/mod/oksigeniajepyso/report.php?id=1",
+        "picture": "<img src=\"https://example.com/pix/u/f2.png\" class=\"userpicture\" width=\"64\" height=\"64\" alt=\"\">",
+        "fullname": "Ana Martín",
+        "progress": "Has hecho 2 de 6 sesiones",
+        "limit": "Molestia aceptable: hasta 5 de 10",
+        "hasdays": true,
+        "days": [
+            {
+                "date": "15 de noviembre de 2026",
+                "time": "18:30",
+                "flagged": true,
+                "withoutapp": false,
+                "corrected": false,
+                "nextmorning": "Molestia a la mañana siguiente: 2 de 10",
+                "exercises": [
+                    {
+                        "name": "Puente de glúteo",
+                        "side": "",
+                        "done": "Hecho en cada serie: 10, 10, 8",
+                        "prescribed": "Pauta: 3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s",
+                        "discomfort": "Molestia: 6 de 10 · por encima de la aceptable",
+                        "hard": true,
+                        "couldnot": false,
+                        "note": "Nota: me costó la última serie"
+                    }
+                ]
+            }
+        ]
+    }
+}}
+<p><a href="{{backurl}}">{{#str}}backtofollowup, mod_oksigeniajepyso{{/str}}</a></p>
+<div class="mod-oksigeniajepyso-student mb-3">
+    {{{picture}}}
+    <div>
+        <p class="h5 mb-1">{{fullname}}</p>
+        <p class="mb-1">{{progress}}</p>
+        <p class="text-muted mb-0">{{limit}}</p>
+    </div>
+</div>
+{{#hasdays}}
+{{#days}}
+<section class="border rounded p-3 mb-3">
+    <h4 class="h5">{{date}}{{#time}} · {{time}}{{/time}}</h4>
+    {{#flagged}}
+    <p class="mb-2"><span class="badge badge-warning text-bg-warning">{{#str}}flagged, mod_oksigeniajepyso{{/str}}</span></p>
+    {{/flagged}}
+    {{#withoutapp}}
+    <p class="mb-2"><span class="badge badge-secondary text-bg-secondary">{{#str}}withoutapp, mod_oksigeniajepyso{{/str}}</span></p>
+    {{/withoutapp}}
+    {{#corrected}}
+    <p class="text-muted mb-2">{{#str}}corrected, mod_oksigeniajepyso{{/str}}</p>
+    {{/corrected}}
+    <ul class="list-unstyled mb-0">
+        {{#exercises}}
+        <li class="mb-3">
+            <p class="mb-1"><strong>{{name}}</strong>{{#side}} · {{side}}{{/side}}</p>
+            <p class="mb-1">{{done}}</p>
+            <p class="text-muted mb-1">{{prescribed}}</p>
+            {{#discomfort}}
+            <p class="mb-1">{{discomfort}}</p>
+            {{/discomfort}}
+            {{#hard}}
+            <p class="mb-1">{{#str}}hard, mod_oksigeniajepyso{{/str}}</p>
+            {{/hard}}
+            {{#couldnot}}
+            <p class="mb-1">{{#str}}couldnot, mod_oksigeniajepyso{{/str}}</p>
+            {{/couldnot}}
+            {{#note}}
+            <p class="mb-1 mod-oksigeniajepyso-note">{{note}}</p>
+            {{/note}}
+        </li>
+        {{/exercises}}
+    </ul>
+    {{#nextmorning}}
+    <p class="mb-0">{{nextmorning}}</p>
+    {{/nextmorning}}
+</section>
+{{/days}}
+{{/hasdays}}
+{{^hasdays}}
+<div class="alert alert-info">{{#str}}nosessions, mod_oksigeniajepyso{{/str}}</div>
+{{/hasdays}}

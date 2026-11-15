@@ -1,0 +1,77 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_oksigeniajepyso/report
+
+    The follow-up of an activity: a row for each student.
+
+    Context variables required for this template:
+    * hasstudents - Whether there is anyone to show
+    * students - Each with picture (HTML), fullname, url, sessions, last, flagged, hasflagged, hard, couldnot and notes
+
+    Example context (json):
+    {
+        "hasstudents": true,
+        "students": [
+            {
+                "picture": "<img src=\"https://example.com/pix/u/f2.png\" class=\"userpicture\" width=\"35\" height=\"35\" alt=\"\">",
+                "fullname": "Ana Martín",
+                "url": "https://example.com/mod/oksigeniajepyso/report.php?id=1&userid=3",
+                "sessions": "2 de 6",
+                "last": "15 de noviembre de 2026",
+                "flagged": 1,
+                "hasflagged": true,
+                "hard": 1,
+                "couldnot": 0,
+                "notes": 2
+            }
+        ]
+    }
+}}
+{{#hasstudents}}
+<div class="table-responsive">
+    <table class="table generaltable mod-oksigeniajepyso-report">
+        <thead>
+            <tr>
+                <th scope="col">{{#str}}student, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}sessionsdone, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}lastsessionheader, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}flaggeddays, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}hard, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}couldnot, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}notes, mod_oksigeniajepyso{{/str}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#students}}
+            <tr>
+                <th scope="row">{{{picture}}} <a href="{{url}}">{{fullname}}</a></th>
+                <td>{{sessions}}</td>
+                <td>{{last}}</td>
+                <td>{{#hasflagged}}<span class="badge badge-warning text-bg-warning">{{flagged}}</span>{{/hasflagged}}{{^hasflagged}}{{flagged}}{{/hasflagged}}</td>
+                <td>{{hard}}</td>
+                <td>{{couldnot}}</td>
+                <td>{{notes}}</td>
+            </tr>
+            {{/students}}
+        </tbody>
+    </table>
+</div>
+{{/hasstudents}}
+{{^hasstudents}}
+<div class="alert alert-info">{{#str}}nostudents, mod_oksigeniajepyso{{/str}}</div>
+{{/hasstudents}}
