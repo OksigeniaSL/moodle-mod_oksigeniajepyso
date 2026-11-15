@@ -1,63 +1,159 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme/cabecera-es-oscuro.webp">
+    <img src=".github/readme/cabecera-es-claro.webp" width="100%" alt="jepyso°: rutinas de ejercicios en Moodle, con una figura en 3D que lleva el ritmo, el lado y las series">
+  </picture>
+</p>
+
+<p align="center">
+  <a href="README.md">Read in English</a> · <a href="https://jepyso.com">jepyso.com</a> · Moodle 4.5 a 5.3 ·
+  GNU GPL v3
+</p>
+
 # Rutina de ejercicios (Oksigenia Jepyso)
 
-[Read in English](README.md)
+Una actividad para Moodle. El docente pone una rutina de ejercicios en el curso y cada estudiante la hace en el
+teléfono o en el ordenador, siguiendo a una figura en 3D que se mueve al ritmo, del lado y con las series que dice la
+rutina. Al acabar, apunta las repeticiones que hizo y la molestia que notó. Cada sesión se guarda en Moodle, cuenta
+para la finalización y la calificación, y el docente sigue a cada estudiante semana a semana.
 
-Una actividad para Moodle. El docente pone una rutina de ejercicios; cada estudiante la hace en el teléfono o en el
-ordenador, siguiendo a una figura en 3D que lleva el ritmo, el lado y las series que dice la rutina. Al acabar, apunta
-las repeticiones que hizo y la molestia que notó (de 0 a 10). Cada sesión se guarda en Moodle, cuenta para la
-finalización y la calificación, y el docente ve el seguimiento de cada estudiante.
+Está hecha para cualquier centro educativo o de formación: clases de Educación Física y escuelas que forman a
+fisioterapeutas, entrenadores o profesionales de las ciencias del deporte.
 
-Está hecha para cualquier centro educativo o de formación: clases de Educación Física y escuelas de fisioterapia,
-entrenamiento o ciencias del deporte.
+<table>
+  <tr>
+    <td width="50%"><img src=".github/readme/silla.webp" width="100%" alt="La primera figura de Jepyso se levanta de una silla y vuelve a sentarse, con los brazos cruzados sobre el pecho"></td>
+    <td width="50%"><img src=".github/readme/puente.webp" width="100%" alt="La segunda figura de Jepyso sube la cadera en un puente de glúteo sobre la esterilla y la baja"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Levantarse de la silla, con la primera figura</sub></td>
+    <td align="center"><sub>Puente de glúteo, con la segunda figura</sub></td>
+  </tr>
+</table>
+
+## Cómo funciona
+
+### 1. El docente arma la rutina
+
+En los ajustes de la actividad, «Armar la rutina» abre el constructor de Jepyso: los ejercicios con sus series,
+repeticiones, ritmo y lado, el descanso entre series, los días a la semana y la molestia aceptable. Cuando está lista,
+la rutina vuelve sola al formulario. También se puede pegar una rutina hecha en
+[app.jepyso.com](https://app.jepyso.com), con su enlace o su código.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/formulario-es-oscuro.webp">
+  <img src=".github/readme/formulario-es-claro.webp" width="100%" alt="Los ajustes de la actividad, con el constructor abierto encima">
+</picture>
+
+### 2. Cada estudiante sigue a la figura
+
+La página de la actividad enseña la rutina y lo que lleva hecho cada estudiante. «Empezar» abre el reproductor: la
+figura sube, mantiene y baja al ritmo de cada ejercicio, del lado que toca, serie tras serie, con un sonido y una
+vibración en cada repetición. Al final, el estudiante apunta lo que hizo, la molestia, si un ejercicio le costó o no
+pudo hacerlo, y una nota.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme/alumno-es-oscuro.webp">
+    <img src=".github/readme/alumno-es-claro.webp" width="32%" alt="La página de la actividad en el teléfono: el yeso, las sesiones hechas y Empezar">
+  </picture>
+  &nbsp;
+  <img src=".github/readme/app-figura.webp" width="32%" alt="El reproductor: la figura se levanta de la silla, con la fase en grande y la cuenta de repeticiones">
+  &nbsp;
+  <img src=".github/readme/app-guardado.webp" width="32%" alt="El final de la sesión: lo que hizo en cada serie, guardado en el curso">
+</p>
+
+### 3. Cada sesión llega al curso
+
+Cada sesión se guarda en Moodle en cuanto termina; sin conexión espera en el teléfono y se manda en cuanto la hay. El
+docente ve quién ha hecho qué y lo que hay que mirar: días por encima de la molestia aceptable, ejercicios que costaron
+o no se pudieron hacer, notas. La ficha de cada estudiante enseña la molestia semana a semana frente a la aceptable, y
+cada serie hecha frente a la pedida.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/seguimiento-es-oscuro.webp">
+  <img src=".github/readme/seguimiento-es-claro.webp" width="100%" alt="El seguimiento del docente: cada estudiante, con las sesiones hechas y lo que hay que mirar">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/ficha-es-oscuro.webp">
+  <img src=".github/readme/ficha-es-claro.webp" width="100%" alt="La ficha de un estudiante: la molestia semana a semana y cada día, serie a serie">
+</picture>
+
+## En la app de Moodle
+
+La actividad funciona en la app oficial de Moodle sin configurar nada. Su página enseña la rutina y el progreso;
+«Empezar» abre el reproductor dentro de la app, con la sesión ya iniciada, y el progreso se pone al día en cuanto se
+cierra el reproductor. Probada en Android con la app oficial 5.2.
+
+<p align="center">
+  <img src=".github/readme/app-actividad.webp" width="32%" alt="La actividad en la app de Moodle: las sesiones hechas y Empezar">
+</p>
+
+## Lo que trae
+
+- **La figura cumple la pauta:** su ritmo (sube, mantén, baja), su lado, sus series y su descanso. Nunca un vídeo fijo
+  que va a otro ritmo.
+- **La molestia, con método:** cada rutina tiene un nivel aceptable (5 de 10 si el docente no pone otro), según el
+  modelo de control del dolor (Thomeé, 1997). Los días que lo pasan salen marcados, y la mañana siguiente a una sesión
+  se le pregunta al estudiante cómo notaba la zona al levantarse.
+- **Finalización y calificación:** la regla «Hacer las sesiones previstas»; con una calificación en puntos, la nota
+  sigue la parte de las sesiones hechas, y el docente siempre puede calificar a mano.
+- **Grupos**, separados y visibles; **copia de seguridad y restauración** con las sesiones; **reinicio del curso**;
+  **API de privacidad**.
+- **El docente prueba la rutina** como la vería un estudiante, y nada de lo que hace se guarda.
+- **Su propio aspecto**, con cualquier tema, en claro y en oscuro.
+- **Nada sale de tu sitio:** ningún servicio externo ni seguimiento; el reproductor lo sirve el propio Moodle.
+
+## Los ejercicios
+
+El plugin trae una muestra gratis de doce ejercicios para todo el cuerpo, en las dos figuras: levantarse de la silla,
+puente de glúteo, rotación externa con banda, media sentadilla, elevación de talones, equilibrio a una pierna, plancha
+de rodillas, brazo y pierna contrarios a cuatro patas, gato-camello, almeja, extensión de rodilla sentado y rodilla al
+pecho. La biblioteca completa de Jepyso (97 ejercicios, con los programas Otago y Vivifrail) la servirá Oksigenia con
+una clave para cada sitio, de pago; esta versión aún no la trae. Si una rutina lleva ejercicios que el sitio no tiene,
+el docente ve cuáles.
+
+## Idiomas
+
+Las páginas de la actividad están en español y en inglés. El reproductor habla español por ahora; llegarán más
+idiomas.
 
 ## Requisitos
 
-- Moodle 4.5 a 5.3.
-- Ningún servicio externo: el reproductor lo sirve tu propio sitio y nada sale de él.
+- Moodle 4.5 a 5.3, con su PHP de siempre.
+- Nada más: ningún servicio externo ni paso de compilación.
 
 ## Instalación
 
 1. Copia el plugin en `mod/oksigeniajepyso` (desde Moodle 5.1, `public/mod/oksigeniajepyso`) o instala el ZIP desde
    *Administración del sitio > Extensiones > Instalar complementos*.
 2. Entra en *Administración del sitio > Notificaciones* o ejecuta `admin/cli/upgrade.php`.
-
-## Cómo funciona
-
-- **La rutina.** En los ajustes de la actividad, pega el enlace de una rutina hecha con Jepyso
-  (`https://app.jepyso.com/#r=…`) o su código, o pulsa «Armar la rutina» para hacer una: vuelve sola al formulario.
-  Pon cuántas sesiones debe hacer cada estudiante.
-- **Las sesiones.** «Empezar» abre el reproductor (`reproductor/`, dentro del plugin). Sigue el ritmo, el lado y las
-  series de cada ejercicio; al final, el estudiante apunta lo que hizo. El reproductor guarda con los servicios web
-  `mod_oksigeniajepyso_save_sessions` y `mod_oksigeniajepyso_get_sessions`.
-- **Finalización y calificación.** Condición «Hacer las sesiones previstas». Con una calificación en puntos y un número
-  de sesiones, la nota es la calificación máxima multiplicada por la proporción de sesiones hechas, sin pasar de la
-  máxima; si no, califica el docente en el libro de calificaciones.
-- **Seguimiento.** El docente ve, de cada estudiante, las sesiones hechas, la última, los días con más molestia de la
-  aceptable, los ejercicios que le cuestan o que no ha podido hacer y las notas, y puede abrir los días de cada uno.
-  Respeta los grupos separados y visibles. El docente puede probar la rutina; lo que haga no se guarda.
-- **Los ejercicios.** El plugin trae una muestra gratuita de la biblioteca de ejercicios. La biblioteca completa la
-  sirve Oksigenia con una clave por sitio, de pago; esta versión aún no la incluye. Al docente se le muestran los
-  ejercicios de una rutina que no están en la muestra.
-
-## En la app de Moodle
-
-La actividad funciona en la app oficial de Moodle, sin configurar nada. Su página muestra la descripción, los
-ejercicios con su pauta y el progreso; «Empezar» abre el reproductor en el navegador de la app, con la sesión ya
-iniciada, y las sesiones se guardan igual que en la web.
+3. Añade una «Rutina de ejercicios (Jepyso)» a un curso.
 
 ## Privacidad
 
-Las sesiones se guardan en el sitio (`oksigeniajepyso_session`), declaradas en la API de privacidad, que las exporta y
-las borra. La copia de seguridad y la restauración las incluyen con los datos de usuario; el reinicio del curso puede
+Las sesiones se guardan en el sitio (`oksigeniajepyso_session`): el día y la hora, lo hecho en cada serie, la molestia,
+las marcas «me ha costado» y «no he podido» y las notas. Están declaradas en la API de privacidad, que las exporta y
+las borra; la copia de seguridad y la restauración las llevan con los datos de usuario, y el reinicio del curso puede
 borrarlas.
 
-## El reproductor
+## Para quien desarrolla
 
-`reproductor/` no se cambia aquí: se construye desde el repositorio de Jepyso con
-`tools/construir-moodle.sh <esta carpeta>`, que trae la muestra gratis de doce ejercicios y `catalogo.json`.
+- El reproductor de `reproductor/` es la app web de Jepyso, construida desde su repositorio con
+  `tools/construir-moodle.sh <esta carpeta>`. No se cambia aquí.
+- El reproductor lee su arranque de `sesion.php` y guarda con los servicios web `mod_oksigeniajepyso_save_sessions` y
+  `mod_oksigeniajepyso_get_sessions`.
+- PHPUnit cubre las rutinas, las sesiones, los servicios web, la finalización, las calificaciones, la privacidad, la
+  copia de seguridad y la página en la app.
 
 ## Licencia
 
-GNU GPL v3 o posterior (`LICENSE`). Copyright 2026 Oksigenia SL. El reproductor de `reproductor/` es la app web de
-Jepyso (https://github.com/OksigeniaSL/jepyso), GPL v3 o posterior, con three.js (MIT); sus figuras en 3D son
-contenido con sus propias condiciones (ver `thirdpartylibs.xml`).
+GNU GPL v3 o posterior (`LICENSE`). Copyright 2026 Oksigenia SL. El reproductor es la app web de Jepyso
+([OksigeniaSL/jepyso](https://github.com/OksigeniaSL/jepyso)), GPL v3 o posterior, con three.js (MIT) y las fuentes
+Red Hat (OFL). Las figuras en 3D y sus imágenes son contenido con sus propias condiciones, en
+`reproductor/modelos/LICENSE-FIGURES.md`.
+
+---
+
+<p align="center"><sub>Oksigenia Jepyso es de <a href="https://oksigenia.com">Oksigenia</a>.</sub></p>

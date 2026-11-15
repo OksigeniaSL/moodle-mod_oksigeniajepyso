@@ -77,6 +77,12 @@
     --jepyso-plaster: radial-gradient(120% 95% at 18% 0%, #2c3236 0%, #1a1e21 60%, #131618 100%);
 }
 
+/* The icon of the activity keeps the graphite of Jepyso (purpose «other», lib.php). On a dark page it takes the light
+   of the plaster, or it would hardly show. */
+[data-bs-theme="dark"] .modicon_oksigeniajepyso img {
+    filter: invert(1) brightness(0.9);
+}
+
 /* The studio: the pages of the activity stand on a plaster panel. The teacher's carry its registration marks; the
    student's page goes without them, and without Mono, as the person's screens of the app. */
 .mod-oksigeniajepyso-view,

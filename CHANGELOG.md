@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 (2026-11-15)
+
+- On a dark page, the icon of the activity takes the light of the plaster: in graphite it hardly showed.
+- The readme in English and Spanish, with the figures in motion, the pages of the activity and the Moodle app; its
+  pictures stay out of the plugin's package (`.gitattributes`).
+
 ## 0.1.2 (2026-11-15)
 
 - In the Moodle app, the page of the activity asks for itself again when the routine's in-app browser closes, so
