@@ -1,0 +1,10 @@
+{
+    "v": 1,
+    "ejercicios": {
+        "silla": {"nombre": "Levantarse de la silla", "unLado": false, "unidad": "reps", "posicion": "Sentado", "material": "Silla firme", "disponible": true},
+        "puente": {"nombre": "Puente de glúteo", "unLado": false, "unidad": "reps", "posicion": "Boca arriba", "material": "Esterilla", "disponible": true},
+        "hombro": {"nombre": "Rotación externa con banda", "unLado": true, "unidad": "reps", "posicion": "De pie", "material": "Banda elástica", "disponible": true},
+        "caminar": {"nombre": "Caminar", "unLado": false, "unidad": "minutos", "posicion": "De pie", "material": "Calzado cómodo", "disponible": true},
+        "plancha": {"nombre": "Plancha frontal", "unLado": false, "unidad": "segundos", "posicion": "Boca abajo", "material": "Esterilla", "disponible": false}
+    }
+}
