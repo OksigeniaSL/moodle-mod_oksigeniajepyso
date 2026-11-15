@@ -1,0 +1,146 @@
+# Moodle Plugin CI: the suite that Moodle Marketplace reviewers expect (validate, lint, codechecker, phpdoc, savepoints,
+# mustache, grunt) plus the plugin's PHPUnit and Behat tests.
+#
+# The lowest supported branch (4.5), the highest (5.3) and main. main tracks the next Moodle release and is allowed to
+# fail, so upstream breakage shows up early. The player in reproductor/ is a built copy of the Jepyso app, declared in
+# thirdpartylibs.xml: no check looks into it.
+#
+# Reference template: https://github.com/moodlehq/moodle-plugin-ci
+name: Moodle Plugin CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    # What is not code does not run the suite.
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore']
+  workflow_dispatch:
+
+# A new push cancels the run of the one before it on the same branch, which nobody needs any more.
+concurrency:
+  group: moodle-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    continue-on-error: ${{ matrix.experimental || false }}
+
+    services:
+      postgres:
+        # 5.3 and main need PostgreSQL 17 (the install runs the environment check); 4.5 stays on 16.
+        image: postgres:${{ matrix.pg }}
+        env:
+          POSTGRES_USER: 'postgres'
+          POSTGRES_HOST_AUTH_METHOD: 'trust'
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 8
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - moodle-branch: 'MOODLE_405_STABLE'
+            php: '8.1'
+            node: '20'
+            pg: '16'
+          - moodle-branch: 'MOODLE_503_STABLE'
+            php: '8.3'
+            node: '22'
+            pg: '17'
+          - moodle-branch: 'main'
+            php: '8.4'
+            node: '22'
+            pg: '17'
+            experimental: true
+
+    env:
+      # The built player is third-party code for every check of moodle-plugin-ci.
+      IGNORE_PATHS: reproductor
+
+    steps:
+      - name: Check out plugin code
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pgsql, zip, gd, soap, xmlrpc, mbstring, intl
+          ini-values: max_input_vars=5000
+          coverage: none
+
+      - name: Set up Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install moodle-plugin-ci
+        run: |
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          echo "$(pwd)/ci/bin" >> "$GITHUB_PATH"
+          echo "$(pwd)/ci/vendor/bin" >> "$GITHUB_PATH"
+          sudo locale-gen en_AU.UTF-8
+
+      - name: Install Moodle (${{ matrix.moodle-branch }})
+        run: |
+          moodle-plugin-ci install \
+            --plugin=$(pwd)/plugin \
+            --db-host=127.0.0.1 \
+            --db-user=postgres \
+            --db-pass='' \
+            --db-name=moodle \
+            --db-type=pgsql \
+            --branch=${{ matrix.moodle-branch }}
+        env:
+          DB: pgsql
+          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
+
+      - name: validate
+        if: always()
+        run: moodle-plugin-ci validate
+
+      - name: phplint
+        if: always()
+        run: moodle-plugin-ci phplint
+
+      - name: phpmd
+        if: always()
+        run: moodle-plugin-ci phpmd
+
+      - name: codechecker
+        if: always()
+        run: moodle-plugin-ci codechecker --max-warnings 0
+
+      - name: phpdoc
+        if: always()
+        run: moodle-plugin-ci phpdoc
+
+      - name: savepoints
+        if: always()
+        run: moodle-plugin-ci savepoints
+
+      - name: mustache
+        if: always()
+        run: moodle-plugin-ci mustache
+
+      - name: grunt
+        if: always()
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
+
+      - name: phpunit
+        if: always()
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
+      - name: behat
+        if: always()
+        run: moodle-plugin-ci behat --profile chrome

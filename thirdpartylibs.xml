@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libraries>
+    <library>
+        <location>reproductor</location>
+        <name>Jepyso player</name>
+        <description>The exercise player of Oksigenia Jepyso, a built copy of its web app (index.html, its JavaScript modules, the exercise catalogue and the figures in modelos/). It bundles three.js, under the MIT licence. The 3D figures and their stills are content under their own terms, stated in LICENSE-FIGURES.md of the Jepyso repository.</description>
+        <version>0.1.0</version>
+        <license>GPL</license>
+        <licenseversion>3.0+</licenseversion>
+        <repository>https://github.com/OksigeniaSL/jepyso</repository>
+        <copyrights>
+            <copyright>Copyright (c) 2026 Oksigenia SL</copyright>
+            <copyright>Copyright (c) 2010-2026 three.js authors (MIT)</copyright>
+        </copyrights>
+    </library>
+</libraries>
