@@ -55,7 +55,7 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
         // The builder of the player opens in a window of its own and sends the routine back here. Without JavaScript,
         // the link opens it in another tab and the link of the routine is copied from there.
         $builder = new moodle_url('/mod/oksigeniajepyso/reproductor/index.html', ['armar' => 1]);
-        $mform->addElement('static', 'buildroutine', '', html_writer::span(html_writer::link(
+        $buildlink = html_writer::link(
             $builder,
             get_string('buildroutine', 'mod_oksigeniajepyso'),
             [
@@ -64,8 +64,9 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
                 'target' => 'jepyso-armar',
                 'rel' => 'opener',
             ]
-        ) . html_writer::span(get_string('buildroutinehint', 'mod_oksigeniajepyso'), 'mod-oksigeniajepyso-hint'),
-            'mod-oksigeniajepyso-launch'));
+        );
+        $buildhint = html_writer::span(get_string('buildroutinehint', 'mod_oksigeniajepyso'), 'mod-oksigeniajepyso-hint');
+        $mform->addElement('static', 'buildroutine', '', html_writer::span($buildlink . $buildhint, 'mod-oksigeniajepyso-launch'));
         $mform->addElement('textarea', 'routine', get_string('routine', 'mod_oksigeniajepyso'), ['rows' => 3, 'cols' => 60]);
         $mform->setType('routine', PARAM_RAW_TRIMMED);
         $mform->addRule('routine', null, 'required', null, 'client');
