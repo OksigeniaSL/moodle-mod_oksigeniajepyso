@@ -30,8 +30,8 @@ entrenamiento o ciencias del deporte.
   series de cada ejercicio; al final, el estudiante apunta lo que hizo. El reproductor guarda con los servicios web
   `mod_oksigeniajepyso_save_sessions` y `mod_oksigeniajepyso_get_sessions`.
 - **Finalización y calificación.** Condición «Hacer las sesiones previstas». Con una calificación en puntos y un número
-  de sesiones, la nota es la calificación máxima por la parte de las sesiones hechas (nunca más que la máxima); si no,
-  califica el docente en el libro de calificaciones.
+  de sesiones, la nota es la calificación máxima multiplicada por la proporción de sesiones hechas, sin pasar de la
+  máxima; si no, califica el docente en el libro de calificaciones.
 - **Seguimiento.** El docente ve, de cada estudiante, las sesiones hechas, la última, los días con más molestia de la
   aceptable, los ejercicios que le cuestan o que no ha podido hacer y las notas, y puede abrir los días de cada uno.
   Respeta los grupos separados y visibles. El docente puede probar la rutina; lo que haga no se guarda.

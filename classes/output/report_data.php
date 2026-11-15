@@ -51,9 +51,7 @@ class report_data {
                 'fullname' => fullname($student),
                 'url' => (new \moodle_url('/mod/oksigeniajepyso/report.php', ['id' => $cm->id, 'userid' => $student->id]))
                     ->out(false),
-                'sessions' => $target > 0
-                    ? get_string('sessionsshare', self::COMPONENT, (object) ['done' => $summary['done'], 'target' => $target])
-                    : (string) $summary['done'],
+                'sessions' => self::share($summary['done'], $target),
                 'last' => $summary['last'] ? view_data::day($summary['last']) : get_string('never', self::COMPONENT),
                 'flagged' => $summary['flagged'],
                 'hasflagged' => $summary['flagged'] > 0,
@@ -106,7 +104,10 @@ class report_data {
             'backurl' => (new \moodle_url('/mod/oksigeniajepyso/report.php', ['id' => $cm->id]))->out(false),
             'picture' => $OUTPUT->user_picture($student, ['size' => 64, 'link' => false, 'alttext' => false]),
             'fullname' => fullname($student),
-            'progress' => view_data::progress(sessions::done((int) $jepyso->id, (int) $student->id), (int) $jepyso->sessions),
+            'progress' => get_string('studentprogress', self::COMPONENT, self::share(
+                sessions::done((int) $jepyso->id, (int) $student->id),
+                (int) $jepyso->sessions
+            )),
             'limit' => get_string('limit', self::COMPONENT, $limit),
             'days' => $days,
             'hasdays' => (bool) $days,
@@ -151,6 +152,19 @@ class report_data {
             'couldnot' => ($exercise['c'] ?? '') === 'no',
             'note' => isset($exercise['n']) ? get_string('note', self::COMPONENT, (string) $exercise['n']) : '',
         ];
+    }
+
+    /**
+     * The sessions done, out of those asked for if there is a number: «2 of 6», or «2».
+     *
+     * @param int $done The sessions done.
+     * @param int $target The sessions asked for, or 0.
+     * @return string
+     */
+    private static function share(int $done, int $target): string {
+        return $target > 0
+            ? get_string('sessionsshare', self::COMPONENT, (object) ['done' => $done, 'target' => $target])
+            : (string) $done;
     }
 
     /**
