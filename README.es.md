@@ -151,8 +151,9 @@ borrarlas.
 
 GNU GPL v3 o posterior (`LICENSE`). Copyright 2026 Oksigenia SL. El reproductor es la app web de Jepyso
 ([OksigeniaSL/jepyso](https://github.com/OksigeniaSL/jepyso)), GPL v3 o posterior, con three.js (MIT) y las fuentes
-Red Hat (OFL). Las figuras en 3D y sus imágenes son contenido con sus propias condiciones, en
-`reproductor/modelos/LICENSE-FIGURES.md`.
+Red Hat (OFL). Su contenido (las dos figuras y los doce ejercicios de la muestra, las cabeceras de yeso, el icono, el
+mapa del cuerpo y la voz grabada) va con CC BY-SA 4.0, en `reproductor/modelos/LICENSE.md`, con las fichas de las que
+salen los movimientos en `reproductor/modelos/fichas/`. La biblioteca completa de Jepyso no va en este paquete.
 
 ---
 

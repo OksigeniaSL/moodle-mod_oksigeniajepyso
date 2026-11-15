@@ -146,8 +146,9 @@ exported and deleted with it; backup and restore include them with user data, an
 
 GNU GPL v3 or later (`LICENSE`). Copyright 2026 Oksigenia SL. The player is the web app of Jepyso
 ([OksigeniaSL/jepyso](https://github.com/OksigeniaSL/jepyso)), GPL v3 or later, with three.js (MIT) and the Red Hat
-fonts (OFL). The 3D figures and their stills are content under their own terms, in
-`reproductor/modelos/LICENSE-FIGURES.md`.
+fonts (OFL). Its content (the two figures and the twelve exercises of the sample, the plaster headers, the icon, the
+body map and the recorded voice) is under CC BY-SA 4.0, in `reproductor/modelos/LICENSE.md`, with the sheets the
+movements are built from in `reproductor/modelos/fichas/`. The full library of Jepyso is not part of this package.
 
 ---
 

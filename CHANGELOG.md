@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 (2026-11-15)
+
+- The player guides the sets with a recorded voice: a woman's or a man's, as each student chooses, or none. It speaks
+  in the Moodle app too, which has no voices of its own.
+- Inside the Moodle app, no «Back to the course» in the player: the window's × is the way back, and the player says so.
+- The content of the player (the figures and stills of the sample, the plaster headers, the icon, the body map and the
+  voice) is under CC BY-SA 4.0, compatible with the GPL, with the sheets the twelve movements are built from.
+- The description for the Moodle Marketplace.
+
 ## 0.1.3 (2026-11-15)
 
 - On a dark page, the icon of the activity takes the light of the plaster: in graphite it hardly showed.
