@@ -17,11 +17,13 @@
 {{!
     @template mod_oksigeniajepyso/report
 
-    The follow-up of an activity: a row for each student.
+    The follow-up of an activity: a row for each student, with the sessions done and what there is to look at, the days
+    above the acceptable discomfort first. On a phone, each row is a card.
 
     Context variables required for this template:
     * hasstudents - Whether there is anyone to show
-    * students - Each with picture (HTML), fullname, url, sessions, last, flagged, hasflagged, hard, couldnot and notes
+    * students - Each with picture (HTML), fullname, url, sessions, hastarget, twentieths, last, nosessions, hasflagged,
+      hasalerts and alerts (each with alerttext and alertstrong)
 
     Example context (json):
     {
@@ -32,46 +34,60 @@
                 "fullname": "Ana Martín",
                 "url": "https://example.com/mod/oksigeniajepyso/report.php?id=1&userid=3",
                 "sessions": "2 de 6",
+                "hastarget": true,
+                "twentieths": 6,
                 "last": "15 de noviembre de 2026",
-                "flagged": 1,
+                "nosessions": false,
                 "hasflagged": true,
-                "hard": 1,
-                "couldnot": 0,
-                "notes": 2
+                "hasalerts": true,
+                "alerts": [
+                    {"alerttext": "1 día por encima de la aceptable", "alertstrong": true},
+                    {"alerttext": "2 notas", "alertstrong": false}
+                ]
             }
         ]
     }
 }}
+<div class="mod-oksigeniajepyso-followup">
 {{#hasstudents}}
-<div class="table-responsive">
-    <table class="table generaltable mod-oksigeniajepyso-report">
+    <table class="table-reboot mod-oksigeniajepyso-report">
         <thead>
             <tr>
                 <th scope="col">{{#str}}student, mod_oksigeniajepyso{{/str}}</th>
                 <th scope="col">{{#str}}sessionsdone, mod_oksigeniajepyso{{/str}}</th>
                 <th scope="col">{{#str}}lastsessionheader, mod_oksigeniajepyso{{/str}}</th>
-                <th scope="col">{{#str}}flaggeddays, mod_oksigeniajepyso{{/str}}</th>
-                <th scope="col">{{#str}}hard, mod_oksigeniajepyso{{/str}}</th>
-                <th scope="col">{{#str}}couldnot, mod_oksigeniajepyso{{/str}}</th>
-                <th scope="col">{{#str}}notes, mod_oksigeniajepyso{{/str}}</th>
+                <th scope="col">{{#str}}tolookat, mod_oksigeniajepyso{{/str}}</th>
             </tr>
         </thead>
         <tbody>
             {{#students}}
-            <tr>
-                <th scope="row">{{{picture}}} <a href="{{url}}">{{fullname}}</a></th>
-                <td>{{sessions}}</td>
-                <td>{{last}}</td>
-                <td>{{#hasflagged}}<span class="badge badge-warning text-bg-warning">{{flagged}}</span>{{/hasflagged}}{{^hasflagged}}{{flagged}}{{/hasflagged}}</td>
-                <td>{{hard}}</td>
-                <td>{{couldnot}}</td>
-                <td>{{notes}}</td>
+            <tr class="{{#hasflagged}}is-flagged{{/hasflagged}}">
+                <th scope="row"><span class="mod-oksigeniajepyso-who">{{{picture}}}<a href="{{url}}">{{fullname}}</a></span></th>
+                <td data-label="{{#str}}sessionsdone, mod_oksigeniajepyso{{/str}}">
+                    <span class="mod-oksigeniajepyso-count">{{sessions}}</span>
+                    {{#hastarget}}
+                    <span class="mod-oksigeniajepyso-bar is-small" data-twentieths="{{twentieths}}" aria-hidden="true"><span></span></span>
+                    {{/hastarget}}
+                </td>
+                <td class="mod-oksigeniajepyso-when{{#nosessions}} mod-oksigeniajepyso-quiet{{/nosessions}}" data-label="{{#str}}lastsessionheader, mod_oksigeniajepyso{{/str}}">{{last}}</td>
+                <td data-label="{{#str}}tolookat, mod_oksigeniajepyso{{/str}}">
+                    {{#hasalerts}}
+                    <ul class="mod-oksigeniajepyso-alerts">
+                        {{#alerts}}
+                        <li class="mod-oksigeniajepyso-tag{{#alertstrong}} is-strong{{/alertstrong}}">{{alerttext}}</li>
+                        {{/alerts}}
+                    </ul>
+                    {{/hasalerts}}
+                    {{^hasalerts}}
+                    <span class="mod-oksigeniajepyso-quiet">{{#str}}nothingtolookat, mod_oksigeniajepyso{{/str}}</span>
+                    {{/hasalerts}}
+                </td>
             </tr>
             {{/students}}
         </tbody>
     </table>
-</div>
 {{/hasstudents}}
 {{^hasstudents}}
-<div class="alert alert-info">{{#str}}nostudents, mod_oksigeniajepyso{{/str}}</div>
+    <p class="mod-oksigeniajepyso-empty">{{#str}}nostudents, mod_oksigeniajepyso{{/str}}</p>
 {{/hasstudents}}
+</div>

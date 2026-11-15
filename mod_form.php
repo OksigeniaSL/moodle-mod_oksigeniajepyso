@@ -26,6 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
+use mod_oksigeniajepyso\local\catalog;
 use mod_oksigeniajepyso\local\routine;
 
 /**
@@ -54,11 +55,17 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
         // The builder of the player opens in a window of its own and sends the routine back here. Without JavaScript,
         // the link opens it in another tab and the link of the routine is copied from there.
         $builder = new moodle_url('/mod/oksigeniajepyso/reproductor/index.html', ['armar' => 1]);
-        $mform->addElement('static', 'buildroutine', '', html_writer::link(
+        $mform->addElement('static', 'buildroutine', '', html_writer::span(html_writer::link(
             $builder,
             get_string('buildroutine', 'mod_oksigeniajepyso'),
-            ['class' => 'btn btn-secondary', 'id' => 'mod_oksigeniajepyso_build', 'target' => 'jepyso-armar', 'rel' => 'opener']
-        ));
+            [
+                'class' => 'btn mod-oksigeniajepyso-button is-secondary',
+                'id' => 'mod_oksigeniajepyso_build',
+                'target' => 'jepyso-armar',
+                'rel' => 'opener',
+            ]
+        ) . html_writer::span(get_string('buildroutinehint', 'mod_oksigeniajepyso'), 'mod-oksigeniajepyso-hint'),
+            'mod-oksigeniajepyso-launch'));
         $mform->addElement('textarea', 'routine', get_string('routine', 'mod_oksigeniajepyso'), ['rows' => 3, 'cols' => 60]);
         $mform->setType('routine', PARAM_RAW_TRIMMED);
         $mform->addRule('routine', null, 'required', null, 'client');
@@ -91,6 +98,16 @@ require([], function() {
     if (!link || !field) {
         return;
     }
+    // A code that changes in the form is not the one its preview shows: the preview goes until the form is saved.
+    var outdated = function() {
+        var preview = document.getElementById('mod_oksigeniajepyso_preview');
+        var stale = document.getElementById('mod_oksigeniajepyso_stale');
+        if (preview && stale) {
+            preview.hidden = true;
+            stale.hidden = false;
+        }
+    };
+    field.addEventListener('input', outdated);
     link.addEventListener('click', function(e) {
         // A window of its own; if the browser refuses it, the link opens the builder in another tab.
         var builder = window.open({$url}, 'jepyso-armar', 'popup,width=1180,height=860');
@@ -108,6 +125,7 @@ require([], function() {
             return;
         }
         field.value = data.codigo;
+        outdated();
         field.dispatchEvent(new Event('change', {bubbles: true}));
         field.focus();
     });
@@ -116,9 +134,10 @@ JS;
     }
 
     /**
-     * Shows what the site cannot play of the routine below its field.
+     * Shows below its field what the routine has, and what the site cannot play of it.
      */
     public function definition_after_data() {
+        global $OUTPUT;
         parent::definition_after_data();
         $mform = $this->_form;
         $value = $mform->elementExists('routine') ? (string) $mform->getElementValue('routine') : '';
@@ -127,6 +146,17 @@ JS;
         }
         $check = routine::check($value);
         $warnings = routine::warnings($check);
+        $parsed = $check['error'] === null ? routine::parse($check['code']) : null;
+        $described = $parsed && catalog::exists() ? routine::describe($parsed) : null;
+        if ($described && $described['hasexercises']) {
+            $preview = $OUTPUT->render_from_template('mod_oksigeniajepyso/routine_preview', [
+                'size' => $described['size'],
+                'exercises' => $described['exercises'],
+                'facts' => $described['facts'],
+                'limit' => $described['limit'],
+            ]);
+            $mform->insertElementBefore($mform->createElement('static', 'routinepreview', '', $preview), 'sessions');
+        }
         if ($check['error'] === null && $warnings) {
             $notice = html_writer::div(implode('<br>', array_map('s', $warnings)), 'alert alert-warning mb-0');
             $element = $mform->createElement('static', 'routinewarning', '', $notice);

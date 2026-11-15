@@ -17,16 +17,21 @@
 {{!
     @template mod_oksigeniajepyso/report_user
 
-    The days of one student, newest first.
+    The file of one student: who, how far, the week-by-week discomfort against the acceptable level, and each day,
+    newest first, with what was done in each set against what was asked.
 
     Context variables required for this template:
     * backurl - The follow-up of the whole activity
     * picture - The picture of the student (HTML)
     * fullname - The name of the student
     * progress - The sessions done by the student
-    * limit - The acceptable discomfort of the routine
-    * hasdays, days - Each day with date, time, flagged, withoutapp, corrected, nextmorning and exercises
-      (each with name, side, done, prescribed, discomfort, hard, couldnot and note)
+    * hastally, tallymarks, hasbar, twentieths - The sessions as marks, or as a bar past 60
+    * limit, limitlevel - The acceptable discomfort of the routine, in words and as a number
+    * hasweeks, weeks, weekshelp - Each week with weekof, weeksessions, weekup, and during and waking (each with
+      hasvalue, value, valueover and nonzero)
+    * hasdays, days - Each day with title, time, flagged, withoutapp, corrected, hasdaytags, nextmorning, morningover
+      and exercises (each with name, side, done, hassets, sets, askedeach, inroutine, prescribed, discomfort,
+      discomfortover, hard, couldnot and note)
 
     Example context (json):
     {
@@ -34,23 +39,53 @@
         "picture": "<img src=\"https://example.com/pix/u/f2.png\" class=\"userpicture\" width=\"64\" height=\"64\" alt=\"\">",
         "fullname": "Ana Martín",
         "progress": "Sesiones hechas: 2 de 6",
+        "hastally": true,
+        "tallymarks": [
+            {"markdone": true}, {"markdone": true}, {"markdone": false},
+            {"markdone": false}, {"markdone": false}, {"markdone": false}
+        ],
+        "hasbar": false,
+        "twentieths": 0,
         "limit": "Molestia aceptable: hasta 5 de 10",
+        "limitlevel": 5,
+        "hasweeks": true,
+        "weekshelp": "La molestia más alta de cada semana.",
+        "weeks": [
+            {
+                "weekof": "9 de noviembre",
+                "weeksessions": 2,
+                "weekup": true,
+                "during": {"hasvalue": true, "value": 6, "valueover": true, "nonzero": true},
+                "waking": {"hasvalue": false, "value": 0, "valueover": false, "nonzero": false}
+            }
+        ],
         "hasdays": true,
         "days": [
             {
-                "date": "15 de noviembre de 2026",
+                "title": "Domingo, 15 de noviembre de 2026",
                 "time": "18:30",
                 "flagged": true,
                 "withoutapp": false,
                 "corrected": false,
+                "hasdaytags": true,
                 "nextmorning": "Molestia a la mañana siguiente: 2 de 10",
+                "morningover": false,
                 "exercises": [
                     {
                         "name": "Puente de glúteo",
                         "side": "",
                         "done": "Hecho en cada serie: 10, 10, 8",
+                        "hassets": true,
+                        "sets": [
+                            {"setcount": "10", "setshort": false},
+                            {"setcount": "10", "setshort": false},
+                            {"setcount": "8", "setshort": true}
+                        ],
+                        "askedeach": "de 10 en cada serie",
+                        "inroutine": true,
                         "prescribed": "Pauta: 3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s",
                         "discomfort": "Molestia: 6 de 10 · por encima de la aceptable",
+                        "discomfortover": true,
                         "hard": true,
                         "couldnot": false,
                         "note": "Nota: me costó la última serie"
@@ -60,55 +95,117 @@
         ]
     }
 }}
-<p><a href="{{backurl}}">{{#str}}backtofollowup, mod_oksigeniajepyso{{/str}}</a></p>
-<div class="mod-oksigeniajepyso-student mb-3">
-    {{{picture}}}
-    <div>
-        <p class="h5 mb-1">{{fullname}}</p>
-        <p class="mb-1">{{progress}}</p>
-        <p class="text-muted mb-0">{{limit}}</p>
+<div class="mod-oksigeniajepyso-file">
+    <p class="mod-oksigeniajepyso-back"><a href="{{backurl}}">{{#str}}backtofollowup, mod_oksigeniajepyso{{/str}}</a></p>
+    <div class="mod-oksigeniajepyso-student">
+        {{{picture}}}
+        <div>
+            <h3 class="mod-oksigeniajepyso-student-name">{{fullname}}</h3>
+            <p class="mod-oksigeniajepyso-student-progress">{{progress}}</p>
+            {{#hastally}}
+            <p class="mod-oksigeniajepyso-tally is-small" aria-hidden="true">{{#tallymarks}}<span class="mod-oksigeniajepyso-mark{{#markdone}} is-done{{/markdone}}"></span>{{/tallymarks}}</p>
+            {{/hastally}}
+            {{#hasbar}}
+            <p class="mod-oksigeniajepyso-bar" data-twentieths="{{twentieths}}" aria-hidden="true"><span></span></p>
+            {{/hasbar}}
+            <p class="mod-oksigeniajepyso-quiet">{{limit}}</p>
+        </div>
     </div>
+    {{#hasweeks}}
+    <section class="mod-oksigeniajepyso-weeks">
+        <h4 class="mod-oksigeniajepyso-label">{{#str}}weeks, mod_oksigeniajepyso{{/str}}</h4>
+        <p class="mod-oksigeniajepyso-quiet">{{weekshelp}}</p>
+        <table class="table-reboot mod-oksigeniajepyso-weektable">
+            <thead>
+                <tr>
+                    <th scope="col">{{#str}}weekof, mod_oksigeniajepyso{{/str}}</th>
+                    <th scope="col">{{#str}}sessionsdone, mod_oksigeniajepyso{{/str}}</th>
+                    <th scope="col">{{#str}}during, mod_oksigeniajepyso{{/str}}</th>
+                    <th scope="col">{{#str}}onwaking, mod_oksigeniajepyso{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#weeks}}
+                <tr>
+                    <th scope="row">{{weekof}}{{#weekup}} <span class="mod-oksigeniajepyso-tag is-strong">{{#str}}weekup, mod_oksigeniajepyso{{/str}}</span>{{/weekup}}</th>
+                    <td class="mod-oksigeniajepyso-figure" data-label="{{#str}}sessionsdone, mod_oksigeniajepyso{{/str}}">{{weeksessions}}</td>
+                    <td data-label="{{#str}}during, mod_oksigeniajepyso{{/str}}">
+                        {{#during}}
+                        {{#hasvalue}}
+                        <span class="mod-oksigeniajepyso-level{{#valueover}} is-over{{/valueover}}">
+                            <span class="mod-oksigeniajepyso-levelbar" data-level="{{value}}" data-limit="{{limitlevel}}" aria-hidden="true"><span></span></span>
+                            <span class="mod-oksigeniajepyso-figure">{{value}}</span>
+                        </span>
+                        {{/hasvalue}}
+                        {{^hasvalue}}<span class="mod-oksigeniajepyso-quiet">—</span>{{/hasvalue}}
+                        {{/during}}
+                    </td>
+                    <td data-label="{{#str}}onwaking, mod_oksigeniajepyso{{/str}}">
+                        {{#waking}}
+                        {{#hasvalue}}
+                        <span class="mod-oksigeniajepyso-level{{#valueover}} is-over{{/valueover}}">
+                            <span class="mod-oksigeniajepyso-levelbar" data-level="{{value}}" data-limit="{{limitlevel}}" aria-hidden="true"><span></span></span>
+                            <span class="mod-oksigeniajepyso-figure">{{value}}</span>
+                        </span>
+                        {{/hasvalue}}
+                        {{^hasvalue}}<span class="mod-oksigeniajepyso-quiet">—</span>{{/hasvalue}}
+                        {{/waking}}
+                    </td>
+                </tr>
+                {{/weeks}}
+            </tbody>
+        </table>
+    </section>
+    {{/hasweeks}}
+    <section class="mod-oksigeniajepyso-days">
+        <h4 class="mod-oksigeniajepyso-label">{{#str}}whatdone, mod_oksigeniajepyso{{/str}}</h4>
+        {{#hasdays}}
+        {{#days}}
+        <article class="mod-oksigeniajepyso-day{{#flagged}} is-flagged{{/flagged}}">
+            <h5 class="mod-oksigeniajepyso-day-title">{{title}}{{#time}} <span class="mod-oksigeniajepyso-figure">· {{time}}</span>{{/time}}</h5>
+            {{#hasdaytags}}
+            <p class="mod-oksigeniajepyso-tags">{{#flagged}}<span class="mod-oksigeniajepyso-tag is-strong">{{#str}}flagged, mod_oksigeniajepyso{{/str}}</span> {{/flagged}}{{#withoutapp}}<span class="mod-oksigeniajepyso-tag">{{#str}}withoutapp, mod_oksigeniajepyso{{/str}}</span> {{/withoutapp}}{{#corrected}}<span class="mod-oksigeniajepyso-tag">{{#str}}corrected, mod_oksigeniajepyso{{/str}}</span>{{/corrected}}</p>
+            {{/hasdaytags}}
+            <ul class="mod-oksigeniajepyso-done">
+                {{#exercises}}
+                <li>
+                    <p class="mod-oksigeniajepyso-done-name"><strong>{{name}}</strong>{{#side}} · {{side}}{{/side}}</p>
+                    {{#hassets}}
+                    <p class="mod-oksigeniajepyso-sets">
+                        <span class="sr-only visually-hidden">{{done}}</span>
+                        <span class="mod-oksigeniajepyso-cells" aria-hidden="true">{{#sets}}<span class="mod-oksigeniajepyso-cell{{#setshort}} is-short{{/setshort}}">{{setcount}}</span>{{/sets}}</span>
+                        <span class="mod-oksigeniajepyso-quiet" aria-hidden="true">{{askedeach}}</span>
+                    </p>
+                    {{/hassets}}
+                    {{^hassets}}
+                    <p class="mod-oksigeniajepyso-sets">{{done}}</p>
+                    {{/hassets}}
+                    {{#discomfort}}
+                    <p class="mod-oksigeniajepyso-done-discomfort"><span class="mod-oksigeniajepyso-tag{{#discomfortover}} is-strong{{/discomfortover}}">{{discomfort}}</span></p>
+                    {{/discomfort}}
+                    {{#hard}}
+                    <p class="mod-oksigeniajepyso-tags"><span class="mod-oksigeniajepyso-tag">{{#str}}hard, mod_oksigeniajepyso{{/str}}</span></p>
+                    {{/hard}}
+                    {{#couldnot}}
+                    <p class="mod-oksigeniajepyso-tags"><span class="mod-oksigeniajepyso-tag is-strong">{{#str}}couldnot, mod_oksigeniajepyso{{/str}}</span></p>
+                    {{/couldnot}}
+                    {{^inroutine}}
+                    <p class="mod-oksigeniajepyso-quiet">{{prescribed}}</p>
+                    {{/inroutine}}
+                    {{#note}}
+                    <p class="mod-oksigeniajepyso-note">{{note}}</p>
+                    {{/note}}
+                </li>
+                {{/exercises}}
+            </ul>
+            {{#nextmorning}}
+            <p class="mod-oksigeniajepyso-morning"><span class="mod-oksigeniajepyso-tag{{#morningover}} is-strong{{/morningover}}">{{nextmorning}}</span></p>
+            {{/nextmorning}}
+        </article>
+        {{/days}}
+        {{/hasdays}}
+        {{^hasdays}}
+        <p class="mod-oksigeniajepyso-empty">{{#str}}nosessions, mod_oksigeniajepyso{{/str}}</p>
+        {{/hasdays}}
+    </section>
 </div>
-{{#hasdays}}
-{{#days}}
-<section class="border rounded p-3 mb-3">
-    <h4 class="h5">{{date}}{{#time}} · {{time}}{{/time}}</h4>
-    {{#flagged}}
-    <p class="mb-2"><span class="badge badge-warning text-bg-warning">{{#str}}flagged, mod_oksigeniajepyso{{/str}}</span></p>
-    {{/flagged}}
-    {{#withoutapp}}
-    <p class="mb-2"><span class="badge badge-secondary text-bg-secondary">{{#str}}withoutapp, mod_oksigeniajepyso{{/str}}</span></p>
-    {{/withoutapp}}
-    {{#corrected}}
-    <p class="text-muted mb-2">{{#str}}corrected, mod_oksigeniajepyso{{/str}}</p>
-    {{/corrected}}
-    <ul class="list-unstyled mb-0">
-        {{#exercises}}
-        <li class="mb-3">
-            <p class="mb-1"><strong>{{name}}</strong>{{#side}} · {{side}}{{/side}}</p>
-            <p class="mb-1">{{done}}</p>
-            <p class="text-muted mb-1">{{prescribed}}</p>
-            {{#discomfort}}
-            <p class="mb-1">{{discomfort}}</p>
-            {{/discomfort}}
-            {{#hard}}
-            <p class="mb-1">{{#str}}hard, mod_oksigeniajepyso{{/str}}</p>
-            {{/hard}}
-            {{#couldnot}}
-            <p class="mb-1">{{#str}}couldnot, mod_oksigeniajepyso{{/str}}</p>
-            {{/couldnot}}
-            {{#note}}
-            <p class="mb-1 mod-oksigeniajepyso-note">{{note}}</p>
-            {{/note}}
-        </li>
-        {{/exercises}}
-    </ul>
-    {{#nextmorning}}
-    <p class="mb-0">{{nextmorning}}</p>
-    {{/nextmorning}}
-</section>
-{{/days}}
-{{/hasdays}}
-{{^hasdays}}
-<div class="alert alert-info">{{#str}}nosessions, mod_oksigeniajepyso{{/str}}</div>
-{{/hasdays}}

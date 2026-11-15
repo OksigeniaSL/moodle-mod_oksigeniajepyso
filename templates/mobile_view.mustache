@@ -17,18 +17,22 @@
 {{!
     @template mod_oksigeniajepyso/mobile_view
 
-    The page of the activity in the Moodle app. Everything here was made inert before (local\template::inert); the
-    description of the teacher comes as data (CONTENT_OTHERDATA.intro) and the app shows it.
+    The page of the activity in the Moodle app, with Ionic components only and the colours of the app. Everything here
+    was made inert before (local\template::inert); the description of the teacher comes as data
+    (CONTENT_OTHERDATA.intro) and the app shows it.
 
     Context variables required for this template:
     * cmid, courseid - The activity and its course
     * hasroutine - Whether there is a routine that can be done
     * noroutine - What is said when there is none
+    * casturl - The picture that heads the card, or empty
     * progress, last - How far the student has gone, or empty
+    * hasprogressbar, fraction - The share of the planned sessions done, from 0 to 1
     * starturl, startlabel - The way into the player
+    * size - How many exercises and how long, or empty
     * previewnote - Said to who tries the routine without keeping it, or empty
-    * howtohead, facts - How the routine is done
-    * exerciseshead, exercises - Each exercise with name and lines
+    * howtohead, facts, limitlabel, limitfigure - How the routine is done
+    * exerciseshead, exercises - Each exercise with name, posterurl, mirrored and lines
 
     Example context (json):
     {
@@ -36,16 +40,27 @@
         "courseid": 2,
         "hasroutine": true,
         "noroutine": "Esta actividad no tiene una rutina que se pueda hacer.",
+        "casturl": "https://example.com/mod/oksigeniajepyso/reproductor/imagenes/yeso-puente.webp",
         "progress": "Has hecho 2 de 6 sesiones",
         "last": "Última sesión: 15 de noviembre de 2026",
+        "hasprogressbar": true,
+        "fraction": 0.33,
         "starturl": "https://example.com/mod/oksigeniajepyso/player.php?id=1",
         "startlabel": "Empezar",
+        "size": "1 ejercicio · unos 2 minutos",
         "previewnote": "",
         "howtohead": "Cómo se hace",
-        "facts": ["Descanso entre series: 45 s", "Días a la semana: 3"],
+        "facts": [{"factlabel": "Descanso entre series", "factfigure": "45 s"}],
+        "limitlabel": "Molestia aceptable",
+        "limitfigure": "hasta 5 de 10",
         "exerciseshead": "Ejercicios",
         "exercises": [
-            {"name": "1. Puente de glúteo", "lines": ["3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s"]}
+            {
+                "name": "1. Puente de glúteo",
+                "posterurl": "https://example.com/mod/oksigeniajepyso/reproductor/modelos/posters/puente.webp",
+                "mirrored": false,
+                "lines": ["3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s"]
+            }
         ]
     }
 }}
@@ -53,29 +68,42 @@
     <core-format-text [text]="CONTENT_OTHERDATA.intro" component="mod_oksigeniajepyso" [componentId]="{{cmid}}" contextLevel="module" [contextInstanceId]="{{cmid}}" [courseId]="{{courseid}}"></core-format-text>
 </div>
 {{#hasroutine}}
-{{#progress}}
-<ion-list>
-    <ion-item>
-        <ion-label class="ion-text-wrap">
-            <h2>{{progress}}</h2>
-            {{#last}}<p>{{last}}</p>{{/last}}
-        </ion-label>
-    </ion-item>
-</ion-list>
-{{/progress}}
-<div class="ion-padding">
-    <ion-button expand="block" core-link inApp="true" autoLogin="yes" href="{{starturl}}">{{startlabel}}</ion-button>
-    {{#previewnote}}<p>{{previewnote}}</p>{{/previewnote}}
-</div>
+<ion-card>
+    {{#casturl}}
+    <img src="{{casturl}}" alt="">
+    {{/casturl}}
+    {{#progress}}
+    <ion-card-header>
+        <ion-card-title>{{progress}}</ion-card-title>
+        {{#last}}<ion-card-subtitle>{{last}}</ion-card-subtitle>{{/last}}
+    </ion-card-header>
+    {{/progress}}
+    <ion-card-content>
+        {{#hasprogressbar}}
+        <ion-progress-bar value="{{fraction}}" aria-hidden="true"></ion-progress-bar>
+        {{/hasprogressbar}}
+        <ion-button expand="block" class="ion-margin-top" core-link inApp="true" autoLogin="yes" href="{{starturl}}">
+            <ion-icon name="fas-play" slot="start" aria-hidden="true"></ion-icon>
+            {{startlabel}}
+        </ion-button>
+        {{#size}}<p class="ion-text-center ion-margin-top">{{size}}</p>{{/size}}
+        {{#previewnote}}<p class="ion-margin-top">{{previewnote}}</p>{{/previewnote}}
+    </ion-card-content>
+</ion-card>
 <ion-list>
     <ion-list-header>
         <ion-label><h2>{{howtohead}}</h2></ion-label>
     </ion-list-header>
     {{#facts}}
     <ion-item>
-        <ion-label class="ion-text-wrap">{{.}}</ion-label>
+        <ion-label class="ion-text-wrap">{{factlabel}}</ion-label>
+        <ion-note slot="end">{{factfigure}}</ion-note>
     </ion-item>
     {{/facts}}
+    <ion-item>
+        <ion-label class="ion-text-wrap">{{limitlabel}}</ion-label>
+        <ion-note slot="end">{{limitfigure}}</ion-note>
+    </ion-item>
 </ion-list>
 <ion-list>
     <ion-list-header>
@@ -83,6 +111,11 @@
     </ion-list-header>
     {{#exercises}}
     <ion-item>
+        {{#posterurl}}
+        <ion-thumbnail slot="start">
+            <img src="{{posterurl}}" alt=""{{#mirrored}} style="transform: scaleX(-1)"{{/mirrored}}>
+        </ion-thumbnail>
+        {{/posterurl}}
         <ion-label class="ion-text-wrap">
             <h3>{{name}}</h3>
             {{#lines}}<p>{{.}}</p>{{/lines}}

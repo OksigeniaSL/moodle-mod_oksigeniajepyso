@@ -1,31 +1,1306 @@
+/* Jepyso inside any Moodle: the pages of the activity look like Jepyso, not like the theme (Enrique, 15 November 2026:
+   «las cosas que hacemos para Moodle no tengan aspecto de Moodle»). Its look is the app's, «the plaster studio»:
+   graphite on plaster, hairlines, square corners and no shadows, Red Hat Display for titles, Text for the rest and
+   Mono for the figures. The colours are Jepyso's own, set here and not taken from the theme, so any theme leaves
+   them as they are; light and dark follow the site (<html data-bs-theme>, Moodle 5.0 and later). The student's page
+   reads big and with high contrast; the teacher's carries the studio's signatures, the ruler under the section
+   labels and the registration marks on the cards. The fonts come with the plugin, under names of their own, and only
+   for the latin letters they have: any other script falls to the theme's font. */
+
+@font-face {
+    font-family: "Jepyso Display";
+    font-style: normal;
+    font-weight: 300 900;
+    font-display: swap;
+    src: url([[font:mod_oksigeniajepyso|red-hat-display.woff2]]) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2212;
+}
+
+@font-face {
+    font-family: "Jepyso Text";
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url([[font:mod_oksigeniajepyso|red-hat-text.woff2]]) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2212;
+}
+
+@font-face {
+    font-family: "Jepyso Mono";
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url([[font:mod_oksigeniajepyso|red-hat-mono.woff2]]) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2212;
+}
+
+.mod-oksigeniajepyso-view,
+.mod-oksigeniajepyso-followup,
+.mod-oksigeniajepyso-file,
+.mod-oksigeniajepyso-preview,
+.mod-oksigeniajepyso-launch {
+    --jepyso-page: #e4e6e3;
+    --jepyso-card: #f2f3f1;
+    --jepyso-sunk: #d9dcd9;
+    --jepyso-ink: #1d2225;
+    --jepyso-soft: #596165;
+    --jepyso-line: #bcc2c2;
+    --jepyso-control: #737c7e;
+    --jepyso-fine: rgb(29 34 37 / 38%);
+    --jepyso-on-ink: #f2f3f1;
+    --jepyso-plaster: radial-gradient(120% 95% at 18% 0%, #f7f8f6 0%, #dfe2df 55%, #cfd3d0 100%);
+    --jepyso-display: "Jepyso Display", "Jepyso Text", var(--bs-body-font-family, system-ui), sans-serif;
+    --jepyso-text: "Jepyso Text", var(--bs-body-font-family, system-ui), sans-serif;
+    --jepyso-figures: "Jepyso Mono", var(--bs-font-monospace, monospace);
+    --jepyso-radius: 3px;
+    color: var(--jepyso-ink);
+    font-family: var(--jepyso-text);
+    font-size: 1rem;
+    line-height: 1.45;
+    letter-spacing: 0.005em;
+}
+
+[data-bs-theme="dark"] .mod-oksigeniajepyso-view,
+[data-bs-theme="dark"] .mod-oksigeniajepyso-followup,
+[data-bs-theme="dark"] .mod-oksigeniajepyso-file,
+[data-bs-theme="dark"] .mod-oksigeniajepyso-preview,
+[data-bs-theme="dark"] .mod-oksigeniajepyso-launch {
+    --jepyso-page: #121517;
+    --jepyso-card: #191d20;
+    --jepyso-sunk: #22272a;
+    --jepyso-ink: #e3e6e4;
+    --jepyso-soft: #a2aaae;
+    --jepyso-line: #353b3f;
+    --jepyso-control: #6b7377;
+    --jepyso-fine: rgb(227 230 228 / 34%);
+    --jepyso-on-ink: #121517;
+    --jepyso-plaster: radial-gradient(120% 95% at 18% 0%, #2c3236 0%, #1a1e21 60%, #131618 100%);
+}
+
+/* The studio: the pages of the activity stand on a plaster panel. The teacher's carry its registration marks; the
+   student's page goes without them, and without Mono, as the person's screens of the app. */
+.mod-oksigeniajepyso-view,
+.mod-oksigeniajepyso-followup,
+.mod-oksigeniajepyso-file {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 0.5rem 1.25rem;
+    border-radius: var(--jepyso-radius);
+    background: var(--jepyso-page);
+}
+
+.mod-oksigeniajepyso-followup,
+.mod-oksigeniajepyso-file {
+    background:
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 1px 10px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 1px 10px no-repeat,
+        var(--jepyso-page);
+}
+
+.mod-oksigeniajepyso-view a:not(.mod-oksigeniajepyso-button),
+.mod-oksigeniajepyso-followup a,
+.mod-oksigeniajepyso-file a,
+.mod-oksigeniajepyso-preview a {
+    color: var(--jepyso-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.mod-oksigeniajepyso-view a:focus-visible,
+.mod-oksigeniajepyso-followup a:focus-visible,
+.mod-oksigeniajepyso-file a:focus-visible {
+    outline: 2px solid var(--jepyso-ink);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+
+.mod-oksigeniajepyso-view h3,
+.mod-oksigeniajepyso-view h4,
+.mod-oksigeniajepyso-file h3,
+.mod-oksigeniajepyso-file h5 {
+    color: var(--jepyso-ink);
+    font-family: var(--jepyso-display);
+}
+
+.mod-oksigeniajepyso-figure {
+    font-family: var(--jepyso-figures);
+    font-variant-numeric: tabular-nums;
+}
+
+.mod-oksigeniajepyso-count {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.mod-oksigeniajepyso-quiet {
+    color: var(--jepyso-soft);
+}
+
+p.mod-oksigeniajepyso-quiet {
+    margin: 0;
+}
+
+/* The button of the app: graphite, square, 48 px high. It also carries .btn, so that the theme's rules for links
+   (the underline of Boost in dark mode) leave it alone; these rules go over the theme's .btn. */
+.btn.mod-oksigeniajepyso-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0 1.375rem;
+    border: 1px solid var(--jepyso-ink);
+    border-radius: 2px;
+    background: var(--jepyso-ink);
+    box-shadow: none;
+    color: var(--jepyso-on-ink);
+    font-family: var(--jepyso-text);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.btn.mod-oksigeniajepyso-button:hover,
+.btn.mod-oksigeniajepyso-button:focus,
+.btn.mod-oksigeniajepyso-button:active {
+    border-color: var(--jepyso-soft);
+    background: var(--jepyso-soft);
+    color: var(--jepyso-on-ink);
+    text-decoration: none;
+}
+
+.btn.mod-oksigeniajepyso-button:focus-visible {
+    outline: 2px solid var(--jepyso-ink);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+
+.btn.mod-oksigeniajepyso-button.is-secondary {
+    background: transparent;
+    color: var(--jepyso-ink);
+}
+
+.btn.mod-oksigeniajepyso-button.is-secondary:hover,
+.btn.mod-oksigeniajepyso-button.is-secondary:focus,
+.btn.mod-oksigeniajepyso-button.is-secondary:active {
+    border-color: var(--jepyso-ink);
+    background: var(--jepyso-sunk);
+    color: var(--jepyso-ink);
+}
+
+.btn.mod-oksigeniajepyso-button svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: currentcolor;
+}
+
+.mod-oksigeniajepyso-tag {
+    display: inline-block;
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid var(--jepyso-line);
+    border-radius: 0;
+    color: var(--jepyso-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+/* What matters, in graphite and bold: never by colour alone. */
+.mod-oksigeniajepyso-tag.is-strong {
+    border-color: var(--jepyso-ink);
+    color: var(--jepyso-ink);
+    font-weight: 700;
+}
+
+.mod-oksigeniajepyso-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0.25rem 0 0;
+}
+
+.mod-oksigeniajepyso-note {
+    margin: 0.375rem 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--jepyso-ink);
+    white-space: pre-line;
+}
+
+/* A section label of the studio: small capitals in mono over a ruler, ticks every 8 px and a longer one every 40. */
+.mod-oksigeniajepyso-label {
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.5625rem;
+    background:
+        repeating-linear-gradient(90deg, var(--jepyso-fine) 0 1px, transparent 1px 8px) left bottom / 100% 5px no-repeat,
+        repeating-linear-gradient(90deg, var(--jepyso-fine) 0 1px, transparent 1px 40px) left bottom / 100% 9px no-repeat;
+    color: var(--jepyso-soft);
+    font-family: var(--jepyso-figures);
+    font-size: 0.78125rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.mod-oksigeniajepyso-followup > .mod-oksigeniajepyso-label:first-child,
+.mod-oksigeniajepyso-file > :first-child {
+    margin-top: 0.25rem;
+}
+
+/* The name, written: lower case, with the degree sign. */
+.mod-oksigeniajepyso-wordmark {
+    margin: 0;
+    color: var(--jepyso-ink);
+    font-family: var(--jepyso-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+
+.mod-oksigeniajepyso-wordmark span {
+    font-weight: 300;
+}
+
+/* The sessions as marks: a square for each planned one, filled in graphite as they are done. */
+.mod-oksigeniajepyso-tally {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+}
+
+.mod-oksigeniajepyso-mark {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-mark.is-done {
+    background: var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-tally.is-small {
+    gap: 3px;
+}
+
+.mod-oksigeniajepyso-tally.is-small .mod-oksigeniajepyso-mark {
+    width: 10px;
+    height: 10px;
+    border-width: 1px;
+}
+
+.mod-oksigeniajepyso-bar {
+    display: block;
+    height: 6px;
+    margin: 0;
+    overflow: hidden;
+    background: var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-bar > span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-bar.is-small {
+    width: 6rem;
+    height: 4px;
+    margin-top: 0.375rem;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="1"] > span {
+    width: 5%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="2"] > span {
+    width: 10%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="3"] > span {
+    width: 15%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="4"] > span {
+    width: 20%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="5"] > span {
+    width: 25%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="6"] > span {
+    width: 30%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="7"] > span {
+    width: 35%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="8"] > span {
+    width: 40%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="9"] > span {
+    width: 45%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="10"] > span {
+    width: 50%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="11"] > span {
+    width: 55%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="12"] > span {
+    width: 60%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="13"] > span {
+    width: 65%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="14"] > span {
+    width: 70%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="15"] > span {
+    width: 75%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="16"] > span {
+    width: 80%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="17"] > span {
+    width: 85%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="18"] > span {
+    width: 90%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="19"] > span {
+    width: 95%;
+}
+
+.mod-oksigeniajepyso-bar[data-twentieths="20"] > span {
+    width: 100%;
+}
+
+/* ---------- The page of the activity ---------- */
+
+.mod-oksigeniajepyso-today {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--jepyso-line);
+    border-radius: var(--jepyso-radius);
+    background: var(--jepyso-card);
+}
+
+/* The cast of the bridge at the top of its hold, the one that heads the routine in the app. */
+.mod-oksigeniajepyso-cast {
+    display: block;
+    width: 100%;
+    height: 11rem;
+    object-fit: cover;
+    object-position: 30% 62%;
+    border-bottom: 1px solid var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-today-body {
+    display: grid;
+    align-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1rem;
+}
+
+.mod-oksigeniajepyso-progress {
+    margin: 0.25rem 0 0;
+    color: var(--jepyso-ink);
+    font-family: var(--jepyso-display);
+    font-size: 1.625rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.mod-oksigeniajepyso-last,
+.mod-oksigeniajepyso-size,
+.mod-oksigeniajepyso-previewnote {
+    margin: 0;
+    color: var(--jepyso-soft);
+}
+
+.mod-oksigeniajepyso-size {
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
 .mod-oksigeniajepyso-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-.mod-oksigeniajepyso-start {
-    min-width: 12rem;
+.mod-oksigeniajepyso-actions .btn.mod-oksigeniajepyso-button {
+    flex: 1 1 12rem;
 }
 
-.mod-oksigeniajepyso-exercise,
-.mod-oksigeniajepyso-student {
+.mod-oksigeniajepyso-heading {
+    margin: 2rem 0 0.75rem;
+    font-size: 1.375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+/* How the routine is done: on a phone, a row each, the label and its figure; wider, side by side. */
+.mod-oksigeniajepyso-facts {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-fact {
     display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--jepyso-line);
 }
 
-.mod-oksigeniajepyso-poster {
-    flex: 0 0 auto;
-    width: 96px;
-    height: 96px;
-    object-fit: cover;
+.mod-oksigeniajepyso-fact dt {
+    color: var(--jepyso-soft);
+    font-weight: 400;
+}
+
+.mod-oksigeniajepyso-fact dd {
+    margin: 0;
+    color: var(--jepyso-ink);
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+/* The acceptable discomfort on its ruler from 0 to 10, filled up to the level, with its line. */
+.mod-oksigeniajepyso-scale {
+    position: relative;
+    display: block;
+    width: 10rem;
+    height: 12px;
+    margin: 0.375rem 0 0 auto;
+    background:
+        repeating-linear-gradient(90deg, var(--jepyso-fine) 0 1px, transparent 1px 10%) 0 100% / calc(100% + 1px) 5px no-repeat,
+        linear-gradient(var(--jepyso-line), var(--jepyso-line)) left bottom / 100% 1px no-repeat;
+}
+
+.mod-oksigeniajepyso-scale > span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 12px;
+    border-right: 2px solid var(--jepyso-ink);
+    background: linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left bottom / 100% 3px no-repeat;
+}
+
+.mod-oksigeniajepyso-scale[data-level="0"] > span {
+    width: 0%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="1"] > span {
+    width: 10%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="2"] > span {
+    width: 20%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="3"] > span {
+    width: 30%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="4"] > span {
+    width: 40%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="5"] > span {
+    width: 50%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="6"] > span {
+    width: 60%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="7"] > span {
+    width: 70%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="8"] > span {
+    width: 80%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="9"] > span {
+    width: 90%;
+}
+
+.mod-oksigeniajepyso-scale[data-level="10"] > span {
+    width: 100%;
+}
+
+.mod-oksigeniajepyso-exercises {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mod-oksigeniajepyso-exercise {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.75rem;
+    border: 1px solid var(--jepyso-line);
+    border-radius: var(--jepyso-radius);
+    background: var(--jepyso-card);
+}
+
+/* The still of each exercise, on its plaster light: in the figure of the routine, with its band, the left side in
+   mirror. */
+.mod-oksigeniajepyso-still {
+    flex: none;
+    width: 6.5rem;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--jepyso-plaster);
+}
+
+.mod-oksigeniajepyso-still img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .mod-oksigeniajepyso-mirrored {
     transform: scaleX(-1);
 }
 
-.mod-oksigeniajepyso-note {
-    white-space: pre-line;
+.mod-oksigeniajepyso-exercise-body {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.mod-oksigeniajepyso-exercise-name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.mod-oksigeniajepyso-number {
+    flex: none;
+    color: var(--jepyso-soft);
+    font-family: var(--jepyso-text);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.mod-oksigeniajepyso-load {
+    margin: 0;
+    font-weight: 700;
+}
+
+.mod-oksigeniajepyso-tempo {
+    margin: 0;
+    color: var(--jepyso-soft);
+}
+
+@media (min-width: 576px) {
+    .mod-oksigeniajepyso-view,
+    .mod-oksigeniajepyso-followup,
+    .mod-oksigeniajepyso-file {
+        padding: 1.5rem 1.75rem 2rem;
+    }
+
+    .mod-oksigeniajepyso-exercise {
+        padding: 0.875rem;
+    }
+
+    .mod-oksigeniajepyso-report td.mod-oksigeniajepyso-when {
+        white-space: nowrap;
+    }
+
+    .mod-oksigeniajepyso-facts {
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+        gap: 0 1.5rem;
+        border-bottom: 1px solid var(--jepyso-line);
+    }
+
+    .mod-oksigeniajepyso-fact {
+        display: block;
+        border-bottom: 0;
+    }
+
+    .mod-oksigeniajepyso-fact dd {
+        margin-top: 0.125rem;
+        font-size: 1.25rem;
+        text-align: left;
+    }
+
+    .mod-oksigeniajepyso-scale {
+        margin-left: 0;
+    }
+
+    .mod-oksigeniajepyso-actions .btn.mod-oksigeniajepyso-button {
+        flex: 0 1 auto;
+        min-width: 13rem;
+    }
+
+    .mod-oksigeniajepyso-size {
+        text-align: left;
+    }
+
+    .mod-oksigeniajepyso-still {
+        width: 7rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .mod-oksigeniajepyso-today.has-cast {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    }
+
+    .mod-oksigeniajepyso-today.has-cast .mod-oksigeniajepyso-cast {
+        height: 100%;
+        min-height: 16rem;
+        border-right: 1px solid var(--jepyso-line);
+        border-bottom: 0;
+    }
+
+    .mod-oksigeniajepyso-today-body {
+        padding: 1.75rem 1.5rem;
+    }
+
+    .mod-oksigeniajepyso-still {
+        width: 10rem;
+    }
+}
+
+/* ---------- The follow-up ---------- */
+
+.mod-oksigeniajepyso-report {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    border: 1px solid var(--jepyso-line);
+    background: var(--jepyso-card);
+}
+
+.mod-oksigeniajepyso-report th,
+.mod-oksigeniajepyso-report td {
+    padding: 0.875rem 0.75rem;
+    border: 0;
+    border-top: 1px solid var(--jepyso-line);
+    color: var(--jepyso-ink);
+    text-align: left;
+    vertical-align: top;
+}
+
+.mod-oksigeniajepyso-report thead th {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    border-top: 0;
+    color: var(--jepyso-soft);
+    font-family: var(--jepyso-figures);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    vertical-align: bottom;
+}
+
+.mod-oksigeniajepyso-report tbody th {
+    min-width: 12rem;
+    font-weight: 600;
+}
+
+.mod-oksigeniajepyso-who {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.mod-oksigeniajepyso-who .userpicture,
+.mod-oksigeniajepyso-who .userinitials {
+    flex: none;
+    margin: 0;
+}
+
+.mod-oksigeniajepyso-followup .userinitials,
+.mod-oksigeniajepyso-file .userinitials {
+    background: var(--jepyso-sunk);
+    color: var(--jepyso-ink);
+}
+
+/* A student with days above the acceptable discomfort: a graphite rule at the start of the row. */
+.mod-oksigeniajepyso-report tr.is-flagged > th {
+    box-shadow: inset 3px 0 0 var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-alerts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* ---------- The file of a student ---------- */
+
+.mod-oksigeniajepyso-back {
+    margin: 0 0 1rem;
+}
+
+.mod-oksigeniajepyso-student {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mod-oksigeniajepyso-student > .userpicture,
+.mod-oksigeniajepyso-student > .userinitials {
+    flex: none;
+    margin: 0;
+}
+
+.mod-oksigeniajepyso-student > div {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.mod-oksigeniajepyso-student-name {
+    margin: 0;
+    font-size: 1.625rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.mod-oksigeniajepyso-student-progress {
+    margin: 0;
+}
+
+.mod-oksigeniajepyso-weektable {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--jepyso-card);
+    font-size: 0.875rem;
+}
+
+.mod-oksigeniajepyso-weektable th,
+.mod-oksigeniajepyso-weektable td {
+    padding: 0.5rem 0.625rem;
+    border: 0;
+    border-top: 1px solid var(--jepyso-line);
+    color: var(--jepyso-ink);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.mod-oksigeniajepyso-weektable thead th {
+    border-top: 0;
+    color: var(--jepyso-soft);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.mod-oksigeniajepyso-weektable tbody th {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.mod-oksigeniajepyso-weeks > .mod-oksigeniajepyso-quiet {
+    margin-bottom: 0.75rem;
+}
+
+/* A discomfort of the week on its bar from 0 to 10, against the line of the acceptable one. Graphite only; the number
+   is written, and the bar only repeats it. */
+.mod-oksigeniajepyso-level {
+    display: grid;
+    grid-template-columns: minmax(3rem, 1fr) 1.5rem;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mod-oksigeniajepyso-level .mod-oksigeniajepyso-figure {
+    text-align: right;
+}
+
+.mod-oksigeniajepyso-level.is-over .mod-oksigeniajepyso-figure {
+    font-weight: 700;
+}
+
+.mod-oksigeniajepyso-levelbar {
+    position: relative;
+    display: block;
+    height: 12px;
+}
+
+.mod-oksigeniajepyso-levelbar::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-levelbar > span {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    width: 0;
+    height: 6px;
+    background: var(--jepyso-soft);
+}
+
+.mod-oksigeniajepyso-level.is-over .mod-oksigeniajepyso-levelbar > span {
+    background: var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-levelbar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="1"] > span {
+    width: 10%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="2"] > span {
+    width: 20%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="3"] > span {
+    width: 30%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="4"] > span {
+    width: 40%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="5"] > span {
+    width: 50%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="6"] > span {
+    width: 60%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="7"] > span {
+    width: 70%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="8"] > span {
+    width: 80%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="9"] > span {
+    width: 90%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-level="10"] > span {
+    width: 100%;
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="0"]::after {
+    left: calc(0% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="1"]::after {
+    left: calc(10% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="2"]::after {
+    left: calc(20% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="3"]::after {
+    left: calc(30% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="4"]::after {
+    left: calc(40% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="5"]::after {
+    left: calc(50% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="6"]::after {
+    left: calc(60% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="7"]::after {
+    left: calc(70% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="8"]::after {
+    left: calc(80% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="9"]::after {
+    left: calc(90% - 1px);
+}
+
+.mod-oksigeniajepyso-levelbar[data-limit="10"]::after {
+    left: calc(100% - 1px);
+}
+
+.mod-oksigeniajepyso-days > .mod-oksigeniajepyso-label {
+    margin-bottom: 1rem;
+}
+
+/* Each day, a card of the studio with its registration marks. */
+.mod-oksigeniajepyso-day {
+    margin-bottom: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--jepyso-line);
+    border-radius: var(--jepyso-radius);
+    background:
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 1px 10px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 1px 10px no-repeat,
+        var(--jepyso-card);
+}
+
+.mod-oksigeniajepyso-day.is-flagged {
+    box-shadow: inset 3px 0 0 var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-day-title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+}
+
+.mod-oksigeniajepyso-day-title .mod-oksigeniajepyso-figure {
+    color: var(--jepyso-soft);
+    font-weight: 500;
+}
+
+.mod-oksigeniajepyso-done {
+    display: grid;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mod-oksigeniajepyso-done > li {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-done > li:last-child {
+    padding-bottom: 0;
+}
+
+.mod-oksigeniajepyso-done p {
+    margin: 0;
+}
+
+/* What was done in each set: a cell each, in graphite when it reached what was asked, open and dashed when not. */
+.mod-oksigeniajepyso-sets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mod-oksigeniajepyso-cells {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.mod-oksigeniajepyso-cell {
+    min-width: 2rem;
+    padding: 0.0625rem 0.375rem;
+    border: 1px solid var(--jepyso-ink);
+    background: var(--jepyso-ink);
+    color: var(--jepyso-on-ink);
+    font-family: var(--jepyso-figures);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.mod-oksigeniajepyso-cell.is-short {
+    border-style: dashed;
+    background: transparent;
+    color: var(--jepyso-ink);
+}
+
+.mod-oksigeniajepyso-morning {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--jepyso-line);
+}
+
+.mod-oksigeniajepyso-empty {
+    margin: 0;
+    padding: 1rem;
+    border: 1px dashed var(--jepyso-control);
+    border-radius: var(--jepyso-radius);
+    color: var(--jepyso-soft);
+}
+
+@media (min-width: 768px) {
+    .mod-oksigeniajepyso-done > li {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1.4fr);
+        align-items: start;
+        gap: 0.25rem 1rem;
+    }
+
+    .mod-oksigeniajepyso-done > li > * {
+        grid-column: 1 / -1;
+    }
+
+    .mod-oksigeniajepyso-done > li > .mod-oksigeniajepyso-done-name,
+    .mod-oksigeniajepyso-done > li > .mod-oksigeniajepyso-sets,
+    .mod-oksigeniajepyso-done > li > .mod-oksigeniajepyso-done-discomfort {
+        grid-column: auto;
+    }
+
+    .mod-oksigeniajepyso-done-discomfort {
+        justify-self: end;
+    }
+}
+
+/* On a phone, a row of a table is a card: the name across, and each figure under its own label. */
+@media (max-width: 575.98px) {
+    .mod-oksigeniajepyso-report thead,
+    .mod-oksigeniajepyso-weektable thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .mod-oksigeniajepyso-report,
+    .mod-oksigeniajepyso-report tbody,
+    .mod-oksigeniajepyso-weektable,
+    .mod-oksigeniajepyso-weektable tbody {
+        display: block;
+    }
+
+    .mod-oksigeniajepyso-report {
+        border: 0;
+        background: transparent;
+    }
+
+    .mod-oksigeniajepyso-report tr,
+    .mod-oksigeniajepyso-weektable tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0.5rem 1rem;
+        padding: 0.875rem;
+        border: 1px solid var(--jepyso-line);
+        border-top: 0;
+        background: var(--jepyso-card);
+    }
+
+    .mod-oksigeniajepyso-report tr:first-child,
+    .mod-oksigeniajepyso-weektable tr:first-child {
+        border-top: 1px solid var(--jepyso-line);
+    }
+
+    .mod-oksigeniajepyso-weektable tr {
+        grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .mod-oksigeniajepyso-report th,
+    .mod-oksigeniajepyso-report td,
+    .mod-oksigeniajepyso-weektable th,
+    .mod-oksigeniajepyso-weektable td {
+        display: block;
+        padding: 0;
+        border: 0;
+    }
+
+    .mod-oksigeniajepyso-report tbody th,
+    .mod-oksigeniajepyso-report td:last-child,
+    .mod-oksigeniajepyso-weektable tbody th {
+        grid-column: 1 / -1;
+    }
+
+    .mod-oksigeniajepyso-report tr.is-flagged > th {
+        box-shadow: none;
+    }
+
+    .mod-oksigeniajepyso-report tr.is-flagged {
+        box-shadow: inset 3px 0 0 var(--jepyso-ink);
+    }
+
+    .mod-oksigeniajepyso-report td::before,
+    .mod-oksigeniajepyso-weektable td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 0.125rem;
+        color: var(--jepyso-soft);
+        font-family: var(--jepyso-text);
+        font-size: 0.75rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+}
+
+/* ---------- The form: what the code of the routine has ---------- */
+
+.mod-oksigeniajepyso-launch {
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+    color: inherit;
+}
+
+.mod-oksigeniajepyso-hint {
+    color: var(--bs-secondary-color, inherit);
+    font-family: var(--bs-body-font-family, inherit);
+    font-size: 0.875rem;
+}
+
+#fitem_id_buildroutine + #fitem_id_routine textarea {
+    font-family: var(--bs-font-monospace, monospace);
+    font-size: 0.8125rem;
+    word-break: break-all;
+}
+
+.mod-oksigeniajepyso-preview {
+    width: 100%;
+    padding: 0.25rem 1.25rem 1rem;
+    border: 1px solid var(--jepyso-line);
+    border-radius: var(--jepyso-radius);
+    background:
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) left 6px top 6px / 1px 10px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 10px 1px no-repeat,
+        linear-gradient(var(--jepyso-ink), var(--jepyso-ink)) right 6px bottom 6px / 1px 10px no-repeat,
+        var(--jepyso-page);
+}
+
+.mod-oksigeniajepyso-preview .mod-oksigeniajepyso-label {
+    margin-top: 0.875rem;
+}
+
+.mod-oksigeniajepyso-preview .mod-oksigeniajepyso-label .mod-oksigeniajepyso-figure {
+    letter-spacing: 0.04em;
+    text-transform: none;
+}
+
+.mod-oksigeniajepyso-minilist {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.mod-oksigeniajepyso-minilist li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mod-oksigeniajepyso-still.is-mini {
+    width: 4.5rem;
+}
+
+.mod-oksigeniajepyso-mini-body {
+    display: grid;
+    min-width: 0;
+}
+
+.mod-oksigeniajepyso-mini-name {
+    font-family: var(--jepyso-display);
+    font-weight: 500;
+}
+
+.mod-oksigeniajepyso-stale {
+    margin: 0;
+    color: var(--bs-secondary-color, inherit);
+}
+
+/* On paper, without the backgrounds most printers leave out: what is filled in graphite is drawn with its border,
+   and the panel is plain paper. */
+@media print {
+    .mod-oksigeniajepyso-view,
+    .mod-oksigeniajepyso-followup,
+    .mod-oksigeniajepyso-file {
+        padding: 0;
+        background: none;
+    }
+
+    .mod-oksigeniajepyso-mark.is-done {
+        border-width: 7px;
+    }
+
+    .mod-oksigeniajepyso-tally.is-small .mod-oksigeniajepyso-mark.is-done {
+        border-width: 5px;
+    }
+
+    .mod-oksigeniajepyso-bar > span,
+    .mod-oksigeniajepyso-levelbar > span {
+        height: 0;
+        border-top: 6px solid var(--jepyso-ink);
+    }
+
+    .mod-oksigeniajepyso-scale > span {
+        border-bottom: 3px solid var(--jepyso-ink);
+        background: none;
+    }
+
+    .mod-oksigeniajepyso-cell {
+        background: transparent;
+        color: var(--jepyso-ink);
+        font-weight: 800;
+    }
+
+    .mod-oksigeniajepyso-cell.is-short {
+        font-weight: 500;
+    }
+
+    .mod-oksigeniajepyso-cast,
+    .mod-oksigeniajepyso-actions {
+        display: none;
+    }
 }

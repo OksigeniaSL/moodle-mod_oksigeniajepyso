@@ -231,13 +231,18 @@ class routine {
      * @return array The data for the templates.
      */
     public static function describe(array $routine): array {
+        $component = 'mod_oksigeniajepyso';
         $exercises = [];
+        $playable = 0;
         foreach ($routine['e'] as $exercise) {
             $item = catalog::get($exercise['i']);
             if (!$item) {
                 continue;
             }
-            $poster = catalog::poster($exercise['i'], $routine['c']);
+            $poster = catalog::poster($exercise['i'], $routine['c'], $exercise['b']);
+            $side = $item['oneside'] && $exercise['l'] ? get_string('side' . $exercise['l'], $component) : '';
+            $band = $exercise['b'] ? get_string('band' . $exercise['b'], $component) : '';
+            $playable += (int) $item['available'];
             $exercises[] = [
                 'number' => count($exercises) + 1,
                 'id' => $exercise['i'],
@@ -247,20 +252,122 @@ class routine {
                 // The picture shows the right side; the left one is its mirror, as in the app.
                 'mirrored' => $exercise['l'] === 'izq',
                 'dosage' => self::dosage($exercise, $item['unit']),
-                'side' => $item['oneside'] && $exercise['l'] ? get_string('side' . $exercise['l'], 'mod_oksigeniajepyso') : '',
-                'band' => $exercise['b'] ? get_string('band' . $exercise['b'], 'mod_oksigeniajepyso') : '',
+                'load' => self::load($exercise, $item['unit']),
+                'tempo' => $item['unit'] === 'reps' ? self::tempo_text($exercise['t']) : '',
+                'side' => $side,
+                'band' => $band,
+                'hastags' => $side !== '' || $band !== '',
                 'note' => $exercise['n'] ?? '',
                 'available' => $item['available'],
             ];
         }
+        $limit = self::limit($routine);
+        $facts = [[
+            'factlabel' => get_string('factrest', $component),
+            'factfigure' => get_string('amountseconds', $component, $routine['d']),
+        ]];
+        if ($routine['x'] > 1) {
+            $facts[] = ['factlabel' => get_string('facttimes', $component), 'factfigure' => (string) $routine['x']];
+        }
+        if ($routine['w']) {
+            $facts[] = ['factlabel' => get_string('factdays', $component), 'factfigure' => (string) $routine['w']];
+        }
         return [
             'exercises' => $exercises,
             'hasexercises' => (bool) $exercises,
-            'rest' => get_string('rest', 'mod_oksigeniajepyso', $routine['d']),
-            'times' => $routine['x'] > 1 ? get_string('timesaday', 'mod_oksigeniajepyso', $routine['x']) : '',
-            'days' => $routine['w'] ? get_string('daysaweek', 'mod_oksigeniajepyso', $routine['w']) : '',
-            'limit' => get_string('limit', 'mod_oksigeniajepyso', self::limit($routine)),
+            'size' => $playable ? self::size($playable, self::seconds($routine)) : '',
+            'rest' => get_string('rest', $component, $routine['d']),
+            'times' => $routine['x'] > 1 ? get_string('timesaday', $component, $routine['x']) : '',
+            'days' => $routine['w'] ? get_string('daysaweek', $component, $routine['w']) : '',
+            'limit' => get_string('limit', $component, $limit),
+            'facts' => $facts,
+            'limitlabel' => get_string('factlimit', $component),
+            'limitfigure' => get_string('limitvalue', $component, $limit),
+            'limitlevel' => $limit,
         ];
+    }
+
+    /**
+     * How long a routine takes, in seconds, as the app counts it: every repetition is up, hold and down and a second at
+     * rest; a step, the mean of up and down; a lap, up, hold and down; a minute, sixty seconds. Both sides count twice,
+     * and the rest goes between the sets. Only the exercises this site can play.
+     *
+     * @param array $routine As parse() returns it.
+     * @return int
+     */
+    public static function seconds(array $routine): int {
+        $total = 0;
+        foreach ($routine['e'] as $exercise) {
+            $item = catalog::get($exercise['i']);
+            if (!$item || !$item['available']) {
+                continue;
+            }
+            [$up, $hold, $down] = $exercise['t'];
+            $count = $exercise['r'];
+            switch ($item['unit']) {
+                case 'minutos':
+                    $set = $count * 60;
+                    break;
+                case 'pasos':
+                    $set = $count * ($up + $down) / 2;
+                    break;
+                case 'vueltas':
+                    $set = $count * ($up + $hold + $down);
+                    break;
+                default:
+                    $set = $count * ($up + $hold + $down + 1);
+            }
+            $sides = $exercise['l'] === 'ambos' ? 2 : 1;
+            $total += $sides * ($exercise['s'] * $set + ($exercise['s'] - 1) * $routine['d']);
+        }
+        return (int) round($total);
+    }
+
+    /**
+     * The size of a routine in words, as the app says it: «3 exercises · about 9 minutes».
+     *
+     * @param int $exercises How many exercises.
+     * @param int $seconds How long it takes.
+     * @return string
+     */
+    public static function size(int $exercises, int $seconds): string {
+        $component = 'mod_oksigeniajepyso';
+        $minutes = max(1, (int) round($seconds / 60));
+        return get_string('routinesize', $component, (object) [
+            'exercises' => $exercises === 1 ? get_string('exercisescountone', $component)
+                : get_string('exercisescount', $component, $exercises),
+            'time' => $minutes === 1 ? get_string('aboutoneminute', $component)
+                : get_string('aboutminutes', $component, $minutes),
+        ]);
+    }
+
+    /**
+     * The sets and their amount: «3 sets of 10».
+     *
+     * @param array $exercise An exercise of the routine.
+     * @param string $unit Its unit.
+     * @return string
+     */
+    public static function load(array $exercise, string $unit): string {
+        $amount = self::amount($exercise['r'], $unit);
+        return $exercise['s'] === 1
+            ? get_string('setsone', 'mod_oksigeniajepyso', $amount)
+            : get_string('sets', 'mod_oksigeniajepyso', (object) ['sets' => $exercise['s'], 'amount' => $amount]);
+    }
+
+    /**
+     * The pace of a repetition: «up 2 s, hold 2 s, down 2 s».
+     *
+     * @param int[] $tempo Up, hold and down, in seconds.
+     * @return string
+     */
+    public static function tempo_text(array $tempo): string {
+        [$up, $hold, $down] = $tempo;
+        return get_string($hold ? 'tempohold' : 'tempo', 'mod_oksigeniajepyso', (object) [
+            'up' => $up,
+            'hold' => $hold,
+            'down' => $down,
+        ]);
     }
 
     /**
@@ -271,17 +378,9 @@ class routine {
      * @return string
      */
     public static function dosage(array $exercise, string $unit): string {
-        $amount = self::amount($exercise['r'], $unit);
-        $parts = [$exercise['s'] === 1
-            ? get_string('setsone', 'mod_oksigeniajepyso', $amount)
-            : get_string('sets', 'mod_oksigeniajepyso', (object) ['sets' => $exercise['s'], 'amount' => $amount])];
+        $parts = [self::load($exercise, $unit)];
         if ($unit === 'reps') {
-            [$up, $hold, $down] = $exercise['t'];
-            $parts[] = get_string($hold ? 'tempohold' : 'tempo', 'mod_oksigeniajepyso', (object) [
-                'up' => $up,
-                'hold' => $hold,
-                'down' => $down,
-            ]);
+            $parts[] = self::tempo_text($exercise['t']);
         }
         return implode(' · ', $parts);
     }

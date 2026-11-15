@@ -16,6 +16,7 @@
 
 namespace mod_oksigeniajepyso\output;
 
+use mod_oksigeniajepyso\local\sessions;
 use mod_oksigeniajepyso\local\template;
 
 /**
@@ -56,17 +57,29 @@ class mobile {
             'starturl' => $page['starturl'],
             'startlabel' => $page['startlabel'],
             'previewnote' => $page['previewnote'],
+            'casturl' => $page['cast'],
+            'size' => $page['size'],
+            // The share of the planned sessions done, for the bar of the app, in its colours.
+            'hasprogressbar' => $page['progress'] !== '' && (int) $jepyso->sessions > 0,
+            'fraction' => (int) $jepyso->sessions > 0
+                ? round(min(1, sessions::done((int) $jepyso->id, (int) $USER->id) / (int) $jepyso->sessions), 2) : 0,
             'exerciseshead' => get_string('exercises', 'mod_oksigeniajepyso'),
             'howtohead' => get_string('howto', 'mod_oksigeniajepyso'),
             'facts' => [],
+            'limitlabel' => '',
+            'limitfigure' => '',
             'exercises' => [],
         ];
         if ($page['routine']) {
             $routine = $page['routine'];
-            $data['facts'] = array_values(array_filter([$routine['rest'], $routine['times'], $routine['days'], $routine['limit']]));
+            $data['facts'] = $routine['facts'];
+            $data['limitlabel'] = $routine['limitlabel'];
+            $data['limitfigure'] = $routine['limitfigure'];
             foreach ($routine['exercises'] as $exercise) {
                 $data['exercises'][] = [
                     'name' => $exercise['number'] . '. ' . $exercise['name'],
+                    'posterurl' => $exercise['poster'],
+                    'mirrored' => $exercise['mirrored'],
                     'lines' => array_values(array_filter([
                         $exercise['dosage'],
                         $exercise['side'],

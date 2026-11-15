@@ -23,8 +23,10 @@ namespace mod_oksigeniajepyso\local;
  * @copyright  2026 Oksigenia SL <dev@oksigenia.cc>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \mod_oksigeniajepyso\local\routine
+ * @covers     \mod_oksigeniajepyso\local\catalog
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(routine::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(catalog::class)]
 final class routine_test extends \advanced_testcase {
     /** @var string The routine of the app (silla, puente, hombro), compressed. */
     private const DEFLATED = 'd.bc3BCoJAFIXhV4l_fQVnTIn7DO1aigvLiYRRY9QKxHcPlSCo3Vl8h3_igRrhXoYSBaFyKMex7peN7lPhtZInmggNmgoXlBLhim'
@@ -196,5 +198,51 @@ final class routine_test extends \advanced_testcase {
         $this->assertSame('Acceptable discomfort: up to 5 out of 10', $described['limit']);
         $this->assertSame('1 step', routine::amount(1, 'pasos'));
         $this->assertSame('3 laps', routine::amount(3, 'vueltas'));
+    }
+
+    /**
+     * The figures of a routine apart from their words, its size as the app says it, and the picture with its band.
+     */
+    public function test_size_and_facts(): void {
+        $routine = routine::parse(self::plain(['w' => 3, 'x' => 2, 'e' => [
+            ['i' => 'silla', 's' => 2, 'r' => 8, 't' => [2, 1, 2]],
+            ['i' => 'hombro', 's' => 1, 'r' => 6, 't' => [3, 0, 3], 'l' => 'izq', 'b' => 'verde'],
+            ['i' => 'caminar', 's' => 1, 'r' => 5],
+            ['i' => 'plancha', 's' => 3, 'r' => 30],
+        ]]));
+        // Silla: 2 sets of 8 × (2 + 1 + 2 + 1) s and one rest of 45 s; hombro: 6 × (3 + 0 + 3 + 1) s; caminar: 5 min.
+        // The plank is not in this site, so it does not count.
+        $this->assertSame(2 * 48 + 45 + 42 + 300, routine::seconds($routine));
+        $described = routine::describe($routine);
+        $this->assertSame('3 exercises · about 8 minutes', $described['size']);
+        [$silla, $hombro, $caminar] = $described['exercises'];
+        $this->assertSame('2 sets of 8', $silla['load']);
+        $this->assertSame('out 2 s, hold 1 s, back 2 s', $silla['tempo']);
+        $this->assertFalse($silla['hastags']);
+        $this->assertTrue($hombro['hastags']);
+        $this->assertSame('', $caminar['tempo']);
+        $this->assertSame([
+            ['factlabel' => 'Rest between sets', 'factfigure' => '45 s'],
+            ['factlabel' => 'Times a day', 'factfigure' => '2'],
+            ['factlabel' => 'Days a week', 'factfigure' => '3'],
+        ], $described['facts']);
+        $this->assertSame('up to 5 out of 10', $described['limitfigure']);
+        $this->assertSame(5, $described['limitlevel']);
+
+        // Both sides count twice.
+        $both = routine::parse(self::plain(['d' => 30, 'e' => [
+            ['i' => 'hombro', 's' => 2, 'r' => 6, 't' => [2, 1, 2], 'l' => 'ambos'],
+        ]]));
+        $this->assertSame(2 * (2 * 36 + 30), routine::seconds($both));
+        $this->assertSame('1 exercise · about 3 minutes', routine::size(1, 204));
+        $this->assertSame('1 exercise · one minute', routine::size(1, 20));
+
+        // The picture of the player, with the band when there is one of it, and of the second figure.
+        catalog::use_file(null);
+        $poster = fn(string $id, string $figure, ?string $band = null) => catalog::poster($id, $figure, $band)->out(false);
+        $this->assertStringEndsWith('/reproductor/modelos/posters/hombro-verde.webp', $poster('hombro', 'a', 'verde'));
+        $this->assertStringEndsWith('/reproductor/modelos/posters/puente.webp', $poster('puente', 'a', 'verde'));
+        $this->assertStringEndsWith('/reproductor/modelos/b/posters/silla.webp', $poster('silla', 'b'));
+        $this->assertNull(catalog::poster('nada', 'a'));
     }
 }

@@ -55,13 +55,13 @@ if ($userid) {
     $PAGE->navbar->add(get_string('followup', 'mod_oksigeniajepyso'), $url);
     $PAGE->navbar->add(fullname($student));
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('sessionsof', 'mod_oksigeniajepyso', fullname($student)), 3);
+    // The name of the student heads the file, with their picture, in the template.
     echo $OUTPUT->render_from_template('mod_oksigeniajepyso/report_user', report_data::student($jepyso, $cm, $student));
     echo $OUTPUT->footer();
     exit;
 }
 
-$PAGE->navbar->add(get_string('followup', 'mod_oksigeniajepyso'));
+// The node of the follow-up in the navigation of the activity already puts it in the breadcrumb.
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('followup', 'mod_oksigeniajepyso'), 3);
 

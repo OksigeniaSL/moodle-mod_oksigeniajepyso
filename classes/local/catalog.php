@@ -99,21 +99,27 @@ class catalog {
     }
 
     /**
-     * The address of the picture of an exercise, if the player has it.
+     * The address of the picture of an exercise, if the player has it: with the band of the routine when there is a
+     * picture of it, as the app shows it.
      *
      * @param string $id The exercise id.
      * @param string $figure The figure of the routine, «a» or «b».
+     * @param string|null $band The band of the exercise in the routine, or null.
      * @return \moodle_url|null
      */
-    public static function poster(string $id, string $figure): ?\moodle_url {
+    public static function poster(string $id, string $figure, ?string $band = null): ?\moodle_url {
         if (!preg_match(self::ID, $id)) {
             return null;
         }
-        $path = ($figure === 'b' ? 'modelos/b/posters/' : 'modelos/posters/') . $id . '.webp';
-        if (!is_readable(self::player_dir() . '/' . $path)) {
-            return null;
+        $folder = $figure === 'b' ? 'modelos/b/posters/' : 'modelos/posters/';
+        $names = $band !== null && preg_match('/^[a-z]+$/', $band) ? [$id . '-' . $band, $id] : [$id];
+        foreach ($names as $name) {
+            $path = $folder . $name . '.webp';
+            if (is_readable(self::player_dir() . '/' . $path)) {
+                return new \moodle_url('/mod/oksigeniajepyso/reproductor/' . $path);
+            }
         }
-        return new \moodle_url('/mod/oksigeniajepyso/reproductor/' . $path);
+        return null;
     }
 
     /**

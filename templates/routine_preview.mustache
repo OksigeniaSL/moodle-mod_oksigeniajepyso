@@ -1,0 +1,65 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_oksigeniajepyso/routine_preview
+
+    In the form of the activity, under the code of the routine: what that code is, its exercises with their stills, so
+    that nobody has to guess. When the code changes in the form, the script of the form hides it and says that the new
+    routine will show once saved.
+
+    Context variables required for this template:
+    * size - How many exercises and how long
+    * exercises - Each with name, poster, hasposter, mirrored, dosage, side and band
+    * facts - Each with factlabel and factfigure
+    * limit - The acceptable discomfort, in words
+
+    Example context (json):
+    {
+        "size": "3 ejercicios · unos 9 minutos",
+        "exercises": [
+            {
+                "name": "Levantarse de la silla",
+                "poster": "https://example.com/mod/oksigeniajepyso/reproductor/modelos/posters/silla.webp",
+                "hasposter": true,
+                "mirrored": false,
+                "dosage": "2 series de 8 · ida 2 s, mantén 1 s, vuelta 2 s",
+                "side": "",
+                "band": ""
+            }
+        ],
+        "facts": [
+            {"factlabel": "Descanso entre series", "factfigure": "45 s"}
+        ],
+        "limit": "Molestia aceptable: hasta 5 de 10"
+    }
+}}
+<div class="mod-oksigeniajepyso-preview" id="mod_oksigeniajepyso_preview">
+    <p class="mod-oksigeniajepyso-label">{{#str}}routinepreview, mod_oksigeniajepyso{{/str}} <span class="mod-oksigeniajepyso-figure">· {{size}}</span></p>
+    <ol class="mod-oksigeniajepyso-minilist">
+        {{#exercises}}
+        <li>
+            <span class="mod-oksigeniajepyso-still is-mini">{{#hasposter}}<img class="{{#mirrored}}mod-oksigeniajepyso-mirrored{{/mirrored}}" src="{{poster}}" alt="" width="192" height="144" loading="lazy">{{/hasposter}}</span>
+            <span class="mod-oksigeniajepyso-mini-body">
+                <span class="mod-oksigeniajepyso-mini-name">{{name}}</span>
+                <span class="mod-oksigeniajepyso-quiet">{{dosage}}{{#side}} · {{side}}{{/side}}{{#band}} · {{band}}{{/band}}</span>
+            </span>
+        </li>
+        {{/exercises}}
+    </ol>
+    <p class="mod-oksigeniajepyso-quiet">{{#facts}}{{factlabel}}: {{factfigure}} · {{/facts}}{{limit}}</p>
+</div>
+<p class="mod-oksigeniajepyso-stale" id="mod_oksigeniajepyso_stale" hidden>{{#str}}routinepreviewstale, mod_oksigeniajepyso{{/str}}</p>

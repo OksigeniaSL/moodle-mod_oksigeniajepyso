@@ -17,16 +17,21 @@
 {{!
     @template mod_oksigeniajepyso/view
 
-    The page of an activity: the progress of the student, the way into the player and the routine.
+    The page of an activity, in the look of Jepyso: the plaster cast, the name written, the progress of the student with
+    the way into the player, how the routine is done, and its exercises with their stills.
 
     Context variables required for this template:
     * hasroutine - Whether there is a routine that can be done
-    * routine - The routine: exercises, rest, times, days and limit
+    * routine - The routine: exercises, facts and the acceptable discomfort
     * noroutine - What is said when there is none
+    * cast - The picture that heads the page, or empty
     * progress - How far the student has gone, or empty for who does not keep sessions
+    * hastally, tallymarks - One mark for each planned session, filled as they are done
+    * hasbar, twentieths - Past 60 planned sessions, a bar in twentieths instead
     * last - The last session, or empty
     * starturl - The address of the player
     * startlabel - The text of the button
+    * size - How many exercises and how long, or empty
     * previewnote - Said to who tries the routine without keeping it, or empty
     * reporturl - The follow-up, or empty for who cannot see it
     * reportlabel - The text of its button
@@ -42,81 +47,113 @@
                     "poster": "https://example.com/mod/oksigeniajepyso/reproductor/modelos/posters/puente.webp",
                     "hasposter": true,
                     "mirrored": false,
-                    "dosage": "3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s",
+                    "load": "3 series de 10",
+                    "tempo": "ida 2 s, mantén 2 s, vuelta 2 s",
+                    "hastags": false,
                     "side": "",
                     "band": "",
                     "note": "Sin dolor",
                     "available": true
                 }
             ],
-            "hasexercises": true,
-            "rest": "Descanso entre series: 45 s",
-            "times": "",
-            "days": "Días a la semana: 3",
-            "limit": "Molestia aceptable: hasta 5 de 10"
+            "facts": [
+                {"factlabel": "Descanso entre series", "factfigure": "45 s"},
+                {"factlabel": "Días a la semana", "factfigure": "3"}
+            ],
+            "limitlabel": "Molestia aceptable",
+            "limitfigure": "hasta 5 de 10",
+            "limitlevel": 5
         },
         "noroutine": "Esta actividad no tiene una rutina que se pueda hacer.",
+        "cast": "https://example.com/mod/oksigeniajepyso/reproductor/imagenes/yeso-puente.webp",
         "progress": "Has hecho 2 de 6 sesiones",
+        "hastally": true,
+        "tallymarks": [
+            {"markdone": true}, {"markdone": true}, {"markdone": false},
+            {"markdone": false}, {"markdone": false}, {"markdone": false}
+        ],
+        "hasbar": false,
+        "twentieths": 0,
         "last": "Última sesión: 15 de noviembre de 2026",
         "starturl": "https://example.com/mod/oksigeniajepyso/player.php?id=1",
         "startlabel": "Empezar",
+        "size": "1 ejercicio · unos 2 minutos",
         "previewnote": "",
-        "reporturl": "https://example.com/mod/oksigeniajepyso/report.php?id=1",
+        "reporturl": "",
         "reportlabel": "Ver el seguimiento"
     }
 }}
 <div class="mod-oksigeniajepyso-view">
 {{#hasroutine}}
-    {{#progress}}
-    <div class="mb-3">
-        <p class="h5 mb-1">{{progress}}</p>
-        {{#last}}
-        <p class="text-muted mb-0">{{last}}</p>
-        {{/last}}
-    </div>
-    {{/progress}}
-    <div class="mod-oksigeniajepyso-actions mb-2">
-        <a class="btn btn-primary btn-lg mod-oksigeniajepyso-start" href="{{starturl}}">{{startlabel}}</a>
-        {{#reporturl}}
-        <a class="btn btn-secondary btn-lg" href="{{reporturl}}">{{reportlabel}}</a>
-        {{/reporturl}}
-    </div>
-    {{#previewnote}}
-    <p class="text-muted">{{previewnote}}</p>
-    {{/previewnote}}
+    <section class="mod-oksigeniajepyso-today{{#cast}} has-cast{{/cast}}">
+        {{#cast}}
+        <img class="mod-oksigeniajepyso-cast" src="{{cast}}" alt="" width="1800" height="1200">
+        {{/cast}}
+        <div class="mod-oksigeniajepyso-today-body">
+            <p class="mod-oksigeniajepyso-wordmark" aria-hidden="true">jepyso<span>°</span></p>
+            {{#progress}}
+            <p class="mod-oksigeniajepyso-progress">{{progress}}</p>
+            {{#hastally}}
+            <p class="mod-oksigeniajepyso-tally" aria-hidden="true">{{#tallymarks}}<span class="mod-oksigeniajepyso-mark{{#markdone}} is-done{{/markdone}}"></span>{{/tallymarks}}</p>
+            {{/hastally}}
+            {{#hasbar}}
+            <p class="mod-oksigeniajepyso-bar" data-twentieths="{{twentieths}}" aria-hidden="true"><span></span></p>
+            {{/hasbar}}
+            {{#last}}
+            <p class="mod-oksigeniajepyso-last">{{last}}</p>
+            {{/last}}
+            {{/progress}}
+            <div class="mod-oksigeniajepyso-actions">
+                <a class="btn mod-oksigeniajepyso-button mod-oksigeniajepyso-start" href="{{starturl}}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4.5v15l12.5-7.5z"/></svg>{{startlabel}}</a>
+                {{#reporturl}}
+                <a class="btn mod-oksigeniajepyso-button is-secondary" href="{{reporturl}}">{{reportlabel}}</a>
+                {{/reporturl}}
+            </div>
+            {{#size}}
+            <p class="mod-oksigeniajepyso-size">{{size}}</p>
+            {{/size}}
+            {{#previewnote}}
+            <p class="mod-oksigeniajepyso-previewnote">{{previewnote}}</p>
+            {{/previewnote}}
+        </div>
+    </section>
     {{#routine}}
-    <h3 class="h4 mt-4">{{#str}}howto, mod_oksigeniajepyso{{/str}}</h3>
-    <ul class="mb-4">
-        <li>{{rest}}</li>
-        {{#times}}
-        <li>{{times}}</li>
-        {{/times}}
-        {{#days}}
-        <li>{{days}}</li>
-        {{/days}}
-        <li>{{limit}}</li>
-    </ul>
-    <h3 class="h4">{{#str}}exercises, mod_oksigeniajepyso{{/str}}</h3>
-    <ol class="list-unstyled mod-oksigeniajepyso-exercises">
+    <h3 class="mod-oksigeniajepyso-heading">{{#str}}howto, mod_oksigeniajepyso{{/str}}</h3>
+    <dl class="mod-oksigeniajepyso-facts">
+        {{#facts}}
+        <div class="mod-oksigeniajepyso-fact">
+            <dt>{{factlabel}}</dt>
+            <dd>{{factfigure}}</dd>
+        </div>
+        {{/facts}}
+        <div class="mod-oksigeniajepyso-fact mod-oksigeniajepyso-fact-limit">
+            <dt>{{limitlabel}}</dt>
+            <dd>{{limitfigure}} <span class="mod-oksigeniajepyso-scale" data-level="{{limitlevel}}" aria-hidden="true"><span></span></span></dd>
+        </div>
+    </dl>
+    <h3 class="mod-oksigeniajepyso-heading">{{#str}}exercises, mod_oksigeniajepyso{{/str}}</h3>
+    <ol class="mod-oksigeniajepyso-exercises">
         {{#exercises}}
-        <li class="mod-oksigeniajepyso-exercise border rounded p-3 mb-3">
-            {{#hasposter}}
-            <img class="mod-oksigeniajepyso-poster rounded{{#mirrored}} mod-oksigeniajepyso-mirrored{{/mirrored}}" src="{{poster}}" alt="" width="96" height="96" loading="lazy">
-            {{/hasposter}}
-            <div>
-                <h4 class="h5 mb-1">{{number}}. {{name}}</h4>
-                <p class="mb-1">{{dosage}}</p>
-                {{#side}}
-                <p class="mb-1">{{side}}</p>
-                {{/side}}
-                {{#band}}
-                <p class="mb-1">{{band}}</p>
-                {{/band}}
+        <li class="mod-oksigeniajepyso-exercise">
+            <div class="mod-oksigeniajepyso-still">
+                {{#hasposter}}
+                <img class="{{#mirrored}}mod-oksigeniajepyso-mirrored{{/mirrored}}" src="{{poster}}" alt="" width="192" height="144" loading="lazy">
+                {{/hasposter}}
+            </div>
+            <div class="mod-oksigeniajepyso-exercise-body">
+                <h4 class="mod-oksigeniajepyso-exercise-name"><span class="mod-oksigeniajepyso-number" aria-hidden="true">{{number}}</span> {{name}}</h4>
+                <p class="mod-oksigeniajepyso-load">{{load}}</p>
+                {{#tempo}}
+                <p class="mod-oksigeniajepyso-tempo">{{tempo}}</p>
+                {{/tempo}}
+                {{#hastags}}
+                <p class="mod-oksigeniajepyso-tags">{{#side}}<span class="mod-oksigeniajepyso-tag">{{side}}</span>{{/side}} {{#band}}<span class="mod-oksigeniajepyso-tag">{{band}}</span>{{/band}}</p>
+                {{/hastags}}
                 {{#note}}
-                <p class="mb-1 text-muted mod-oksigeniajepyso-note">{{note}}</p>
+                <p class="mod-oksigeniajepyso-note">{{note}}</p>
                 {{/note}}
                 {{^available}}
-                <p class="mb-0"><span class="badge badge-secondary text-bg-secondary">{{#str}}notavailable, mod_oksigeniajepyso{{/str}}</span></p>
+                <p class="mod-oksigeniajepyso-tags"><span class="mod-oksigeniajepyso-tag is-strong">{{#str}}notavailable, mod_oksigeniajepyso{{/str}}</span></p>
                 {{/available}}
             </div>
         </li>
@@ -125,6 +162,6 @@
     {{/routine}}
 {{/hasroutine}}
 {{^hasroutine}}
-    <div class="alert alert-info">{{noroutine}}</div>
+    <p class="mod-oksigeniajepyso-empty">{{noroutine}}</p>
 {{/hasroutine}}
 </div>

@@ -56,8 +56,16 @@ class view_data {
             'reporturl' => '',
             'reportlabel' => get_string('viewfollowup', 'mod_oksigeniajepyso'),
         ];
+        // The cast of the bridge at the top of its hold heads the page, as it heads the routine in the app.
+        $cast = catalog::player_dir() . '/imagenes/yeso-puente.webp';
+        $data['cast'] = is_readable($cast)
+            ? (new \moodle_url('/mod/oksigeniajepyso/reproductor/imagenes/yeso-puente.webp'))->out(false) : '';
+        $data += self::tally(0, 0);
+        $data['size'] = $canplay ? $routine['size'] : '';
         if ($cansubmit) {
-            $data['progress'] = self::progress(sessions::done((int) $jepyso->id, $userid), (int) $jepyso->sessions);
+            $done = sessions::done((int) $jepyso->id, $userid);
+            $data['progress'] = self::progress($done, (int) $jepyso->sessions);
+            $data = array_merge($data, self::tally($done, (int) $jepyso->sessions));
             $last = sessions::last_day((int) $jepyso->id, $userid);
             if ($last) {
                 $data['last'] = get_string('lastsession', 'mod_oksigeniajepyso', self::day($last));
@@ -67,6 +75,29 @@ class view_data {
             $data['reporturl'] = (new \moodle_url('/mod/oksigeniajepyso/report.php', ['id' => $cm->id]))->out(false);
         }
         return $data;
+    }
+
+    /**
+     * The sessions as marks, one for each planned session and filled as they are done, when there are up to 60; past
+     * that, a bar in twentieths. Only a picture of what the text already says.
+     *
+     * @param int $done The sessions done.
+     * @param int $target The sessions asked for, or 0.
+     * @return array tallymarks, hastally, hasbar and twentieths.
+     */
+    public static function tally(int $done, int $target): array {
+        $marks = [];
+        if ($target > 0 && $target <= 60) {
+            for ($i = 0; $i < $target; $i++) {
+                $marks[] = ['markdone' => $i < $done];
+            }
+        }
+        return [
+            'tallymarks' => $marks,
+            'hastally' => (bool) $marks,
+            'hasbar' => $target > 60,
+            'twentieths' => $target > 60 ? (int) floor(min($done, $target) * 20 / $target) : 0,
+        ];
     }
 
     /**

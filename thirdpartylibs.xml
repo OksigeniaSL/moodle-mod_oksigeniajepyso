@@ -13,4 +13,40 @@
             <copyright>Copyright (c) 2010-2026 three.js authors (MIT)</copyright>
         </copyrights>
     </library>
+    <library>
+        <location>fonts/red-hat-display.woff2</location>
+        <name>Red Hat Display</name>
+        <description>Red Hat Display, latin subset with variable weight, for the titles of the activity pages. The same file the player carries. License text in fonts/OFL-red-hat.txt.</description>
+        <version>1.030</version>
+        <license>OFL</license>
+        <licenseversion>1.1</licenseversion>
+        <repository>https://github.com/RedHatOfficial/RedHatFont</repository>
+        <copyrights>
+            <copyright>Copyright 2024 The Red Hat Project Authors</copyright>
+        </copyrights>
+    </library>
+    <library>
+        <location>fonts/red-hat-text.woff2</location>
+        <name>Red Hat Text</name>
+        <description>Red Hat Text, latin subset with variable weight, for the text of the activity pages. The same file the player carries. License text in fonts/OFL-red-hat.txt.</description>
+        <version>1.030</version>
+        <license>OFL</license>
+        <licenseversion>1.1</licenseversion>
+        <repository>https://github.com/RedHatOfficial/RedHatFont</repository>
+        <copyrights>
+            <copyright>Copyright 2024 The Red Hat Project Authors</copyright>
+        </copyrights>
+    </library>
+    <library>
+        <location>fonts/red-hat-mono.woff2</location>
+        <name>Red Hat Mono</name>
+        <description>Red Hat Mono, latin subset with variable weight, for the figures of the activity pages. The same file the player carries. License text in fonts/OFL-red-hat.txt.</description>
+        <version>1.030</version>
+        <license>OFL</license>
+        <licenseversion>1.1</licenseversion>
+        <repository>https://github.com/RedHatOfficial/RedHatFont</repository>
+        <copyrights>
+            <copyright>Copyright 2024 The Red Hat Project Authors</copyright>
+        </copyrights>
+    </library>
 </libraries>
