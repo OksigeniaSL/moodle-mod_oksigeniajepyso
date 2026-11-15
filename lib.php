@@ -46,8 +46,10 @@ function oksigeniajepyso_supports($feature) {
         case FEATURE_GRADE_OUTCOMES:
             return false;
         case FEATURE_MOD_PURPOSE:
-            // Students do the routine as a task, and it counts towards completion and grade.
-            return MOD_PURPOSE_ASSESSMENT;
+            // Not «assessment»: its icon would take the theme's colour for it, and the activity keeps the look of Jepyso
+            // (Enrique, 15-11-2026: Oksigenia's plugins do not look like stock Moodle). It still counts for completion
+            // and grade.
+            return MOD_PURPOSE_OTHER;
         default:
             return null;
     }

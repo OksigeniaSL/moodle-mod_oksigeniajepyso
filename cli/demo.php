@@ -95,8 +95,9 @@ foreach ($people as $username => [$firstname, $lastname, $role]) {
 }
 
 // The activity.
-$routine = 'd.bc3BCoJAFIXhV4l_fQVnTIn7DO1aigvLiYRRY9QKxHcPlSCo3Vl8h3_igRrhXoYSBaFyKMex7peN7lPhtZInmggNmgoXlBLhim'
-    . 'Jjm0XGRCZFcGg-UaP0tfcL6VErBPQgDGhuxYgtBI-2o_ezbPw-unZwm09Wb-LPwf473LrmHLrvQPYToHIBoUU51e2u6nwXmIv5DQ';
+// Signed by the teacher, Carlos: the students see «Tu rutina de Carlos».
+$routine = 'd.bc3BCoJAFIXhV4l_fYNmTIm77RFaiospJxImJ0atIHz3UAmCWh74Dv-LO2qEm0sOBaH2KHuXQuymhW5z4TmjB5oJVzQXTigO4YxiN7ZYG7M2OYJH'
+    . 'yxcNSteEMJEOtUJCd0KPllaM2EoIaDuEMMrCb4Nve7_4bPZm8znYf4dLvB5T_A4UPwFqnxBalEPTruoYYmKsxjc';
 $cm = null;
 foreach (get_fast_modinfo($course)->get_instances_of('oksigeniajepyso') as $existing) {
     $cm = $existing;

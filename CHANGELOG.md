@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 (2026-11-15)
 
+- The purpose of the activity is «other»: its icon keeps the graphite of Jepyso instead of the theme's colour for
+  assessment. It still counts for completion and grade.
+- The example routine of `cli/demo.php` is signed by the teacher of the example course.
 - The pages look like Jepyso, not like the theme, with any theme, in light and dark: its plaster and graphite, its
   graphite button and Red Hat type, on a plaster panel with registration marks:
   - the activity: the plaster cast, the sessions as marks, the size of the routine («3 exercises · about 9 minutes»),
