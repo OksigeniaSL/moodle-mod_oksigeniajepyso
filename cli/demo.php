@@ -136,7 +136,10 @@ $examples = [
         ], 'a' => 1],
         ['f' => '2026-11-11', 'h' => '17:40', 'e' => [
             ['i' => 'silla', 's' => 2, 'r' => 8, 'p' => [8, 7], 'm' => 3, 'c' => 'cuesta'],
-            ['i' => 'puente', 's' => 3, 'r' => 10, 'p' => [10, 8, 6], 'm' => 6, 'n' => 'La última serie me molestó en la zona lumbar.'],
+            [
+                'i' => 'puente', 's' => 3, 'r' => 10, 'p' => [10, 8, 6], 'm' => 6,
+                'n' => 'La última serie me molestó en la zona lumbar.',
+            ],
             ['i' => 'hombro', 'l' => 'der', 's' => 2, 'r' => 6, 'p' => [6, 5], 'm' => 4],
         ], 'a' => 3],
         ['f' => '2026-11-13', 'h' => '18:20', 'e' => [
