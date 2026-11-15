@@ -1,0 +1,130 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_oksigeniajepyso/view
+
+    The page of an activity: the progress of the student, the way into the player and the routine.
+
+    Context variables required for this template:
+    * hasroutine - Whether there is a routine that can be done
+    * routine - The routine: exercises, rest, times, days and limit
+    * noroutine - What is said when there is none
+    * progress - How far the student has gone, or empty for who does not keep sessions
+    * last - The last session, or empty
+    * starturl - The address of the player
+    * startlabel - The text of the button
+    * previewnote - Said to who tries the routine without keeping it, or empty
+    * reporturl - The follow-up, or empty for who cannot see it
+    * reportlabel - The text of its button
+
+    Example context (json):
+    {
+        "hasroutine": true,
+        "routine": {
+            "exercises": [
+                {
+                    "number": 1,
+                    "name": "Puente de glúteo",
+                    "poster": "https://example.com/mod/oksigeniajepyso/reproductor/modelos/posters/puente.webp",
+                    "hasposter": true,
+                    "mirrored": false,
+                    "dosage": "3 series de 10 · ida 2 s, mantén 2 s, vuelta 2 s",
+                    "side": "",
+                    "band": "",
+                    "note": "Sin dolor",
+                    "available": true
+                }
+            ],
+            "hasexercises": true,
+            "rest": "Descanso entre series: 45 s",
+            "times": "",
+            "days": "Días a la semana: 3",
+            "limit": "Molestia aceptable: hasta 5 de 10"
+        },
+        "noroutine": "Esta actividad no tiene una rutina que se pueda hacer.",
+        "progress": "Has hecho 2 de 6 sesiones",
+        "last": "Última sesión: 15 de noviembre de 2026",
+        "starturl": "https://example.com/mod/oksigeniajepyso/player.php?id=1",
+        "startlabel": "Empezar",
+        "previewnote": "",
+        "reporturl": "https://example.com/mod/oksigeniajepyso/report.php?id=1",
+        "reportlabel": "Ver el seguimiento"
+    }
+}}
+<div class="mod-oksigeniajepyso-view">
+{{#hasroutine}}
+    {{#progress}}
+    <div class="mb-3">
+        <p class="h5 mb-1">{{progress}}</p>
+        {{#last}}
+        <p class="text-muted mb-0">{{last}}</p>
+        {{/last}}
+    </div>
+    {{/progress}}
+    <div class="mod-oksigeniajepyso-actions mb-2">
+        <a class="btn btn-primary btn-lg mod-oksigeniajepyso-start" href="{{starturl}}">{{startlabel}}</a>
+        {{#reporturl}}
+        <a class="btn btn-secondary btn-lg" href="{{reporturl}}">{{reportlabel}}</a>
+        {{/reporturl}}
+    </div>
+    {{#previewnote}}
+    <p class="text-muted">{{previewnote}}</p>
+    {{/previewnote}}
+    {{#routine}}
+    <h3 class="h4 mt-4">{{#str}}howto, mod_oksigeniajepyso{{/str}}</h3>
+    <ul class="mb-4">
+        <li>{{rest}}</li>
+        {{#times}}
+        <li>{{times}}</li>
+        {{/times}}
+        {{#days}}
+        <li>{{days}}</li>
+        {{/days}}
+        <li>{{limit}}</li>
+    </ul>
+    <h3 class="h4">{{#str}}exercises, mod_oksigeniajepyso{{/str}}</h3>
+    <ol class="list-unstyled mod-oksigeniajepyso-exercises">
+        {{#exercises}}
+        <li class="mod-oksigeniajepyso-exercise border rounded p-3 mb-3">
+            {{#hasposter}}
+            <img class="mod-oksigeniajepyso-poster rounded{{#mirrored}} mod-oksigeniajepyso-mirrored{{/mirrored}}" src="{{poster}}" alt="" width="96" height="96" loading="lazy">
+            {{/hasposter}}
+            <div>
+                <h4 class="h5 mb-1">{{number}}. {{name}}</h4>
+                <p class="mb-1">{{dosage}}</p>
+                {{#side}}
+                <p class="mb-1">{{side}}</p>
+                {{/side}}
+                {{#band}}
+                <p class="mb-1">{{band}}</p>
+                {{/band}}
+                {{#note}}
+                <p class="mb-1 text-muted mod-oksigeniajepyso-note">{{note}}</p>
+                {{/note}}
+                {{^available}}
+                <p class="mb-0"><span class="badge badge-secondary text-bg-secondary">{{#str}}notavailable, mod_oksigeniajepyso{{/str}}</span></p>
+                {{/available}}
+            </div>
+        </li>
+        {{/exercises}}
+    </ol>
+    {{/routine}}
+{{/hasroutine}}
+{{^hasroutine}}
+    <div class="alert alert-info">{{noroutine}}</div>
+{{/hasroutine}}
+</div>

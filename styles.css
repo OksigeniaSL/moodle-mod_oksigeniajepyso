@@ -1,0 +1,31 @@
+.mod-oksigeniajepyso-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.mod-oksigeniajepyso-start {
+    min-width: 12rem;
+}
+
+.mod-oksigeniajepyso-exercise,
+.mod-oksigeniajepyso-student {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.mod-oksigeniajepyso-poster {
+    flex: 0 0 auto;
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+}
+
+.mod-oksigeniajepyso-mirrored {
+    transform: scaleX(-1);
+}
+
+.mod-oksigeniajepyso-note {
+    white-space: pre-line;
+}
