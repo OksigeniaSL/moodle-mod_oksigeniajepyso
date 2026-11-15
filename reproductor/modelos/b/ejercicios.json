@@ -1,0 +1,170 @@
+{
+ "cuerpo": "modelos/b/cuerpo.glb",
+ "bytes_cuerpo": 1317152,
+ "ejercicios": {
+  "almeja": {
+   "glb": "modelos/b/almeja.glb",
+   "ficha": "modelos/b/almeja.json",
+   "bytes": 41388,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "gluteo_medio"
+    ],
+    "secundarios": [
+     "gluteo_mayor"
+    ]
+   }
+  },
+  "bird_dog": {
+   "glb": "modelos/b/bird_dog.glb",
+   "ficha": "modelos/b/bird_dog.json",
+   "bytes": 46100,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "erectores",
+     "gluteo_mayor"
+    ],
+    "secundarios": []
+   }
+  },
+  "equilibrio": {
+   "glb": "modelos/b/equilibrio.glb",
+   "ficha": "modelos/b/equilibrio.json",
+   "bytes": 68632,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "gemelos",
+     "tibial_anterior"
+    ],
+    "secundarios": []
+   }
+  },
+  "extension_rodilla": {
+   "glb": "modelos/b/extension_rodilla.glb",
+   "ficha": "modelos/b/extension_rodilla.json",
+   "bytes": 65480,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "cuadriceps"
+    ],
+    "secundarios": []
+   }
+  },
+  "gato_camello": {
+   "glb": "modelos/b/gato_camello.glb",
+   "ficha": "modelos/b/gato_camello.json",
+   "bytes": 44884,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [],
+    "secundarios": []
+   }
+  },
+  "hombro": {
+   "glb": "modelos/b/hombro.glb",
+   "ficha": "modelos/b/hombro.json",
+   "bytes": 83076,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "manguito_posterior"
+    ],
+    "secundarios": [
+     "deltoides_posterior"
+    ]
+   }
+  },
+  "plancha_rodillas": {
+   "glb": "modelos/b/plancha_rodillas.glb",
+   "ficha": "modelos/b/plancha_rodillas.json",
+   "bytes": 43936,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [
+     "recto_abdominal"
+    ],
+    "secundarios": [
+     "oblicuos",
+     "gluteo_mayor"
+    ]
+   }
+  },
+  "puente": {
+   "glb": "modelos/b/puente.glb",
+   "ficha": "modelos/b/puente.json",
+   "bytes": 45508,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [
+     "gluteo_mayor"
+    ],
+    "secundarios": [
+     "isquiotibiales",
+     "erectores"
+    ]
+   }
+  },
+  "rodilla_pecho": {
+   "glb": "modelos/b/rodilla_pecho.glb",
+   "ficha": "modelos/b/rodilla_pecho.json",
+   "bytes": 61740,
+   "lado": "derecho",
+   "musculos": {
+    "principales": [
+     "gluteo_mayor"
+    ],
+    "secundarios": [
+     "gluteo_medio"
+    ]
+   }
+  },
+  "sentadilla": {
+   "glb": "modelos/b/sentadilla.glb",
+   "ficha": "modelos/b/sentadilla.json",
+   "bytes": 71132,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [
+     "cuadriceps",
+     "gluteo_mayor"
+    ],
+    "secundarios": [
+     "isquiotibiales"
+    ]
+   }
+  },
+  "silla": {
+   "glb": "modelos/b/silla.glb",
+   "ficha": "modelos/b/silla.json",
+   "bytes": 72464,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [
+     "cuadriceps",
+     "gluteo_mayor"
+    ],
+    "secundarios": [
+     "isquiotibiales",
+     "gemelos",
+     "erectores"
+    ]
+   }
+  },
+  "talones": {
+   "glb": "modelos/b/talones.glb",
+   "ficha": "modelos/b/talones.json",
+   "bytes": 69580,
+   "lado": "ambos",
+   "musculos": {
+    "principales": [
+     "gemelos"
+    ],
+    "secundarios": []
+   }
+  }
+ }
+}

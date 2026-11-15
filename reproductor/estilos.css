@@ -1,0 +1,1367 @@
+/* Jepyso. Light and dark from the same tokens; layout works from 360 px up.
+   Its look is «the plaster studio» (Enrique, 11 November 2026): Gaudí's figure lit as a cast in a studio, graphite on
+   plaster, hairlines and square corners, no shadows. The terracotta of the working muscles is the only warm colour;
+   nothing else may look like it. Red Hat Display for titles, Text for the rest, and Mono for the professional's
+   figures. The professional's screens carry the signatures (registration marks, the protractor under the titles, the
+   goniometer, the path of the movement); the person's screens read bigger and with more contrast. */
+@font-face { font-family: 'Red Hat Display'; src: url('fuentes/red-hat-display.woff2') format('woff2'); font-weight: 300 900; font-display: swap; }
+@font-face { font-family: 'Red Hat Text'; src: url('fuentes/red-hat-text.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Red Hat Mono'; src: url('fuentes/red-hat-mono.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+:root {
+  --letra: 'Red Hat Text', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --letra-titulo: 'Red Hat Display', 'Red Hat Text', system-ui, sans-serif;
+  --letra-cifras: 'Red Hat Mono', ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --fondo: #e4e6e3;
+  --superficie: #f2f3f1;
+  --superficie-2: #d9dcd9;
+  --tinta: #1d2225;
+  --tinta-suave: #596165;
+  --linea: #bcc2c2;
+  /* The edge of what is touched (fields, steppers, segments): 3:1 or more on the page and on both surfaces, as WCAG asks
+     of a control. The fine graphite of cards and rules stays in --linea. */
+  --linea-control: #737c7e;
+  --acento: #1d2225;
+  --acento-tinta: #f2f3f1;
+  --acento-suave: #d3d7d6;
+  --vivo: #c9553a;
+  --vivo-texto: #a5432b;
+  --vivo-suave: color-mix(in srgb, #c9553a 12%, #f2f3f1);
+  --grafito-fino: rgb(29 34 37 / 0.38);
+  --sombra: none;
+  --radio: 3px;
+  --radio-sm: 2px;
+  --figura-fondo: radial-gradient(120% 95% at 18% 0%, #f7f8f6 0%, #dfe2df 55%, #cfd3d0 100%);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #121517;
+    --superficie: #191d20;
+    --superficie-2: #22272a;
+    --tinta: #e3e6e4;
+    --tinta-suave: #a2aaae;
+    --linea: #353b3f;
+    --linea-control: #6b7377;
+    --acento: #e3e6e4;
+    --acento-tinta: #121517;
+    --acento-suave: #2a3034;
+    --vivo: #e06a4c;
+    --vivo-texto: #ef8a70;
+    --vivo-suave: color-mix(in srgb, #e06a4c 16%, #191d20);
+    --grafito-fino: rgb(227 230 228 / 0.34);
+    --sombra: none;
+    --figura-fondo: radial-gradient(120% 95% at 18% 0%, #2c3236 0%, #1a1e21 60%, #131618 100%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fondo: #121517;
+  --superficie: #191d20;
+  --superficie-2: #22272a;
+  --tinta: #e3e6e4;
+  --tinta-suave: #a2aaae;
+  --linea: #353b3f;
+  --linea-control: #6b7377;
+  --acento: #e3e6e4;
+  --acento-tinta: #121517;
+  --acento-suave: #2a3034;
+  --vivo: #e06a4c;
+  --vivo-texto: #ef8a70;
+  --vivo-suave: color-mix(in srgb, #e06a4c 16%, #191d20);
+  --grafito-fino: rgb(227 230 228 / 0.34);
+  --sombra: none;
+  --figura-fondo: radial-gradient(120% 95% at 18% 0%, #2c3236 0%, #1a1e21 60%, #131618 100%);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--fondo);
+  color: var(--tinta);
+  font: 16px/1.45 var(--letra);
+  letter-spacing: 0.005em;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3 { font-family: var(--letra-titulo); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Shared pieces ---------- */
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 22px; border-radius: var(--radio-sm); border: 0;
+  background: var(--acento); color: var(--acento-tinta); font-weight: 600; letter-spacing: 0.01em;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+.boton:active { transform: scale(0.97); }
+.boton:disabled { opacity: 0.45; cursor: default; }
+.boton.secundario { background: transparent; border: 1px solid var(--tinta); color: var(--tinta); }
+.boton.fantasma { background: transparent; color: var(--acento); padding: 0 12px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.boton svg { width: 20px; height: 20px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 0;
+  background: transparent; border: 1px solid var(--linea); color: var(--tinta-suave); font-size: 13px; white-space: nowrap;
+}
+/* A muscle, in its terracotta; a discomfort over the limit, in plain graphite and bold. */
+.chip.vivo { border-color: var(--vivo); color: var(--vivo-texto); }
+.chip.alta { border-color: var(--tinta); color: var(--tinta); font-weight: 700; }
+
+.paso {
+  display: inline-flex; align-items: center; border: 1px solid var(--linea-control); border-radius: var(--radio-sm);
+  background: var(--superficie); height: 40px;
+}
+.paso button {
+  width: 40px; height: 38px; border: 0; background: transparent; font-size: 20px; color: var(--acento); border-radius: 1px;
+}
+.paso output { min-width: 34px; text-align: center; font-weight: 650; }
+
+.segmentos {
+  display: inline-flex; padding: 3px; border-radius: var(--radio-sm); background: transparent; border: 1px solid var(--linea-control); gap: 2px;
+}
+.segmentos button {
+  border: 0; background: transparent; padding: 8px 14px; border-radius: 1px; color: var(--tinta-suave); font-size: 14px;
+  min-height: 36px;
+}
+.segmentos button[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); font-weight: 600; }
+
+/* The band colours: each one a short strip of band, as they come rolled up in the box. The colours are the bands', the
+   same in light and dark. «Sin indicar» is a plain segment. */
+.banda-amarilla { --banda: #e2b93b; }
+.banda-roja { --banda: #c4433b; }
+.banda-verde { --banda: #3f8a55; }
+.banda-azul { --banda: #3e6fb3; }
+.banda-negra { --banda: #2b2b2e; }
+.bandas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bandas .banda {
+  width: 44px; height: 30px; border: 0; padding: 0; border-radius: 3px; background: var(--banda);
+  box-shadow: inset 0 -6px 0 rgb(0 0 0 / 0.14), 0 0 0 1px var(--linea); cursor: pointer;
+}
+.bandas .banda[aria-pressed="true"] { box-shadow: inset 0 -6px 0 rgb(0 0 0 / 0.14), 0 0 0 2px var(--fondo), 0 0 0 4px var(--tinta); }
+.bandas .banda-sin {
+  min-height: 36px; padding: 6px 12px; border: 1px solid var(--linea-control); border-radius: var(--radio-sm); background: transparent;
+  color: var(--tinta-suave); font-size: 14px;
+}
+.bandas .banda-sin[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); border-color: var(--tinta); font-weight: 600; }
+.muestra-banda {
+  display: inline-block; flex: none; width: 18px; height: 8px; border-radius: 2px; background: var(--banda);
+  box-shadow: 0 0 0 1px var(--linea);
+}
+.con-banda { display: inline-flex; align-items: center; gap: 6px; }
+
+/* The tempo line: rest, up, hold, down drawn as a trapezoid, a graphite stroke over a base with a tick every second. */
+.tempo { display: block; width: 100%; height: auto; overflow: visible; }
+.tempo .base { stroke: var(--linea); stroke-width: 6; stroke-dasharray: 1 7; fill: none; }
+.tempo .traza { stroke: var(--tinta); stroke-width: 2.4; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.tempo .relleno { fill: var(--grafito-fino); opacity: 0.18; }
+.tempo .punto { fill: var(--fondo); stroke: var(--tinta); stroke-width: 2; }
+.tempo text { fill: var(--tinta-suave); font-size: 13px; }
+
+/* ---------- Builder (professional) ---------- */
+.armar { min-height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); }
+.armar-cabecera { padding: 28px 20px 8px; }
+.armar-cabecera h1 { margin: 0; font-size: 28px; font-weight: 500; letter-spacing: -0.025em; }
+.armar-cabecera p { margin: 6px 0 0; color: var(--tinta-suave); }
+.armar-cuerpo { padding: 12px 16px 120px; display: grid; gap: 16px; }
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.campo { display: grid; gap: 6px; }
+.campo label { font-size: 13px; color: var(--tinta-suave); }
+.campo input, .campo textarea, .buscar, .plantilla-nueva input, .campo-musculo select {
+  width: 100%; border: 1px solid var(--linea-control); background: var(--superficie); border-radius: var(--radio-sm);
+  padding: 12px 14px; min-height: 48px;
+}
+.campo textarea { resize: vertical; min-height: 64px; }
+.campo input:focus, .campo textarea:focus, .buscar:focus, .plantilla-nueva input:focus, .campo-musculo select:focus {
+  outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent;
+}
+
+.ejercicio {
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra);
+  overflow: hidden; transition: border-color 0.15s ease;
+}
+.ejercicio.activo { border-color: var(--tinta); }
+.ejercicio-cabeza { display: flex; align-items: center; gap: 14px; padding: 14px 16px; width: 100%; border: 0; background: transparent; text-align: left; }
+.ejercicio-cabeza .titulo { flex: 1; min-width: 0; }
+.ejercicio-cabeza h3 { margin: 0; font-size: 17px; }
+.ejercicio-cabeza .linea-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.marca {
+  width: 28px; height: 28px; border-radius: 0; border: 1px solid var(--linea-control); display: grid; place-items: center; flex: none;
+}
+.ejercicio.incluido .marca { background: transparent; border-color: var(--tinta); color: var(--tinta); }
+.marca { font-size: 14px; font-weight: 600; font-family: var(--letra-cifras); }
+.ejercicio-ajustes { display: none; grid-template-columns: minmax(0, 1fr); padding: 4px 16px 18px; gap: 16px; }
+.ejercicio.incluido.activo .ejercicio-ajustes { display: grid; }
+/* Folded, a card is one line with its dose; open, it shows what the exercise is. */
+.ejercicio:not(.activo) .ejercicio-cabeza .linea-chips { display: none; }
+.ejercicio:not(.activo) .ejercicio-cabeza { padding-block: 12px; }
+.dosis { display: flex; align-items: center; gap: 4px 10px; margin-top: 4px; color: var(--tinta-suave); font-size: 14px; }
+.dosis .num { color: var(--tinta); font-weight: 650; }
+.dosis .tempo { width: 52px; flex: none; }
+.dosis .tempo .traza { stroke-width: 2.5; }
+.ejercicio.activo .dosis { display: none; }
+.plegar { flex: none; width: 24px; height: 24px; color: var(--tinta-suave); transition: transform 0.2s ease; }
+.plegar svg { display: block; width: 100%; height: 100%; }
+.ejercicio.activo .plegar { transform: rotate(180deg); }
+.fila { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.ajuste { display: grid; gap: 6px; }
+.ajuste > span { font-size: 13px; color: var(--tinta-suave); }
+/* On a 360 phone the three steppers share the width instead of pushing the card wider than the screen. */
+.ritmo { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); justify-content: start; align-items: end; gap: 8px; }
+.ritmo .tempo { grid-column: 1 / -1; height: auto; }
+@media (min-width: 560px) {
+  .ritmo { grid-template-columns: repeat(3, auto) minmax(0, 1fr); justify-content: stretch; }
+  .ritmo .tempo { grid-column: auto; }
+}
+.ritmo-mini { display: grid; gap: 4px; justify-items: center; }
+.ritmo-mini span { font-size: 12px; color: var(--tinta-suave); }
+.ritmo-mini .paso { height: 36px; }
+.ritmo-mini .paso button { width: 32px; height: 34px; font-size: 18px; }
+
+.general { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 16px; display: grid; gap: 14px; }
+.general h2, .vista h2 { margin: 0; font-size: 15px; color: var(--tinta-suave); font-weight: 600; }
+
+.vista { display: none; }
+.barra-crear {
+  position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--fondo) 86%, transparent); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--linea);
+}
+.barra-crear .resumen-corto { color: var(--tinta-suave); font-size: 14px; }
+
+@media (min-width: 980px) {
+  .armar { grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr); }
+  .armar-izq { overflow: auto; }
+  .armar-cuerpo { padding-bottom: 40px; }
+  .vista {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; position: sticky; top: 0; height: 100vh;
+    padding: 20px 20px 20px 0;
+  }
+  .vista-figura { position: relative; border-radius: 0; border: 1px solid var(--linea); background: var(--figura-fondo); overflow: hidden; min-height: 0; }
+  .barra-crear { position: static; background: transparent; backdrop-filter: none; border: 0; padding: 0 16px 24px; }
+}
+
+/* ---------- Link panel ---------- */
+.capa {
+  position: fixed; inset: 0; background: rgb(10 14 13 / 0.45); display: grid; place-items: end center; z-index: 20;
+  animation: aparecer 0.18s ease;
+}
+@media (min-width: 700px) { .capa { place-items: center; } }
+.hoja {
+  width: 100%; max-height: 92vh; overflow: auto; background: var(--superficie); border-radius: var(--radio) var(--radio) 0 0;
+  padding: 22px 20px calc(22px + env(safe-area-inset-bottom)); display: grid; gap: 16px;
+}
+@media (min-width: 700px) { .hoja { width: min(560px, 92vw); border-radius: var(--radio); } }
+.hoja h2 { margin: 0; font-size: 22px; }
+.hoja p { margin: 0; color: var(--tinta-suave); }
+.qr { display: grid; place-items: center; padding: 16px; background: #fff; border-radius: var(--radio-sm); }
+.qr svg { width: 200px; height: 200px; }
+.enlace-texto {
+  font-size: 13px; color: var(--tinta-suave); background: var(--superficie-2); padding: 10px 12px; border-radius: var(--radio-sm);
+  overflow-wrap: anywhere;
+}
+/* The sheet of the link, a <dialog>: at the bottom on a phone, in the middle wider. */
+dialog.hoja { position: fixed; border: 0; color: var(--tinta); max-width: none; animation: aparecer 0.18s ease; }
+dialog.hoja::backdrop { background: rgb(10 14 13 / 0.45); }
+@media (max-width: 699px) { dialog.hoja { inset: auto 0 0; margin: 0; width: 100%; max-height: 92vh; } }
+@media (min-width: 700px) { dialog.hoja { margin: auto; width: min(560px, 92vw); max-height: 92vh; } }
+.hoja-cabeza { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -6px -6px -4px 0; }
+.hoja-cabeza h2:focus { outline: none; }
+a.boton { text-decoration: none; }
+.hoja-mandar { display: grid; gap: 8px; }
+.hoja-mandar .boton { min-height: 52px; white-space: nowrap; }
+@media (min-width: 700px) { .hoja-mandar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .hoja-mandar .boton.secundario { grid-column: 1 / -1; } }
+/* The message as it will arrive: a plain bubble, square at its corner as the rest of the studio. */
+.burbuja { margin: 0; display: grid; gap: 4px; }
+.burbuja figcaption { font-size: 13px; color: var(--tinta-suave); }
+.burbuja p { margin: 0; justify-self: start; padding: 10px 14px; background: var(--fondo); border: 1px solid var(--linea); border-radius: 0 12px 12px 12px; color: var(--tinta); font-size: 15px; }
+.burbuja-enlace { color: var(--tinta-suave); text-decoration: underline; text-underline-offset: 3px; }
+.hoja-ver { justify-self: start; padding: 0 2px; }
+.hoja-mas { border-top: 1px solid var(--linea); padding-top: 6px; display: grid; gap: 12px; }
+.hoja-mas summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--tinta); font-weight: 600; }
+.hoja-mas[open] { gap: 12px; }
+.hoja-pie { font-size: 14px; }
+/* «Cómo se hace»: «Entendido» stuck at the foot, in sight however long the explanation. */
+.hoja-como h2:focus { outline: none; }
+.hoja-como-pie {
+  position: sticky; bottom: calc(-22px - env(safe-area-inset-bottom)); margin: 0 -20px calc(-22px - env(safe-area-inset-bottom));
+  padding: 12px 20px calc(22px + env(safe-area-inset-bottom)); background: var(--superficie); border-top: 1px solid var(--linea);
+}
+.hoja-como-pie .boton { width: 100%; min-height: 52px; }
+.botones { display: flex; flex-wrap: wrap; gap: 10px; }
+.botones .boton { flex: 1 1 160px; }
+@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Routine (the person) ---------- */
+.rutina { min-height: 100%; display: grid; grid-template-rows: auto 1fr auto; }
+.saludo { padding: 32px 20px 8px; }
+.saludo .de { color: var(--tinta-suave); font-weight: 600; font-size: 15px; letter-spacing: 0.02em; }
+.saludo h1 { margin: 6px 0 0; font-size: 36px; font-weight: 500; letter-spacing: -0.025em; line-height: 1.1; }
+.saludo p { margin: 8px 0 0; color: var(--tinta-suave); }
+.lista { padding: 12px 16px 24px; display: grid; gap: 12px; align-content: start; }
+.tarjeta {
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 16px; display: grid; gap: 10px;
+}
+.tarjeta h3 { margin: 0; font-size: 18px; }
+.tarjeta .nota, .hoja .nota { margin: 0; background: transparent; color: var(--tinta); padding: 4px 0 4px 12px; border-left: 2px solid var(--tinta); border-radius: 0; font-size: 16px; }
+.sin-conexion { margin: 4px 4px 0; color: var(--tinta-suave); font-size: 14px; }
+.sin-conexion:empty { display: none; }
+.pie { padding: 12px 16px calc(16px + env(safe-area-inset-bottom)); display: grid; gap: 8px; }
+.pie .boton { width: 100%; }
+/* The routine's foot stays at the bottom of the screen: «Empezar» is in sight from the first moment, with how long it
+   takes above it, whatever the number of exercises and the size of the letter. */
+.pie-fijo {
+  position: sticky; bottom: 0; z-index: 2; gap: 6px; padding-top: 10px;
+  background: color-mix(in srgb, var(--fondo) 90%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--linea);
+}
+.pie-fijo .boton { min-height: 56px; font-size: 19px; }
+.pie-resumen { margin: 0; text-align: center; color: var(--tinta-suave); font-size: 16px; }
+.mandar-hecho p { margin: 0; color: var(--tinta-suave); }
+.mandar-hecho .boton { min-height: 52px; padding: 0 10px; }
+/* The times a day as boxes: «Hoy: 1 de 2 veces». */
+.veces-hoy { display: flex; align-items: center; gap: 10px; }
+.semana-rutina { margin: 0; color: var(--tinta-suave); }
+.casillas { display: inline-flex; gap: 4px; }
+.casillas i { width: 18px; height: 18px; border: 1.5px solid var(--tinta); }
+.casillas i.hecha { background: var(--tinta); }
+/* The person's card (Fable B4): the still, the name, how many, and in words what to do and with what. */
+.tarjeta-dosis { margin: 0; font-size: 18px; font-weight: 650; color: var(--tinta); }
+.tarjeta-pauta { margin: 0; font-size: 17px; line-height: 1.45; color: var(--tinta); }
+.tarjeta-material { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--tinta-suave); font-size: 16px; }
+.tarjeta-material .muestra-banda { width: 24px; height: 10px; }
+/* «Tenla a mano»: the two steps as the browser draws them, and «Ya la tengo». */
+.a-mano { margin-top: 8px; }
+.a-mano p { margin: 0; color: var(--tinta-suave); }
+.a-mano-pasos { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: paso; }
+.a-mano-pasos li { display: grid; grid-template-columns: auto 44px minmax(0, 1fr); align-items: center; gap: 10px; counter-increment: paso; font-size: 17px; }
+.a-mano-pasos li::before { content: counter(paso); font-family: var(--letra-cifras); font-weight: 600; }
+.a-mano-icono { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--linea); background: var(--fondo); color: var(--tinta); }
+.a-mano-icono svg { width: 22px; height: 22px; }
+.pie-poster { display: none; }
+/* Wide (the WhatsApp of a computer): the list at the left at the width of a phone's reading, and at the right a panel
+   that stays, with the still of the first exercise, how long it takes and «Empezar». Also a TV or a board lying wide
+   from 900 px (a 1920×1080 screen at double density is 960×540), where «Ponerla en pantalla grande» goes in the panel. */
+@media (min-width: 980px), (min-width: 900px) and (orientation: landscape) {
+  .rutina.rutina-intro {
+    max-width: 1180px; margin: 0 auto; grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: auto 1fr;
+    grid-template-areas: "saludo panel" "lista panel"; column-gap: 28px; padding: 0 24px;
+  }
+  .rutina-intro .saludo { grid-area: saludo; padding-left: 0; padding-right: 0; }
+  .rutina-intro .cabecera-rutina { height: 240px; margin: -32px 0 22px; }
+  .rutina-intro .lista { grid-area: lista; padding-left: 0; padding-right: 0; }
+  .rutina-intro .pie-fijo {
+    grid-area: panel; align-self: start; position: sticky; top: 24px; margin-top: 32px; padding: 16px;
+    background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); backdrop-filter: none;
+  }
+  .pie-poster { display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radio-sm); background: var(--figura-fondo); }
+  .pie-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .pie-poster img.espejo { transform: scaleX(-1); }
+}
+/* On a narrow phone or with big letter, the still gets smaller and the chips break, so the card never pushes the page
+   sideways. */
+.tarjeta .chip { white-space: normal; }
+@media (max-width: 380px) { .tarjeta-cabeza .tarjeta-poster { width: 84px; } }
+
+/* Player: the figure fills the screen and the controls sit on a sheet at the bottom. */
+.jugador { position: fixed; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--figura-fondo); }
+.jugador-arriba { display: flex; align-items: center; gap: 12px; padding: calc(12px + env(safe-area-inset-top)) 16px 8px; }
+.jugador-arriba .titulo { flex: 1; min-width: 0; }
+.jugador-arriba h2 { margin: 0; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jugador-arriba .sub { color: var(--tinta-suave); font-size: 14px; }
+.redondo {
+  width: 48px; height: 48px; border-radius: 0; border: 1px solid var(--linea-control); background: var(--fondo); color: var(--tinta);
+  display: grid; place-items: center; flex: none;
+}
+.redondo svg { width: 22px; height: 22px; }
+.escena { position: relative; min-height: 0; }
+.escena canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.lado-etiqueta { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); }
+.girar-pista {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 13px; color: var(--tinta-suave);
+  display: flex; align-items: center; gap: 6px; pointer-events: none; transition: opacity 0.6s ease;
+}
+.mando {
+  background: var(--fondo); border-top: 1px solid var(--linea); padding: 16px 20px calc(18px + env(safe-area-inset-bottom));
+  display: grid; gap: 12px;
+  /* A tall sheet (rating a two-sided exercise, large text) scrolls inside the screen instead of leaving its button below it. */
+  min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+}
+/* Getting ready for an exercise: no clock, the starting position read big, and the button the whole width. The
+   buttons stay in sight when the text is long or the letter big: the sheet scrolls under them. */
+.prepara { display: grid; gap: 10px; }
+.prepara-titulo { margin: 0; font-size: 26px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+.prepara-partida { margin: 0; font-size: 18px; line-height: 1.45; color: var(--tinta); }
+.prepara-material { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 18px; }
+.prepara-material span { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-suave); }
+.prepara-material .muestra-banda { width: 28px; height: 12px; }
+.prepara-botones { position: sticky; bottom: calc(-18px - env(safe-area-inset-bottom)); display: grid; gap: 8px; margin: 0 -20px calc(-18px - env(safe-area-inset-bottom)); padding: 10px 20px calc(18px + env(safe-area-inset-bottom)); background: var(--fondo); }
+.prepara-botones .boton { width: 100%; min-height: 56px; font-size: 18px; }
+.prepara-botones .boton.secundario { min-height: 48px; font-size: 16px; }
+.cuenta { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+/* What to do now leads: the phase big, the count under it (Kimi K3, 11 November 2026). */
+.cuenta { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.cuenta .grande { font-family: var(--letra-titulo); font-size: 30px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+.cuenta .grande small { font-size: 22px; color: var(--tinta-suave); font-weight: 500; letter-spacing: 0; }
+.fase { order: -1; font-family: var(--letra-titulo); font-size: 38px; font-weight: 600; line-height: 1.05; color: var(--tinta); min-height: 1.1em; }
+.fase.mantener { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 8px; }
+.mando-botones { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; }
+.mando-botones .principal { width: 72px; height: 72px; border-radius: 0; border: 0; background: var(--tinta); color: var(--fondo); display: grid; place-items: center; }
+.mando-botones .principal svg { width: 30px; height: 30px; }
+/* The set's controls (Fable B5): three boxes of 56 px and more, the middle one with its word. */
+.mando-serie { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; }
+.mando-serie .boton.secundario { min-height: 56px; padding: 4px 8px; font-size: 16px; line-height: 1.15; white-space: normal; text-align: center; }
+.mando-serie .principal { width: 84px; height: 84px; display: grid; place-items: center; align-content: center; gap: 2px; }
+.mando-serie .principal span { font-size: 14px; font-weight: 700; }
+.mando-serie .principal svg { width: 28px; height: 28px; }
+.jugador.en-pausa .escena canvas { opacity: 0.55; transition: opacity 0.2s ease; }
+.recolocar {
+  position: absolute; top: 8px; right: 8px; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--tinta); border-radius: var(--radio-sm); background: var(--fondo); color: var(--tinta); font-weight: 600;
+}
+.recolocar svg { width: 18px; height: 18px; }
+.mando-botones .boton.fantasma { justify-self: start; font-size: 15px; padding: 0 6px; text-align: left; }
+.mando-botones .boton.fantasma:last-child { justify-self: end; text-align: right; }
+
+/* Rest and countdown screens reuse the sheet. */
+.anillo { width: 132px; height: 132px; justify-self: center; }
+.anillo circle { fill: none; stroke-width: 10; }
+.anillo .fondo-anillo { stroke: var(--superficie-2); }
+.anillo .avance { stroke: var(--tinta); stroke-linecap: butt; transition: stroke-dashoffset 0.25s linear; }
+.anillo text { fill: var(--tinta); font-family: var(--letra-titulo); font-size: 36px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.centro { text-align: center; display: grid; gap: 4px; }
+.centro h3 { margin: 0; font-size: 22px; }
+.centro p { margin: 0; color: var(--tinta-suave); }
+
+.escala { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; }
+/* On a phone, 0 to 10 in two rows: eleven in one line left buttons 28 px wide for a finger. */
+@media (max-width: 560px) { .escala { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; } }
+.escala button {
+  height: 48px; border-radius: 0; border: 1px solid var(--linea-control); background: var(--superficie); font-weight: 600; padding: 0;
+}
+.escala button[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); border-color: var(--tinta); }
+.escala-pie { display: flex; justify-content: space-between; font-size: 14px; color: var(--tinta-suave); }
+/* Rating an exercise: no 3D (its still beside «Hecho»), one question at a time, and the button to go on always in
+   sight at the foot of the sheet, dashed and saying what is missing until the discomfort is marked. */
+.jugador.valorando .escena { display: none; }
+.valorar { display: flex; flex-direction: column; gap: 18px; min-height: 100%; }
+.valorar-cabeza { display: flex; align-items: center; gap: 14px; }
+.valorar-cabeza .tarjeta-poster { flex: none; width: 96px; }
+.valorar-cabeza h3 { margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.valorar-cabeza p { margin: 2px 0 0; color: var(--tinta-suave); font-size: 16px; }
+.valorar-paso { display: grid; gap: 12px; }
+.pregunta { margin: 0; font-family: var(--letra-titulo); font-size: 21px; font-weight: 600; line-height: 1.25; color: var(--tinta); }
+.pregunta:focus { outline: none; }
+.dos-botones { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.dos-botones .boton { min-height: 64px; font-size: 18px; padding: 0 12px; }
+.series-lado { display: grid; }
+.series-lado h5 { margin: 10px 0 2px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-suave); }
+.serie-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; border-bottom: 1px solid var(--linea); font-size: 18px; }
+.serie-fila .paso { height: 50px; }
+.serie-fila .paso button { width: 54px; height: 48px; font-size: 24px; }
+.serie-fila .paso button:disabled { opacity: 0.3; }
+.serie-fila output { min-width: 42px; font-size: 20px; }
+.valorar-hecho { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--linea); color: var(--tinta-suave); font-size: 16px; }
+.enlace { flex: none; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--tinta); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.valorar .escala button { height: 52px; font-size: 19px; }
+.valorar-pie {
+  position: sticky; bottom: calc(-18px - env(safe-area-inset-bottom)); display: grid; gap: 2px;
+  margin: auto -20px calc(-18px - env(safe-area-inset-bottom)); padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
+  background: var(--fondo); border-top: 1px solid var(--linea);
+}
+.valorar-pie .boton { width: 100%; min-height: 56px; font-size: 18px; }
+.valorar-pie .boton[aria-disabled="true"] { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); border: 0; outline: 1px dashed var(--linea); outline-offset: -5px; cursor: default; }
+.valorar-pie .boton.fantasma { min-height: 44px; font-size: 16px; }
+.series-hechas { display: flex; flex-wrap: wrap; gap: 10px; }
+.series-hechas .ajuste { justify-items: start; }
+
+.explicacion { display: grid; gap: 10px; }
+.explicacion p { margin: 0; color: var(--tinta); }
+.explicacion strong { font-weight: 650; }
+.como { display: grid; gap: 8px; margin: 0; padding-left: 20px; }
+.como li { padding-left: 4px; }
+
+/* Summary for the professional */
+.dia { display: grid; gap: 8px; }
+.dia h3 { margin: 0; font-size: 15px; color: var(--tinta-suave); font-weight: 600; }
+.hecho { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: baseline; }
+.hecho .nombre { font-weight: 650; }
+.hecho .detalle { grid-column: 1 / -1; color: var(--tinta-suave); font-size: 14px; }
+.barra-series { display: flex; gap: 4px; }
+.barra-series span { height: 8px; flex: 1; border-radius: 0; background: var(--tinta); }
+.barra-series span.corta { background: repeating-linear-gradient(45deg, var(--tinta) 0 2px, transparent 2px 5px); box-shadow: inset 0 0 0 1px var(--tinta); }
+
+.oculto { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* On phones the preview lives inside the active card. */
+.mini-figura { display: none; position: relative; height: 300px; border-radius: 0; border: 1px solid var(--linea); background: var(--figura-fondo); overflow: hidden; }
+.mini-figura canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.ejercicio.activo.incluido .mini-figura { display: block; }
+.vista-figura canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.biblio-fila.activo .mini-figura { display: block; }
+@media (min-width: 980px) { .mini-figura { display: none !important; } }
+
+.linea-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.centro .cuenta-atras { font-size: 56px; line-height: 1; }
+
+/* Discomfort level: the professional's setting, the morning-after question and the marks in the summary. */
+.ayuda { margin: 0; font-size: 13px; color: var(--tinta-suave); }
+.ajuste > .paso { justify-self: start; }
+.dia h3 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
+.series-hechas .chip { align-self: flex-end; margin-bottom: 7px; }
+.manana p { margin: 0; color: var(--tinta-suave); }
+.manana .boton.fantasma { justify-self: start; padding: 0 4px; min-height: 40px; }
+.manana .apuntado { color: var(--tinta); }
+.aviso-molestia { margin: 0; min-height: 1.4em; font-size: 15px; color: var(--tinta); font-weight: 600; }
+.dia.marcado { border-color: var(--tinta); box-shadow: inset 4px 0 0 var(--tinta); }
+.marca-dia { color: var(--tinta); font-weight: 700; white-space: nowrap; }
+.manana-linea {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px;
+  border-top: 1px solid var(--linea); color: var(--tinta-suave); font-size: 14px;
+}
+.saludo p.molestia-alta { color: var(--tinta); font-weight: 700; }
+
+/* ---------- The routine being built, the library and the templates ---------- */
+.rutina-armada, .biblioteca, .plantillas { display: grid; gap: 12px; }
+.rutina-armada h2, .biblioteca h2, .plantillas h2 { margin: 0; font-size: 15px; color: var(--tinta-suave); font-weight: 600; }
+/* «Vaciar» at the right of «La rutina», and «Rutina vaciada. Deshacer» while it can be undone. */
+.rutina-armada { position: relative; }
+.rutina-armada .vaciar { position: absolute; top: -12px; right: -6px; min-height: 40px; font-size: 14px; }
+.vaciada { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 8px 12px; border-left: 2px solid var(--tinta); color: var(--tinta); }
+.hoja-otra { width: 100%; min-height: 52px; }
+.rutina-vacia {
+  margin: 0; padding: 18px 16px; border: 1px dashed var(--tinta-suave); border-radius: var(--radio); color: var(--tinta-suave);
+}
+.ordenar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ordenar .boton { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.ordenar .boton.fantasma { margin-left: auto; padding: 0 6px; }
+
+.biblioteca {
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 16px;
+  container-type: inline-size;
+}
+.biblio-cabeza { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.biblio-cuenta { font-size: 13px; color: var(--tinta-suave); }
+.biblio-filtros { display: grid; gap: 10px; }
+.buscar { appearance: none; }
+.campo-musculo { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
+.campo-musculo > span { font-size: 13px; color: var(--tinta-suave); }
+.campo-musculo select { min-height: 44px; padding: 8px 12px; }
+.biblio-cuerpo { display: grid; gap: 12px; }
+/* Positioned, so the rows' hidden words («Añadir», for screen readers) stay inside it: otherwise they belonged to the
+   column and, with the list scrolling inside it, stretched the builder's page to 6,000 px of nothing at 1366. */
+.biblio-lista { position: relative; list-style: none; margin: 0; padding: 0; display: grid; align-content: start; }
+.biblio-grupo {
+  display: flex; justify-content: space-between; gap: 12px; padding: 14px 0 6px; border-top: 1px solid var(--linea);
+  font-size: 12px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-suave);
+}
+.biblio-grupo:first-child { border-top: 0; padding-top: 4px; }
+.biblio-grupo + .biblio-fila { border-top: 0; }
+.biblio-meta { display: block; font-size: 13px; color: var(--tinta-suave); line-height: 1.4; }
+.biblio-meta .vivo { color: var(--vivo-texto); }
+.biblio-fila {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 0;
+  border-top: 1px solid var(--linea);
+}
+.biblio-fila:first-child { border-top: 0; }
+.biblio-ver { border: 0; background: transparent; text-align: left; padding: 2px 0; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.biblio-ver .titulo { flex: 1; min-width: 0; }
+/* The still of the exercise (tools/posters/): the figure at the middle of «mantén», on the figure's own ground. */
+.biblio-poster {
+  flex: none; width: 96px; aspect-ratio: 4 / 3; border-radius: 0; border: 1px solid var(--linea); background: var(--figura-fondo); overflow: hidden;
+  transition: box-shadow 0.15s ease;
+}
+.biblio-poster img { display: block; width: 100%; height: 100%; }
+.biblio-poster.vacio img { visibility: hidden; }
+.biblio-fila.activo .biblio-poster { border-color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); }
+/* «.biblio-fila .boton» comes later and sets the padding: these name the button too, so they win. */
+.biblio-fila .boton.biblio-anadir { gap: 6px; padding-left: 12px; }
+.biblio-anadir svg { width: 16px; height: 16px; }
+/* On a phone the row keeps its width for the name: «Añadir» and «En la rutina» say it with the sign alone, and the
+   words stay for screen readers. */
+@container (max-width: 420px) {
+  .biblio-poster { width: 72px; }
+  .biblio-fila .rotulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .biblio-fila .boton.biblio-anadir { width: 44px; min-height: 44px; padding: 0; border-radius: var(--radio-sm); }
+  .biblio-fila .biblio-anadir svg { width: 22px; height: 22px; stroke-width: 2.8; }
+  .biblio-dentro { width: 44px; height: 44px; justify-content: center; border-radius: var(--radio-sm); border: 1px solid var(--tinta); background: transparent; }
+  .biblio-dentro svg { width: 20px; height: 20px; }
+}
+.biblio-ver h3 { margin: 0 0 2px; font-size: 16px; }
+.biblio-fila.activo .biblio-ver h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.biblio-fila .boton { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.biblio-dentro { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--acento); font-weight: 650; white-space: nowrap; }
+.biblio-dentro svg { width: 16px; height: 16px; }
+.biblio-fila .mini-figura { grid-column: 1 / -1; margin-top: 8px; }
+.biblio-vacia { color: var(--tinta-suave); padding: 8px 0; }
+
+.plantillas-cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; }
+.plantillas-cabeza .boton.fantasma { padding: 0 4px; min-height: 36px; font-size: 14px; }
+.plantillas-cabeza .boton[hidden] { display: none; }
+.plantilla-nueva { display: flex; flex-wrap: wrap; gap: 8px; }
+.plantilla-nueva[hidden] { display: none; }
+.plantilla-nueva input { flex: 1 1 240px; width: auto; }
+.lista-plantillas { display: flex; flex-wrap: wrap; gap: 8px; }
+.plantilla {
+  display: inline-flex; align-items: stretch; border: 1px solid var(--linea-control); border-radius: var(--radio-sm); background: var(--superficie);
+  overflow: hidden; max-width: 100%;
+}
+.plantilla .usar {
+  border: 0; background: transparent; padding: 6px 6px 6px 14px; font-size: 14px; display: inline-flex; align-items: center;
+  gap: 8px; min-height: 40px; min-width: 0; text-align: left;
+}
+.plantilla .cuantos { background: transparent; color: var(--tinta-suave); border-left: 1px solid var(--linea); border-radius: 0; padding: 1px 8px; font-family: var(--letra-cifras); font-size: 12px; font-weight: 500; }
+.plantilla .borrar { border: 0; background: transparent; color: var(--tinta-suave); padding: 0 12px 0 6px; display: grid; place-items: center; min-width: 40px; }
+.plantilla .borrar svg { width: 14px; height: 14px; }
+.plantilla .borrar.confirmar { background: var(--tinta); color: var(--fondo); font-size: 13px; font-weight: 600; padding: 0 14px; }
+
+/* The explanation inside a builder card, folded. */
+.detalle { border-top: 1px solid var(--linea); padding-top: 12px; }
+.detalle summary { cursor: pointer; color: var(--tinta); font-weight: 600; font-size: 14px; min-height: 32px; display: flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.detalle[open] summary { margin-bottom: 10px; }
+.detalle .explicacion { font-size: 15px; }
+.detalle .fuente { margin: 10px 0 0; font-size: 13px; color: var(--tinta-suave); }
+
+/* ---------- The body map of the library ----------
+   Gaudí's body from the front and from the back (mapa.js). The muscles are a quiet layer that tells front from back;
+   the ones with exercises are a touch warmer and can be touched; the one chosen lights as on the figure. The points
+   are the areas, in the routine's green. */
+:root {
+  --mapa-cuerpo: #d6d9d6;
+  --mapa-musculo: #c5cac7;
+  --mapa-musculo-con: color-mix(in srgb, var(--vivo) 18%, #c5cac7);
+}
+/* On a dark card the body needs more light than the theme's second surface and an edge of its own, and the muscles
+   with exercises a warmth that still shows. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mapa-cuerpo: color-mix(in srgb, var(--tinta) 16%, var(--superficie));
+    --mapa-borde: color-mix(in srgb, var(--tinta) 34%, var(--superficie));
+    --mapa-musculo: color-mix(in srgb, var(--tinta) 23%, var(--superficie));
+    --mapa-musculo-con: color-mix(in srgb, var(--vivo) 30%, var(--mapa-musculo));
+  }
+}
+:root[data-theme="dark"] {
+  --mapa-cuerpo: color-mix(in srgb, var(--tinta) 16%, var(--superficie));
+  --mapa-borde: color-mix(in srgb, var(--tinta) 34%, var(--superficie));
+  --mapa-musculo: color-mix(in srgb, var(--tinta) 23%, var(--superficie));
+  --mapa-musculo-con: color-mix(in srgb, var(--vivo) 30%, var(--mapa-musculo));
+}
+/* As wide as the two figures: the line under them wraps there instead of widening the map. */
+.mapa { display: grid; gap: 6px; justify-items: center; width: min-content; margin-inline: auto; }
+.mapa-vistas { display: flex; justify-content: center; gap: 4px; }
+.mapa-vista { margin: 0; display: grid; justify-items: center; gap: 2px; }
+.mapa-vista figcaption { font-size: 12px; color: var(--tinta-suave); }
+.mapa-lamina { position: relative; height: var(--mapa-alto, 236px); aspect-ratio: 223 / 480; }
+.mapa-lamina svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.mapa-silueta { fill: var(--mapa-cuerpo); stroke: var(--mapa-borde, var(--linea)); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.mapa-musculo { fill: var(--mapa-musculo); transition: fill 0.15s ease; }
+.mapa-musculo.con { fill: var(--mapa-musculo-con); cursor: pointer; }
+@media (hover: hover) { .mapa-musculo.con:hover { fill: color-mix(in srgb, var(--vivo) 45%, var(--mapa-musculo)); } }
+.mapa-musculo.encendido, .mapa-musculo.encendido:hover { fill: var(--vivo); }
+.mapa-halos { pointer-events: none; }
+.mapa-halo { fill: var(--tinta); opacity: 0; transition: opacity 0.2s ease; }
+.mapa-halo.encendido { opacity: 0.3; }
+.mapa-punto {
+  position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; padding: 0; border: 0; border-radius: 999px;
+  background: transparent; display: grid; place-items: center;
+}
+.mapa-punto::before {
+  content: ''; width: 13px; height: 13px; border-radius: 999px; background: var(--superficie);
+  box-shadow: 0 0 0 1.5px var(--tinta); transition: transform 0.15s ease, background 0.15s ease;
+}
+@media (hover: hover) { .mapa-punto:hover::before { background: var(--acento-suave); transform: scale(1.15); } }
+.mapa-punto[aria-pressed="true"]::before { background: var(--tinta); transform: scale(1.15); }
+.mapa-punto:focus-visible { outline: 2px solid var(--acento); outline-offset: 0; }
+/* The name of the area next to the point, on hover or with the keyboard. */
+.mapa-punto::after {
+  content: attr(data-nombre); position: absolute; bottom: calc(100% - 2px); left: 50%; transform: translateX(-50%);
+  padding: 2px 8px; border-radius: 0; background: var(--tinta); color: var(--fondo); font-size: 12px; font-weight: 600;
+  white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.12s ease; z-index: 1;
+}
+@media (hover: hover) { .mapa-punto:hover::after { opacity: 1; } }
+.mapa-punto:focus-visible::after { opacity: 1; }
+.mapa-pie { margin: 0; min-height: 34px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: var(--tinta-suave); text-align: center; }
+.mapa-quitar {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 10px 0 14px; border: 0; border-radius: var(--radio-sm);
+  background: var(--tinta); color: var(--fondo); font-size: 14px; font-weight: 600;
+}
+.mapa-quitar.musculo { background: var(--vivo-suave); color: var(--vivo-texto); box-shadow: inset 0 0 0 1px var(--vivo); }
+.mapa-quitar svg { width: 14px; height: 14px; }
+
+/* A wide library: the search on top, the map at the left and the list beside it. The map stays in sight while the
+   list scrolls. */
+@container (min-width: 600px) {
+  .biblio-filtros { grid-template-columns: minmax(0, 1fr) minmax(200px, 0.6fr); align-items: center; }
+  .biblio-cuerpo { grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: start; }
+  .hueco-mapa { position: sticky; top: 16px; --mapa-alto: 262px; }
+}
+
+/* The still of each exercise in the routine of the person (tools/posters/), of their figure and their side: the left
+   side, in mirror, so the figure works the same arm or leg they will. */
+.tarjeta-cabeza { display: flex; align-items: center; gap: 14px; }
+.tarjeta-cabeza > div { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.tarjeta-poster {
+  flex: none; width: 112px; aspect-ratio: 4 / 3; border-radius: var(--radio-sm); background: var(--figura-fondo); overflow: hidden;
+}
+.tarjeta-poster img { display: block; width: 100%; height: 100%; }
+.tarjeta-poster img.espejo { transform: scaleX(-1); }
+.tarjeta-poster.vacio img { visibility: hidden; }
+
+/* ---------- The plaster studio: the professional's signatures ----------
+   Only on the builder: the labels of a drawing, its registration marks, the figures in mono, the goniometer and the
+   path of the movement. */
+.rutina-armada > h2, .biblioteca h2, .plantillas h2, .general > h2, .vista > h2, .lo-hecho > h2, .primer-uso > h2 {
+  font-family: var(--letra-cifras); font-size: 12.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--tinta-suave); padding-bottom: 9px;
+  background: repeating-linear-gradient(90deg, var(--grafito-fino) 0 1px, transparent 1px 8px) left bottom / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, var(--grafito-fino) 0 1px, transparent 1px 40px) left bottom / 100% 9px no-repeat;
+}
+.ejercicio, .biblioteca, .general, .armar .tarjeta, .rutina-vacia, .primer-uso {
+  background:
+    linear-gradient(var(--tinta), var(--tinta)) left 6px top 6px / 10px 1px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) left 6px top 6px / 1px 10px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right 6px bottom 6px / 10px 1px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right 6px bottom 6px / 1px 10px no-repeat,
+    var(--superficie);
+}
+.armar .chip, .armar .num, .armar .tempo text, .biblio-cuenta { font-family: var(--letra-cifras); font-variant-numeric: tabular-nums; }
+.armar .chip { font-size: 12px; letter-spacing: 0.02em; }
+
+/* Gaudí's casts head the two sides: getting up from the chair for the professional, the bridge at the top of its hold
+   for the person. Under them, the studio's light while they load. */
+.cabecera-yeso { background-repeat: no-repeat; background-size: cover; border-bottom: 1px solid var(--linea); }
+.cabecera-constructor {
+  height: 250px; margin: -28px -20px 22px;
+  background-image: url('imagenes/yeso-silla.webp'), var(--figura-fondo); background-position: 74% 4%, center;
+}
+@media (min-width: 980px) { .cabecera-constructor { margin: -28px 0 22px -20px; } }
+.cabecera-rutina {
+  height: 200px; margin: -32px -20px 22px;
+  background-image: url('imagenes/yeso-puente.webp'), var(--figura-fondo); background-position: 30% 62%, center;
+}
+
+/* The name, written: lower case, with the degree sign. */
+.marca-jepyso { margin: 0 0 14px; font-family: var(--letra-titulo); font-size: 22px; font-weight: 500; letter-spacing: -0.035em; line-height: 1; color: var(--tinta); }
+.marca-jepyso span { font-weight: 300; }
+
+/* The goniometer (goniometro.js), under the preview. */
+.gonio { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 14px; margin-top: 2px; padding-top: 12px; border-top: 1px solid var(--linea); }
+.gonio[hidden] { display: none; }
+.gonio svg { width: 124px; height: auto; overflow: visible; }
+.gonio-escala line { stroke: var(--tinta); stroke-width: 1; }
+.gonio-escala line.larga { stroke-width: 1.4; }
+.gonio-escala text { fill: var(--tinta-suave); font-family: var(--letra-cifras); font-size: 8.5px; }
+.gonio-arco { fill: none; stroke: var(--linea); stroke-width: 1; }
+.gonio-barrido { fill: var(--grafito-fino); opacity: 0.35; }
+.gonio-brazo { stroke: var(--tinta); stroke-width: 2.2; stroke-linecap: square; }
+.gonio-fijo { stroke: var(--tinta-suave); stroke-width: 2.2; }
+.gonio-eje { fill: var(--fondo); stroke: var(--tinta); stroke-width: 1.6; }
+.gonio-lectura { display: grid; gap: 2px; }
+.gonio-grados { font-family: var(--letra-cifras); font-size: 34px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+.gonio-que { font-family: var(--letra-cifras); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tinta-suave); }
+.gonio-rango { font-family: var(--letra-cifras); font-size: 13px; color: var(--tinta-suave); }
+
+/* The path of the movement (recorrido.js), over the builder's figure, in graphite. */
+.recorrido { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.recorrido-huesos line { stroke: var(--tinta); stroke-opacity: 0.3; stroke-width: 1; }
+.recorrido-puntos circle { fill: var(--tinta); fill-opacity: 0.7; }
+.recorrido-estela polyline { fill: none; stroke: var(--tinta); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.recorrido-vivo { fill: var(--fondo); stroke: var(--tinta); stroke-width: 1.6; }
+.recorrido-nombre { fill: var(--tinta); font-family: var(--letra-cifras); font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ---------- The person: bigger, with more contrast, and without the professional's marks ---------- */
+.rutina, .jugador { --tinta-suave: #41484c; --linea: #a9b0b1; font-size: 18px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .rutina, :root:not([data-theme="light"]) .jugador { --tinta-suave: #c4cacd; --linea: #4a5155; }
+}
+:root[data-theme="dark"] .rutina, :root[data-theme="dark"] .jugador { --tinta-suave: #c4cacd; --linea: #4a5155; }
+.rutina .saludo p { font-size: 18px; }
+.rutina .tarjeta h3 { font-size: 21px; font-weight: 600; }
+.rutina .chip, .jugador .chip { font-size: 15px; padding: 3px 9px; color: var(--tinta); }
+.jugador .chip { background: var(--fondo); }
+.rutina .tempo text, .jugador .tempo text { font-size: 14px; }
+.rutina .boton { min-height: 52px; font-size: 18px; }
+.sin-conexion { font-size: 16px; }
+.jugador-arriba h2 { font-size: 21px; }
+.jugador-arriba .sub { font-size: 16px; }
+.girar-pista { font-size: 15px; color: var(--tinta); white-space: nowrap; }
+.centro p { font-size: 18px; }
+.mando-botones .boton.fantasma { font-size: 17px; }
+.jugador .escala-pie, .rutina .escala-pie { font-size: 15px; }
+
+/* ---------- The professional's people ---------- */
+.cabecera-fila { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 14px; }
+.cabecera-fila .marca-jepyso { margin: 0; }
+.ir-personas {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; white-space: nowrap;
+  color: var(--tinta); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
+}
+.ir-personas .num { font-family: var(--letra-cifras); font-size: 13px; color: var(--tinta-suave); text-decoration: none; }
+.recientes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.recientes > span { font-size: 13px; color: var(--tinta-suave); margin-right: 4px; }
+.recientes a { color: var(--tinta); font-size: 14px; text-underline-offset: 3px; }
+.en-ficha { margin: 0; color: var(--tinta-suave); }
+.en-ficha a { color: var(--tinta); font-weight: 600; text-underline-offset: 3px; }
+.saludo .en-ficha { margin-top: 10px; }
+
+.personas .armar-cuerpo { padding-bottom: 48px; }
+.lista-personas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.persona-fila {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 12px; padding: 14px 16px;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); color: var(--tinta); text-decoration: none;
+}
+.persona-fila .nombre { font-family: var(--letra-titulo); font-size: 18px; font-weight: 500; }
+.persona-fila .meta { grid-column: 1; color: var(--tinta-suave); font-size: 14px; }
+.persona-fila .marcas { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+/* On a phone the marks go under the name, so the line of what it has keeps its width. */
+@media (max-width: 560px) {
+  .persona-fila .marcas { grid-column: 1; grid-row: auto; flex-direction: row; flex-wrap: wrap; align-items: center; justify-self: start; margin-top: 4px; }
+}
+/* A routine sent with nothing back yet, in the first two weeks: a quiet card at the top of the file, with the message
+   ready. The tab of Personas carries how many there are. */
+.sin-noticias { border-left: 3px solid var(--tinta); }
+/* Inside a Moodle course (moodle.js): whether what was done reached the course, and the teacher's preview. */
+.moodle-estado { margin: 0; min-height: 1.4em; color: var(--tinta-suave); font-size: 15px; }
+.moodle-estado[data-estado="pendiente"] { color: var(--tinta); font-weight: 600; }
+.moodle-aviso { margin: 8px 0 0; padding-left: 10px; border-left: 3px solid var(--tinta); color: var(--tinta); font-weight: 600; }
+.mandar-hecho > a.boton { justify-self: start; }
+.sin-noticias p { margin: 0; }
+.sin-noticias .botones .boton { flex: 0 1 auto; }
+.pestana-cuenta {
+  position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--tinta); color: var(--fondo); font: 700 11px/18px var(--letra-cifras); text-align: center;
+}
+.lista-personas .vacio, .lo-hecho .vacio { margin: 0; padding: 18px 16px; border: 1px dashed var(--linea); border-radius: var(--radio); color: var(--tinta-suave); }
+.copia .botones .boton { flex: 0 1 auto; }
+.aviso-copia { margin: 0; color: var(--tinta); }
+.aviso-copia:empty { display: none; }
+
+.persona .armar-cabecera .botones { margin-top: 14px; }
+.persona textarea {
+  width: 100%; border: 1px solid var(--linea-control); background: var(--superficie); border-radius: var(--radio-sm); padding: 12px 14px;
+  min-height: 72px; resize: vertical;
+}
+.persona textarea:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent; }
+.lo-hecho { display: grid; gap: 12px; }
+.lo-hecho > h2, .evolucion > h2 { margin: 0; }
+.rutinas-mandadas { list-style: none; margin: 0; padding: 0; display: grid; }
+.rutinas-mandadas li { display: grid; gap: 4px; padding: 10px 0; border-top: 1px solid var(--linea); }
+.rutinas-mandadas li:first-child { border-top: 0; }
+.botones-fila { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.botones-fila .boton.fantasma { min-height: 36px; padding: 0 2px; font-size: 14px; }
+.borrar-ficha { display: flex; justify-content: flex-start; }
+/* The file of a person: on a phone, one column (notes, weeks, what was done, what was sent); wide, the file on the left
+   and what was done on the right, as the builder keeps the preview beside it. «New routine» keeps its own width. */
+.persona-ficha { display: contents; }
+.persona .notas { order: 1; }
+.persona .evolucion { order: 2; }
+.persona .lo-hecho { order: 3; }
+.persona .mandadas { order: 4; }
+.persona .borrar-ficha { order: 5; }
+@media (min-width: 700px) {
+  .persona .armar-cabecera .botones .boton { flex: 0 0 auto; }
+}
+@media (min-width: 980px) {
+  .persona .armar-cuerpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; column-gap: 20px; }
+  .persona-ficha { display: grid; gap: 16px; align-content: start; }
+  .persona .lo-hecho { order: 0; }
+}
+
+/* The week-by-week table: one graphite bar per value, the level as a tick, the number always written. */
+.semanas { width: 100%; border-collapse: collapse; font-size: 14px; }
+.semanas th, .semanas td { padding: 8px 6px; text-align: left; border-top: 1px solid var(--linea); vertical-align: middle; }
+.semanas thead th { border-top: 0; color: var(--tinta-suave); font-weight: 500; font-size: 13px; }
+.semanas tbody th { font-weight: 500; white-space: nowrap; }
+.semanas td.num { font-family: var(--letra-cifras); }
+.valor-molestia { display: grid; grid-template-columns: minmax(48px, 1fr) 2ch; align-items: center; gap: 8px; }
+.valor-molestia .num { font-family: var(--letra-cifras); text-align: right; }
+.valor-molestia.pasa .num { font-weight: 700; }
+.barra-molestia { width: 100%; height: 12px; display: block; overflow: visible; }
+.barra-molestia .pista { fill: var(--linea); }
+.barra-molestia .valor { fill: var(--tinta); }
+.valor-molestia:not(.pasa) .barra-molestia .valor { fill: var(--tinta-suave); }
+.barra-molestia .tope { stroke: var(--tinta); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.sin-dato { color: var(--tinta-suave); }
+/* On a phone each week is a block: the week on top, then sessions and the two values, each with its label. */
+@media (max-width: 560px) {
+  .semanas thead { display: none; }
+  .semanas, .semanas tbody { display: block; }
+  .semanas tr {
+    display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 4px 16px; padding: 10px 0;
+    border-top: 1px solid var(--linea);
+  }
+  .semanas tr:first-child { border-top: 0; }
+  .semanas th, .semanas td { display: block; padding: 0; border: 0; }
+  .semanas tbody th { grid-column: 1 / -1; white-space: normal; }
+  .semanas td::before { content: attr(data-etiqueta); display: block; font-family: var(--letra); font-size: 12px; color: var(--tinta-suave); }
+}
+
+/* ---------- The professional's app ----------
+   A bar on top with the title (and the way back inside a file), the steps of the builder under it, and the tabs: at the
+   foot of a phone, as a rail at the side of a tablet. Hairlines and square marks, as the rest of the studio. */
+body.pro { --pestanas: calc(60px + env(safe-area-inset-bottom)); padding-bottom: var(--pestanas); }
+.pestanas {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-bottom: env(safe-area-inset-bottom); background: var(--fondo); border-top: 1px solid var(--linea);
+}
+.pestanas[hidden] { display: none; }
+.pestanas-marca { display: none; }
+.pestanas a {
+  position: relative; display: grid; justify-items: center; align-content: center; gap: 3px; min-height: 60px; padding: 6px 4px;
+  color: var(--tinta-suave); font-size: 12.5px; font-weight: 600; text-decoration: none;
+}
+.pestanas a svg { width: 24px; height: 24px; }
+.pestanas a[aria-current="page"] { color: var(--tinta); }
+.pestanas a[aria-current="page"]::before { content: ''; position: absolute; top: -1px; left: 28%; right: 28%; height: 2px; background: var(--tinta); }
+.pestanas a:focus-visible { outline: 2px solid var(--tinta); outline-offset: -4px; }
+
+.barra-app {
+  position: sticky; top: 0; z-index: 12; display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 6px 12px 6px 16px;
+  background: var(--fondo); border-bottom: 1px solid var(--linea);
+}
+.barra-app h1 { flex: 1; min-width: 0; margin: 0; font-size: 20px; font-weight: 500; letter-spacing: -0.015em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barra-volver { display: grid; place-items: center; width: 44px; height: 44px; margin-left: -10px; color: var(--tinta); }
+.barra-volver svg { width: 24px; height: 24px; }
+.barra-boton { min-height: 40px; padding: 0 14px; gap: 6px; font-size: 15px; text-decoration: none; }
+.barra-boton svg { width: 18px; height: 18px; }
+
+/* The steps of the builder, sticky under the bar: a number in a square, a check once done. */
+.etapas-app {
+  position: sticky; top: 56px; z-index: 11; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+  padding: 8px 12px; background: var(--fondo); border-bottom: 1px solid var(--linea);
+}
+.etapa-ir {
+  display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 40px; padding: 0 2px; border: 0; background: transparent;
+  color: var(--tinta-suave); font-size: 12.5px; font-weight: 600; white-space: nowrap;
+}
+/* On the narrowest phones each step keeps its number and its word, stacked. */
+@media (max-width: 400px) {
+  .etapa-ir { flex-direction: column; gap: 2px; font-size: 11.5px; min-height: 48px; }
+}
+.etapa-ir b {
+  display: grid; place-items: center; flex: none; width: 22px; height: 22px; border: 1px solid currentColor;
+  font-family: var(--letra-cifras); font-size: 12px; font-weight: 500;
+}
+.etapa-ir b svg { width: 14px; height: 14px; }
+.etapa-ir.hecha { color: var(--tinta); }
+.etapa-ir.hecha b { background: var(--tinta); border-color: var(--tinta); color: var(--fondo); }
+.etapa-ir:disabled { opacity: 0.45; cursor: default; }
+.etapa { display: grid; gap: 16px; scroll-margin-top: 116px; }
+.etapa-titulo { display: flex; align-items: center; gap: 10px; margin: 6px 0 -4px; font-family: var(--letra-titulo); font-size: 19px; font-weight: 500; }
+.etapa-titulo b {
+  display: grid; place-items: center; width: 28px; height: 28px; background: var(--tinta); color: var(--fondo);
+  font-family: var(--letra-cifras); font-size: 14px; font-weight: 500;
+}
+/* Gaudí's cast getting up from the chair waits in the empty routine, instead of heading the page as a web would. */
+.rutina-vacia::before {
+  content: ''; display: block; height: 128px; margin: -18px -16px 14px;
+  background: url('imagenes/yeso-silla.webp') 74% 6% / cover no-repeat, var(--figura-fondo); border-bottom: 1px solid var(--linea);
+}
+/* Wider, the strip would show a loose head at its edge: taller, and framed from the head to the waist (Gaudí). */
+@media (min-width: 700px) {
+  .rutina-vacia::before { height: 220px; background-position: 75% 14%, center; }
+}
+.rutina-vacia p { margin: 0; }
+
+/* ---------- The professional's first use (Jujol, 15 November 2026) ----------
+   Until the first link, the builder opens with «Así funciona»: the way from building the routine to its summary as a
+   path drawn in the studio's graphite, three square marks joined by a dashed line, one under the other on a phone and in
+   one line from 700 px. Under it, the routine to try. */
+.primer-uso { display: grid; gap: 16px; padding: 16px 18px 18px; border: 1px solid var(--linea); border-radius: var(--radio); }
+.primer-uso > h2 { margin: 0; }
+.camino { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.camino li { position: relative; padding-left: 24px; color: var(--tinta-suave); line-height: 1.4; }
+.camino strong { color: var(--tinta); font-weight: 600; }
+.camino li::before { content: ''; position: absolute; left: 0; top: 0.42em; width: 8px; height: 8px; background: var(--tinta); }
+.camino li:not(:last-child)::after {
+  content: ''; position: absolute; left: 3.5px; top: calc(0.42em + 12px); bottom: calc(-14px - 0.42em + 4px); border-left: 1px dashed var(--tinta-suave);
+}
+@media (min-width: 700px) {
+  .camino { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 24px; }
+  .camino li { padding: 20px 0 0; }
+  .camino li::before { top: 0; }
+  .camino li:not(:last-child)::after { left: 14px; right: -18px; top: 3.5px; bottom: auto; border-left: 0; border-top: 1px dashed var(--tinta-suave); }
+}
+.probar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.probar span { font-size: 13px; color: var(--tinta-suave); }
+.probar-ejemplo:not([href]) { opacity: 0.6; pointer-events: none; }
+
+/* The preview before anything is chosen: the figure standing, and what will move there. */
+.vista.vacia .tarjeta p { margin: 0; color: var(--tinta-suave); line-height: 1.45; }
+
+/* «Figura 1» and «Figura 2», each with its body standing on its own plaster ground, in light and in dark. */
+.segmentos.figuras button { display: inline-flex; align-items: center; gap: 10px; padding: 4px 14px 4px 4px; }
+.segmentos.figuras img { display: block; width: 36px; height: 48px; background: var(--figura-fondo); }
+
+/* The bar of «Create link» stays at hand, over the tabs, for the thumb. */
+@media (max-width: 979px) {
+  body.pro .barra-crear { bottom: var(--pestanas); }
+  body.pro .armar-cuerpo { padding-bottom: 104px; }
+}
+
+/* Lists you tap: one row each, the name and one line. Less to read; the rest, folded. */
+.ficha-cabeza { padding: 14px 16px 0; display: grid; gap: 12px; }
+.ficha-cabeza p { margin: 0; color: var(--tinta-suave); }
+.ficha-cabeza .botones { margin: 0; }
+.ficha-cabeza .boton svg { width: 18px; height: 18px; }
+.persona-fila { min-height: 64px; padding: 10px 14px; }
+.persona-fila .meta { font-size: 13.5px; }
+.ayuda-plegada { color: var(--tinta-suave); font-size: 14px; }
+.ayuda-plegada summary { min-height: 40px; display: flex; align-items: center; cursor: pointer; color: var(--tinta); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.ayuda-plegada p { margin: 4px 0 0; }
+.lista-plantillas-app { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lista-plantillas-app .vacio { margin: 0; padding: 18px 16px; border: 1px dashed var(--linea); border-radius: var(--radio); color: var(--tinta-suave); }
+.plantilla-fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); }
+.plantilla-usar { display: grid; gap: 2px; min-height: 64px; padding: 10px 14px; border: 0; background: transparent; text-align: left; color: var(--tinta); }
+.plantilla-usar .nombre { font-family: var(--letra-titulo); font-size: 18px; font-weight: 500; }
+.plantilla-usar .meta { color: var(--tinta-suave); font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plantilla-quitar { display: grid; place-items: center; min-width: 56px; border: 0; border-left: 1px solid var(--linea); background: transparent; color: var(--tinta-suave); font-size: 13px; font-weight: 600; }
+.plantilla-quitar svg { width: 16px; height: 16px; }
+.plantilla-quitar.confirmar { background: var(--tinta); color: var(--fondo); padding: 0 12px; }
+
+/* A tablet, or wider: the tabs become a rail at the left, with the name on top. */
+@media (min-width: 700px) {
+  body.pro { --pestanas: 0px; --riel: 92px; padding-bottom: 0; padding-left: var(--riel); }
+  .pestanas {
+    top: 0; right: auto; width: var(--riel); grid-template-columns: 1fr; grid-auto-rows: min-content; align-content: start; gap: 4px;
+    padding: 14px 0 0; border-top: 0; border-right: 1px solid var(--linea);
+  }
+  .pestanas-marca { display: block; margin: 0 0 14px; text-align: center; font-size: 19px; }
+  .pestanas a { min-height: 72px; font-size: 12px; }
+  .pestanas a[aria-current="page"]::before { top: 18%; bottom: 18%; left: -1px; right: auto; width: 2px; height: auto; }
+  body.pro .barra-crear { left: var(--riel); }
+  .barra-app { padding-left: 20px; }
+}
+@media (min-width: 980px) {
+  body.pro .barra-crear { left: auto; }
+  .etapas-app { top: 56px; }
+}
+/* The left column scrolls with the page, so its bar and its steps can stay on top. */
+@media (min-width: 980px) {
+  body.pro .armar-izq { overflow: visible; }
+}
+
+/* How many people with a file the free version keeps: five squares, filled in graphite. */
+.capacidad { display: flex; align-items: center; gap: 10px; margin: 0; color: var(--tinta-suave); font-size: 14px; }
+.capacidad b { color: var(--tinta); font-weight: 700; font-variant-numeric: tabular-nums; }
+.capacidad-marcas { display: inline-flex; gap: 3px; flex: none; }
+.capacidad-marcas i { width: 10px; height: 10px; border: 1px solid var(--tinta-suave); }
+.capacidad-marcas i.usada { background: var(--tinta); border-color: var(--tinta); }
+.capacidad.llena { color: var(--tinta); }
+.aviso-lleno { margin: 0; padding: 8px 12px; border-left: 2px solid var(--tinta); color: var(--tinta); font-size: 15px; }
+.aviso-lleno:empty { display: none; }
+
+/* A new version of the app, ready: a notice at the top, out of the way of the tabs and the create button. */
+.nueva-version {
+  position: fixed; z-index: 40; top: calc(8px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: calc(100% - 32px); display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 10px 10px 16px; background: var(--acento); color: var(--acento-tinta); border-radius: var(--radio);
+}
+.nueva-version .boton { min-height: 40px; padding: 0 16px; background: var(--acento-tinta); color: var(--acento); }
+.nueva-version-cerrar { display: grid; place-items: center; width: 40px; height: 40px; margin: -4px -4px -4px -6px; border: 0; background: transparent; color: var(--acento-tinta); }
+.nueva-version-cerrar svg { width: 18px; height: 18px; }
+/* In the professional's app it comes under the bar of the title, never over it nor over the way back; on a tablet,
+   centred on the content beside the rail. */
+body.pro .nueva-version { top: calc(64px + env(safe-area-inset-top)); }
+@media (min-width: 700px) {
+  body.pro .nueva-version { left: calc(50% + var(--riel) / 2); }
+}
+
+/* ---------- The builder below 1280 px (Jujol, 13 and 14 November 2026) ----------
+   The routine is the list, «Añadir ejercicio» is a big button under it, and the library opens as a sheet over the
+   whole screen, the search on top. Choosing one closes it and leaves that exercise open in front. From 1280 px the
+   library is a column of its own (below). */
+.anadir-ejercicio, .biblio-cerrar, .biblio-ver-mapa, .anadir-en-barra { display: none; }
+@media (max-width: 1279px) {
+  .armar-biblio { display: contents; }
+  .anadir-ejercicio {
+    display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 64px; padding: 0 16px;
+    border: 1.5px dashed var(--tinta); border-radius: var(--radio); background: transparent; color: var(--tinta);
+    font-size: 17px; font-weight: 650; cursor: pointer;
+  }
+  .anadir-ejercicio svg { width: 22px; height: 22px; }
+  .anadir-ejercicio:active { background: var(--superficie); }
+  .anadir-ejercicio:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+  /* Closed, the library is not in the page. Open, it is the sheet. */
+  .armar:not(.biblio-abierta) .biblioteca { display: none; }
+  .armar.biblio-abierta .biblioteca {
+    position: fixed; inset: 0; z-index: 30; display: block; overflow-y: auto; overscroll-behavior: contain;
+    margin: 0; padding: 0 16px calc(24px + env(safe-area-inset-bottom)); border: 0; border-radius: 0; background: var(--fondo);
+    animation: hoja-sube 0.22s ease;
+  }
+  body.con-hoja { overflow: hidden; }
+  /* The head of the sheet stays on top while the list scrolls under it: back, title, count, and the search. */
+  .armar.biblio-abierta .biblio-arriba {
+    position: sticky; top: 0; z-index: 2; display: grid; gap: 10px; margin: 0 -16px; padding: calc(8px + env(safe-area-inset-top)) 16px 12px;
+    background: var(--fondo); border-bottom: 1px solid var(--linea);
+  }
+  .armar.biblio-abierta .biblio-cabeza { align-items: center; justify-content: flex-start; min-height: 48px; }
+  /* The title of the sheet, as the title of any screen of the app: not the drawing label of a section. */
+  .armar.biblio-abierta .biblio-cabeza h2 {
+    flex: 1; min-width: 0; padding: 0; background: none; font-family: inherit; font-size: 20px; font-weight: 500;
+    letter-spacing: -0.015em; text-transform: none; color: var(--tinta); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .armar.biblio-abierta .biblio-cabeza h2:focus { outline: none; }
+  .biblio-cerrar {
+    display: grid; place-items: center; width: 44px; height: 44px; margin-left: -10px; border: 0; background: transparent;
+    color: var(--tinta); cursor: pointer;
+  }
+  .biblio-cerrar svg { width: 24px; height: 24px; }
+  .biblio-cerrar:focus-visible { outline: 2px solid var(--acento); outline-offset: -2px; }
+  .armar.biblio-abierta .buscar { font-size: 17px; }
+  /* The search, the muscle and the map on one or two lines; the map folded until asked for, so the list comes first. */
+  .armar.biblio-abierta .biblio-filtros { grid-template-columns: minmax(0, 1fr) auto; }
+  .armar.biblio-abierta .biblio-filtros .buscar { grid-column: 1 / -1; }
+  .biblio-ver-mapa { display: inline-flex; gap: 6px; min-height: 44px; padding: 0 14px; font-size: 14px; }
+  .biblio-ver-mapa svg { width: 18px; height: 18px; }
+  .biblio-ver-mapa[aria-expanded="true"] { background: var(--tinta); color: var(--fondo); }
+  .armar.biblio-abierta .biblio-cuerpo:not(.con-mapa) .hueco-mapa { display: none; }
+  .armar.biblio-abierta .biblio-cuerpo { padding-top: 8px; }
+  .armar.biblio-abierta .hueco-mapa { position: static; padding: 4px 0 12px; border-bottom: 1px solid var(--linea); }
+
+  /* With the routine still empty, the bar at the thumb says what to do first: add an exercise, not a link out of reach. */
+  .armar.sin-ejercicios .barra-crear [data-accion="crear"] { display: none; }
+  .armar.sin-ejercicios .anadir-en-barra { display: inline-flex; gap: 6px; flex: none; white-space: nowrap; }
+  .armar.sin-ejercicios .barra-crear .resumen-corto { flex: 1 1 auto; min-width: 0; }
+  .anadir-en-barra svg { width: 18px; height: 18px; }
+  .armar.sin-ejercicios .hueco-rutina + .anadir-ejercicio { display: none; }
+
+  /* The card just added: a moment of light, so the eye finds it. */
+  .ejercicio.recien { animation: recien 1.4s ease; }
+}
+/* ---------- The builder from 1280 px: three columns (Jujol, 14 November 2026) ----------
+   The library at the left with its own scroll (search and map fixed on top, the list under them), the routine in the
+   middle with «Crear enlace» stuck at its foot, the movement at the right. Nothing of the routine goes under the
+   library, so adding never means going down and up again. */
+@media (min-width: 1280px) {
+  .armar { grid-template-columns: minmax(330px, 0.85fr) minmax(0, 1.15fr) minmax(340px, 0.8fr); }
+  .armar-biblio {
+    grid-column: 1; grid-row: 1; position: sticky; top: 0; height: 100vh; min-height: 0; display: flex; flex-direction: column;
+    border-right: 1px solid var(--linea); background: var(--fondo);
+  }
+  .armar-izq { grid-column: 2; grid-row: 1; min-width: 0; }
+  .vista { grid-column: 3; grid-row: 1; }
+  .armar-biblio .biblioteca {
+    flex: 1; min-height: 0; display: flex; flex-direction: column; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+  }
+  .armar-biblio .biblio-arriba { flex: none; display: grid; gap: 10px; padding: 14px 16px 12px; border-bottom: 1px solid var(--linea); }
+  .armar-biblio .biblio-cabeza { align-items: center; min-height: 32px; }
+  .armar-biblio .biblio-filtros { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 8px; }
+  /* The select says «Todos los músculos»: its word goes to the screen reader only, and the search keeps its width. */
+  .armar-biblio .campo-musculo { grid-template-columns: minmax(0, 1fr); }
+  .armar-biblio .campo-musculo > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .armar-biblio .biblio-cuerpo { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0; }
+  .armar-biblio .hueco-mapa { flex: none; position: static; --mapa-alto: 176px; padding: 8px 16px 0; border-bottom: 1px solid var(--linea); }
+  .armar-biblio .mapa-pie { min-height: 30px; }
+  .armar-biblio .biblio-lista { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 16px 24px; }
+  .anadir-ejercicio, .anadir-en-barra { display: none !important; }
+}
+/* From 980 px, «Crear enlace» and how long the routine takes stay stuck at the foot of the routine. */
+@media (min-width: 980px) {
+  .barra-crear {
+    position: sticky; bottom: 0; z-index: 3; padding: 12px 20px; margin-top: 8px;
+    background: color-mix(in srgb, var(--fondo) 90%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--linea);
+  }
+}
+.ejercicio.recien { animation: recien 1.4s ease; }
+@keyframes hoja-sube { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes recien { 0%, 35% { box-shadow: 0 0 0 3px var(--tinta); } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .armar.biblio-abierta .biblioteca, .ejercicio.recien { animation: none; }
+}
+
+/* Safari on the iPhone (iOS 26) lays the page under its translucent address bar, and a bar stuck at the top leaves a
+   strip above it where the page shows scrolling past. The bar covers that strip with its own colour. A fixed height,
+   enough for the status bar and the address bar: in vh, a full-page capture turns it into the height of the whole page,
+   and that layer never finished painting in CI. */
+.barra-app::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(160px + env(safe-area-inset-top)); background: var(--fondo); pointer-events: none;
+}
+.armar.biblio-abierta .biblio-arriba::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(160px + env(safe-area-inset-top)); background: var(--fondo); pointer-events: none;
+}
+
+.explicacion .parar { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--linea); color: var(--tinta-suave); font-size: 14px; }
+
+/* The person's extras when rating an exercise: it cost them, they could not do it, a note. Optional, so quieter. */
+.valorar-extra { display: grid; gap: 10px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--linea); }
+.pregunta-suave { margin: 0; font-size: 17px; font-weight: 600; }
+.pregunta-suave span { font-weight: 400; color: var(--tinta-suave); font-size: 15px; margin-left: 6px; }
+.chips-elegir { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-elegir {
+  min-height: 48px; padding: 0 16px; border: 1px solid var(--linea-control); border-radius: var(--radio-sm);
+  background: var(--superficie); color: var(--tinta); font-weight: 600; font-size: 16px;
+}
+.chip-elegir[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); border-color: var(--tinta); }
+.nota-persona { display: grid; gap: 6px; }
+.nota-persona span { font-size: 15px; color: var(--tinta-suave); }
+.nota-persona textarea {
+  font: inherit; font-size: 17px; padding: 10px 12px; border: 1px solid var(--linea-control); border-radius: var(--radio-sm);
+  background: var(--superficie); color: var(--tinta); resize: vertical;
+}
+.nota-dia { margin: 0; grid-column: 1 / -1; font-size: 15px; color: var(--tinta); }
+
+/* The person's last days, each with «Corregir», and the reminder in the calendar. */
+.dias-hechos { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.dias-hechos li { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid var(--linea); }
+.dias-hechos li span::first-letter { text-transform: uppercase; }
+.mandar-hecho > .enlace, .dias-hechos .enlace { justify-self: start; min-height: 44px; }
+.recordatorio-fila { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.recordatorio .hora { display: grid; gap: 4px; }
+.recordatorio .hora span { font-size: 15px; color: var(--tinta-suave); }
+.recordatorio input[type="time"] {
+  font: inherit; font-size: 18px; min-height: 48px; padding: 0 10px; border: 1px solid var(--linea-control); border-radius: var(--radio-sm);
+  background: var(--superficie); color: var(--tinta);
+}
+.recordatorio-hecho { margin: 0; color: var(--tinta-suave); }
+.recordatorio-hecho:empty { display: none; }
+.hoja-corregir { display: grid; gap: 14px; overflow-y: auto; }
+.corregir-ejercicio { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--linea); }
+.corregir-ejercicio h3 { margin: 0; font-size: 18px; }
+
+/* ---------- A group on a big screen ----------
+   The person's player, wide: the figure big at the left and, at the right, what to do now, read from four or five
+   metres (a TV in a care home, a projector or a classroom board in PE). Every size goes with the height of the
+   screen, so the same page fills a 1280×600 board and a 1920×1080 TV alike and a cable plugged mid-routine only
+   rescales it. Nothing here asks for :has(), container queries, color-mix() or dvh, which some classroom boards'
+   browsers lack (shared/pizarras-en-el-aula.md); no hover either. */
+.a-grupo { display: none; }
+@media (min-width: 900px) and (orientation: landscape) {
+  .a-grupo { display: grid; gap: 6px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--linea); }
+  .a-grupo .boton { width: 100%; min-height: 48px; font-size: 16px; }
+  .a-grupo .boton svg { width: 22px; height: 22px; }
+  .a-grupo p { margin: 0; color: var(--tinta-suave); font-size: 14px; line-height: 1.4; text-align: center; }
+  /* A short screen (a TV at double density is 540 px high) keeps the whole panel in sight, without the still. */
+  @media (max-height: 580px) { .rutina-intro .pie-poster { display: none; } }
+}
+
+.jugador.grupo { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+.jugador.grupo .jugador-arriba {
+  grid-column: 1 / -1; gap: 2vh; padding: 1.6vh 2.4vh; background: var(--fondo); border-bottom: 1px solid var(--linea);
+}
+.jugador.grupo .jugador-arriba h2 { font-size: 5.4vh; line-height: 1.1; letter-spacing: -0.015em; }
+.jugador.grupo .jugador-arriba .sub { font-size: 3vh; }
+.jugador.grupo .redondo { width: 8vh; height: 8vh; min-width: 48px; min-height: 48px; }
+.jugador.grupo .redondo svg { width: 3.6vh; height: 3.6vh; min-width: 22px; min-height: 22px; }
+.jugador.grupo .escena { grid-column: 1; grid-row: 2; }
+.jugador.grupo .lado-etiqueta { top: 2vh; font-size: 3.2vh; padding: 0.6vh 1.6vh; }
+.jugador.grupo .girar-pista { font-size: 2.2vh; }
+.jugador.grupo .recolocar { top: 2vh; right: 2vh; min-height: max(6vh, 44px); font-size: 2.4vh; }
+.jugador.grupo .mando {
+  grid-column: 2; grid-row: 2; align-content: space-between; gap: 2.6vh; padding: 3.4vh 3.4vh 3.6vh;
+  border-top: 0; border-left: 1px solid var(--linea); overflow: hidden;
+}
+/* The set: the phase word fills the panel, the count under it, the rhythm line, and the three buttons. */
+.jugador.grupo .cuenta { gap: 1vh; align-content: center; }
+.jugador.grupo .fase { font-size: 13vh; line-height: 1; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.jugador.grupo .fase.mantener { text-decoration-thickness: 0.8vh; text-underline-offset: 2vh; }
+.jugador.grupo .cuenta .grande { font-size: 15vh; line-height: 1; letter-spacing: -0.02em; }
+.jugador.grupo .cuenta .grande small { font-size: 6vh; }
+.jugador.grupo .tempo text { font-size: 13px; }
+.jugador.grupo .mando-serie { gap: 2vh; }
+.jugador.grupo .mando-serie .boton.secundario { min-height: max(10vh, 56px); font-size: 2.8vh; padding: 0 1.6vh; }
+.jugador.grupo .mando-serie .principal { width: 15vh; height: 15vh; min-width: 72px; min-height: 72px; gap: 0.6vh; }
+.jugador.grupo .mando-serie .principal svg { width: 5vh; height: 5vh; min-width: 26px; min-height: 26px; }
+.jugador.grupo .mando-serie .principal span { font-size: 2.6vh; }
+/* Getting ready, the countdown, the rest and the end: the same panel, read big. */
+.jugador.grupo .prepara { gap: 2vh; }
+.jugador.grupo .prepara-titulo { font-size: 6.4vh; line-height: 1.05; }
+.jugador.grupo .prepara-partida { font-size: 3.6vh; line-height: 1.35; }
+.jugador.grupo .prepara-material { font-size: 3.4vh; gap: 1vh 1.4vh; }
+.jugador.grupo .prepara-material span { font-size: 2.2vh; }
+.jugador.grupo .prepara-material .muestra-banda { width: 5vh; height: 2.2vh; }
+.jugador.grupo .prepara-botones { position: static; margin: 0; padding: 0; gap: 1.6vh; background: transparent; }
+.jugador.grupo .prepara-botones .boton { min-height: max(11vh, 56px); font-size: 3.8vh; }
+.jugador.grupo .prepara-botones .boton.secundario { min-height: max(8vh, 48px); font-size: 3vh; }
+.jugador.grupo .prepara-botones .boton svg { width: 4vh; height: 4vh; }
+.jugador.grupo .centro { gap: 1.4vh; align-content: center; }
+.jugador.grupo .centro h3 { font-size: 7vh; line-height: 1.05; }
+.jugador.grupo .centro p { font-size: 3.6vh; line-height: 1.3; }
+.jugador.grupo .centro .cuenta-atras { font-size: 32vh; line-height: 0.9; }
+.jugador.grupo .anillo { width: 44vh; height: 44vh; max-width: 100%; }
+.jugador.grupo .mando-botones { gap: 2vh; }
+.jugador.grupo .mando-botones .boton.fantasma { min-height: max(9vh, 48px); font-size: 3.4vh; padding: 0 1vh; }
+.jugador.grupo .grupo-fin { display: grid; gap: 2vh; align-content: center; text-align: center; }
+.jugador.grupo .grupo-fin h3 { margin: 0; font-size: 9vh; line-height: 1.05; letter-spacing: -0.02em; }
+.jugador.grupo .grupo-fin p { margin: 0; color: var(--tinta-suave); font-size: 4vh; }
+/* A window made narrow (or a screen turned upright): the figure on top and the panel under it, sized by the width. */
+@media (max-aspect-ratio: 1/1) {
+  .jugador.grupo { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  .jugador.grupo .mando { grid-column: 1; grid-row: 3; border-left: 0; border-top: 1px solid var(--linea); overflow-y: auto; }
+  .jugador.grupo .fase { font-size: 11vw; }
+  .jugador.grupo .cuenta .grande { font-size: 12vw; }
+  .jugador.grupo .centro .cuenta-atras { font-size: 24vw; }
+  .jugador.grupo .anillo { width: 36vw; height: 36vw; }
+}
+
+/* ---------- Oksigenia's signature ----------
+   The line «Jepyso · un producto de Oksigenia» with its link, and «Accesibilidad», which opens Oksigenia's panel. Quiet
+   graphite under a hairline: it closes the page and never competes with what the page is for. */
+.firma { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; border-top: 1px solid var(--linea); }
+.firma[hidden] { display: none; }
+.firma-linea { margin: 0; color: var(--tinta-suave); font-size: 14px; }
+.firma-linea a { color: var(--tinta); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.firma-acceso {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 2px; border: 0; background: transparent;
+  color: var(--tinta); font-size: 15px; font-weight: 600;
+}
+.firma-acceso svg { flex: none; width: 22px; height: 22px; }
+.firma-acceso span { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.firma-acceso:focus-visible, .firma-linea a:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+/* The person: the last thing in the list, after the reminder, with the room of a card around it. */
+.firma-persona { flex-direction: row-reverse; margin-top: 12px; padding: 10px 4px 0; }
+.saludo + .firma-persona { margin: 24px 20px 0; }
+@media (max-width: 599px) { .firma-persona { flex-direction: column; align-items: flex-start; gap: 0; } }
+/* The professional, on a phone: the end of the page, clear of the tabs (and of «Crear enlace» in the builder). The
+   room is the signature's own padding: the page's height is the screen's, so a margin under the last thing would
+   not scroll. The builder's own room for its bar comes to the signature. */
+@media (max-width: 699px) {
+  .firma-pro { padding: 10px 16px calc(18px + var(--pestanas, 0px)); }
+  body.en-armar .firma-pro { padding-bottom: calc(18px + var(--pestanas, 0px) + 76px + env(safe-area-inset-bottom)); }
+  body.pro.en-armar .armar-cuerpo { padding-bottom: 24px; }
+}
+/* A tablet, or wider: the foot of the rail, stacked under the tabs as one more of them, and the line under it. */
+@media (min-width: 700px) {
+  .firma-pro {
+    position: fixed; left: 0; bottom: 0; z-index: 16; width: var(--riel);
+    flex-direction: column; flex-wrap: nowrap; gap: 8px; padding: 8px 6px calc(14px + env(safe-area-inset-bottom));
+    background: var(--fondo); border-right: 1px solid var(--linea);
+  }
+  .firma-pro .firma-acceso { flex-direction: column; gap: 3px; width: 100%; min-height: 64px; justify-content: center; color: var(--tinta-suave); font-size: 12px; }
+  .firma-pro .firma-acceso span { text-decoration: none; }
+  @media (hover: hover) { .firma-pro .firma-acceso:hover { color: var(--tinta); } }
+  .firma-pro .firma-linea { font-size: 11px; line-height: 1.35; text-align: center; }
+}
+
+/* Where a licence is pasted, in Personas: folded, it is one line. */
+.licencia-pegar summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.licencia-fila { display: flex; flex-wrap: wrap; gap: 8px; }
+.licencia-fila input {
+  flex: 1 1 220px; min-height: 48px; padding: 0 12px; font: inherit; font-family: var(--letra-cifras); font-size: 14px;
+  border: 1px solid var(--linea-control); border-radius: var(--radio-sm); background: var(--superficie); color: var(--tinta);
+}
+.aviso-licencia { margin: 0; color: var(--tinta); }
+.aviso-licencia:empty { display: none; }
+
+/* The free files' Google account (vales.js). A file without its ticket: its name behind a padlock, quieter than the
+   open ones; the section that opens them is marked with the live colour while some wait. Google's own button sits in
+   its space as Google draws it. */
+.candado { width: 16px; height: 16px; flex: none; }
+.persona-fila.cerrada { background: transparent; border-style: dashed; }
+.persona-fila.cerrada .nombre { display: inline-flex; align-items: center; gap: 8px; color: var(--tinta-suave); }
+.cuenta-fichas.pide { border-color: var(--vivo); }
+.cuenta-fichas h2 { display: flex; align-items: center; gap: 8px; }
+.cuenta-fichas .ayuda { font-size: 14px; }
+.hueco-google { min-height: 44px; }
+.cuenta-dentro { margin: 0; font-size: 14px; color: var(--tinta-suave); overflow-wrap: anywhere; }
+.cuenta-dentro strong { color: var(--tinta); font-weight: 600; }
+.aviso-vales { margin: 0; color: var(--vivo-texto); font-size: 14px; }
+.aviso-vales:empty { display: none; }
+
+/* Reference programmes (programas.js), under the professional's own templates. */
+.programas { display: grid; gap: 10px; margin-top: 24px; }
+.programas h2 { margin: 0; font-size: 15px; color: var(--tinta-suave); font-weight: 600; }

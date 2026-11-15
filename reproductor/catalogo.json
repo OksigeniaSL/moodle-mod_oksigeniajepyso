@@ -1,0 +1,975 @@
+{
+ "v": 1,
+ "ejercicios": {
+  "talon": {
+   "nombre": "Deslizamiento de talón",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Cama o esterilla",
+   "disponible": false
+  },
+  "pierna_recta": {
+   "nombre": "Elevación de pierna recta",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "cuadriceps": {
+   "nombre": "Apretar el muslo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Toalla enrollada",
+   "disponible": false
+  },
+  "arco_corto": {
+   "nombre": "Cuádriceps en arco corto",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Toalla enrollada o cojín firme",
+   "disponible": false
+  },
+  "puente": {
+   "nombre": "Puente de glúteo",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "gluteos": {
+   "nombre": "Apretar los glúteos",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "rodilla_pecho": {
+   "nombre": "Rodilla al pecho",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "basculacion": {
+   "nombre": "Basculación pélvica",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "abdominal": {
+   "nombre": "Activar el abdomen",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "rodillas_lado": {
+   "nombre": "Rodillas a un lado y a otro",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "bicho_muerto": {
+   "nombre": "Bicho muerto",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "cojin_rodillas": {
+   "nombre": "Cojín entre las rodillas",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Cojín o toalla grande",
+   "disponible": false
+  },
+  "tobillos": {
+   "nombre": "Bombeo de tobillos",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "isquios_toalla": {
+   "nombre": "Estiramiento de isquios tumbado",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Toalla",
+   "disponible": false
+  },
+  "extension_antebrazos": {
+   "nombre": "Extensión boca abajo sobre los antebrazos",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca abajo",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "extension_lumbar": {
+   "nombre": "Extensión boca abajo con los brazos",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca abajo",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "plancha_rodillas": {
+   "nombre": "Plancha de rodillas",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca abajo",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "plancha": {
+   "nombre": "Plancha",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca abajo",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "almeja": {
+   "nombre": "Almeja",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De lado",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "abduccion_lado": {
+   "nombre": "Abducción de cadera de lado",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De lado",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "rotacion_lado": {
+   "nombre": "Rotación externa tumbado de lado",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De lado",
+   "material": "Peso pequeño y una toalla",
+   "disponible": false
+  },
+  "plancha_lateral_rodilla": {
+   "nombre": "Plancha lateral con la rodilla apoyada",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De lado",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "plancha_lateral": {
+   "nombre": "Plancha lateral",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De lado",
+   "material": "Esterilla",
+   "disponible": false
+  },
+  "bird_dog": {
+   "nombre": "Brazo y pierna contrarios a cuatro patas",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "A cuatro patas",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "gato_camello": {
+   "nombre": "Gato-camello",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "A cuatro patas",
+   "material": "Esterilla",
+   "disponible": true
+  },
+  "circulos_tobillo": {
+   "nombre": "Círculos de tobillo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado en el suelo",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "dorsal_banda": {
+   "nombre": "Flexión dorsal con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado en el suelo",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "plantar_banda": {
+   "nombre": "Flexión plantar con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado en el suelo",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "inversion_banda": {
+   "nombre": "Inversión de tobillo con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado en el suelo",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "eversion_banda": {
+   "nombre": "Eversión de tobillo con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado en el suelo",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "extension_rodilla": {
+   "nombre": "Extensión de rodilla sentado",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": true
+  },
+  "extension_rodilla_lastre": {
+   "nombre": "Extensión de rodilla sentado con tobillera",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla y una tobillera lastrada",
+   "disponible": false
+  },
+  "marcha_sentado": {
+   "nombre": "Marcha sentado",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "abduccion_sentado": {
+   "nombre": "Separar las rodillas sentado, con banda",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "talones_sentado": {
+   "nombre": "Elevación de talones sentado",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "isquios_sentado": {
+   "nombre": "Estiramiento de isquios sentado",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "curl_sentado": {
+   "nombre": "Curl de bíceps sentado",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla y dos pesos pequeños, como dos botellas de agua",
+   "disponible": false
+  },
+  "brazos_arriba": {
+   "nombre": "Brazos arriba sentado",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "brazos_silla": {
+   "nombre": "Brazos atrás a la silla",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme con respaldo",
+   "disponible": false
+  },
+  "estrujar_toalla": {
+   "nombre": "Estrujar una toalla",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla y una toalla pequeña",
+   "disponible": false
+  },
+  "silla": {
+   "nombre": "Levantarse de la silla",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": true
+  },
+  "silla_dos_manos": {
+   "nombre": "Levantarse de la silla con las manos",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "silla_una_mano": {
+   "nombre": "Levantarse de la silla con una mano",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla firme",
+   "disponible": false
+  },
+  "toalla_dedos": {
+   "nombre": "Arrugar una toalla con los dedos del pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Toalla pequeña",
+   "disponible": false
+  },
+  "retraccion": {
+   "nombre": "Meter el mentón",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "cuello_giro": {
+   "nombre": "Rotación de cuello",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "cuello_lado": {
+   "nombre": "Inclinación de cuello",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "iso_cuello": {
+   "nombre": "Isométricos de cuello",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "trapecio": {
+   "nombre": "Estiramiento del trapecio",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "escapulas": {
+   "nombre": "Juntar las escápulas",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Silla",
+   "disponible": false
+  },
+  "muneca": {
+   "nombre": "Flexión y extensión de muñeca",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Mesa",
+   "disponible": false
+  },
+  "prono_supinacion": {
+   "nombre": "Girar la palma arriba y abajo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Mesa",
+   "disponible": false
+  },
+  "estira_flexores": {
+   "nombre": "Estiramiento de la muñeca hacia atrás",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "estira_extensores": {
+   "nombre": "Estiramiento de la muñeca hacia delante",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "tendinoso": {
+   "nombre": "Deslizamiento de los tendones de los dedos",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Mesa",
+   "disponible": false
+  },
+  "abrir_cerrar": {
+   "nombre": "Abrir y cerrar la mano",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Mesa",
+   "disponible": false
+  },
+  "pelota": {
+   "nombre": "Apretar una pelota blanda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Pelota blanda o esponja",
+   "disponible": false
+  },
+  "deslizar_mesa": {
+   "nombre": "Deslizar el brazo por la mesa",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Sentado a la mesa",
+   "material": "Mesa y una toalla",
+   "disponible": false
+  },
+  "talones": {
+   "nombre": "Elevación de talones",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": true
+  },
+  "talones_sin_apoyo": {
+   "nombre": "Elevación de talones sin apoyo",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme, al alcance",
+   "disponible": false
+  },
+  "puntas": {
+   "nombre": "Elevación de puntas",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "puntas_sin_apoyo": {
+   "nombre": "Elevación de puntas sin apoyo",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme, al alcance",
+   "disponible": false
+  },
+  "curl_isquios": {
+   "nombre": "Curl de isquios de pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "curl_isquios_lastre": {
+   "nombre": "Curl de isquios de pie con tobillera",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme y una tobillera lastrada",
+   "disponible": false
+  },
+  "sentadilla": {
+   "nombre": "Media sentadilla",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": true
+  },
+  "sentadilla_sin_apoyo": {
+   "nombre": "Media sentadilla sin apoyo",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme, al alcance",
+   "disponible": false
+  },
+  "abduccion_pie": {
+   "nombre": "Abducción de cadera de pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "abduccion_pie_lastre": {
+   "nombre": "Abducción de cadera de pie con tobillera",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme y una tobillera lastrada",
+   "disponible": false
+  },
+  "equilibrio": {
+   "nombre": "Equilibrio a una pierna",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": true
+  },
+  "equilibrio_sin_apoyo": {
+   "nombre": "Equilibrio a una pierna sin apoyo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme, al alcance",
+   "disponible": false
+  },
+  "tandem_quieto": {
+   "nombre": "Tándem quieto con apoyo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "tandem_quieto_sin_apoyo": {
+   "nombre": "Tándem quieto sin apoyo",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme, al alcance",
+   "disponible": false
+  },
+  "cuadriceps_pie": {
+   "nombre": "Estiramiento de cuádriceps de pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "escalon": {
+   "nombre": "Subir un escalón",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Un escalón",
+   "disponible": false
+  },
+  "extension_espalda_pie": {
+   "nombre": "Extensión de espalda de pie",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "rotacion_tronco_pie": {
+   "nombre": "Rotación de tronco de pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "caminar": {
+   "nombre": "Caminar",
+   "unLado": false,
+   "unidad": "minutos",
+   "uno": "minuto",
+   "varios": "minutos",
+   "posicion": "De pie",
+   "material": "Calzado cómodo",
+   "disponible": false
+  },
+  "andar_atras": {
+   "nombre": "Andar hacia atrás",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "andar_lado": {
+   "nombre": "Andar de lado",
+   "unLado": true,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "andar_tandem": {
+   "nombre": "Andar en tándem",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "andar_tandem_atras": {
+   "nombre": "Andar en tándem hacia atrás",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "andar_talones": {
+   "nombre": "Andar de talones",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "andar_puntillas": {
+   "nombre": "Andar de puntillas",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Apoyo firme",
+   "disponible": false
+  },
+  "andar_ocho": {
+   "nombre": "Andar en ocho",
+   "unLado": false,
+   "unidad": "vueltas",
+   "uno": "vuelta",
+   "varios": "vueltas",
+   "posicion": "De pie",
+   "material": "Dos objetos en el suelo, como dos botellas o dos conos",
+   "disponible": false
+  },
+  "andar_obstaculos": {
+   "nombre": "Andar pasando obstáculos",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Obstáculos bajos, como libros o toallas enrolladas",
+   "disponible": false
+  },
+  "andar_globo": {
+   "nombre": "Andar dando toques a un globo",
+   "unLado": false,
+   "unidad": "pasos",
+   "uno": "paso",
+   "varios": "pasos",
+   "posicion": "De pie",
+   "material": "Un globo",
+   "disponible": false
+  },
+  "sentadilla_pared": {
+   "nombre": "Sentadilla en la pared",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, contra la pared",
+   "material": "Pared",
+   "disponible": false
+  },
+  "gemelo_pared": {
+   "nombre": "Estiramiento de gemelo en la pared",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, frente a la pared",
+   "material": "Pared",
+   "disponible": false
+  },
+  "flexion_pared": {
+   "nombre": "Flexión contra la pared",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, frente a la pared",
+   "material": "Pared",
+   "disponible": false
+  },
+  "iso_hombro": {
+   "nombre": "Isométricos de hombro contra la pared",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, junto a la pared",
+   "material": "Pared",
+   "disponible": false
+  },
+  "pendulo": {
+   "nombre": "Péndulo de hombro",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, inclinado",
+   "material": "Mesa o encimera",
+   "disponible": false
+  },
+  "cruzado": {
+   "nombre": "Estiramiento cruzado de hombro",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false
+  },
+  "baston": {
+   "nombre": "Rotación externa con bastón",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Bastón o palo ligero",
+   "disponible": false
+  },
+  "hombro": {
+   "nombre": "Rotación externa con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Banda elástica",
+   "disponible": true
+  },
+  "rotacion_interna": {
+   "nombre": "Rotación interna con banda",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "remo": {
+   "nombre": "Remo con banda de pie",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Banda elástica",
+   "disponible": false
+  },
+  "scaption": {
+   "nombre": "Elevación del brazo en diagonal",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Sin peso al principio; después, un peso pequeño, como una botella de agua",
+   "disponible": false
+  }
+ }
+}

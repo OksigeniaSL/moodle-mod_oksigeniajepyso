@@ -51,6 +51,11 @@ Las sesiones se guardan en el sitio (`oksigeniajepyso_session`), declaradas en l
 las borra. La copia de seguridad y la restauración las incluyen con los datos de usuario; el reinicio del curso puede
 borrarlas.
 
+## El reproductor
+
+`reproductor/` no se cambia aquí: se construye desde el repositorio de Jepyso con
+`tools/construir-moodle.sh <esta carpeta>`, que trae la muestra gratis de doce ejercicios y `catalogo.json`.
+
 ## Licencia
 
 GNU GPL v3 o posterior (`LICENSE`). Copyright 2026 Oksigenia SL. El reproductor de `reproductor/` es la app web de

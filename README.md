@@ -50,6 +50,11 @@ already open, and the sessions are saved as on the web.
 The sessions are kept in the site (`oksigeniajepyso_session`), declared in the Privacy API, exported and deleted with
 it. Backup and restore include them with user data; the course reset can delete them.
 
+## The player
+
+`reproductor/` is not edited here: it is built from the Jepyso repository with
+`tools/construir-moodle.sh <this folder>`, which brings the free sample of twelve exercises and `catalogo.json`.
+
 ## Licence
 
 GNU GPL v3 or later (`LICENSE`). Copyright 2026 Oksigenia SL. The player in `reproductor/` is the Jepyso web app
