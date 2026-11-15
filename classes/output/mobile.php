@@ -29,6 +29,17 @@ use mod_oksigeniajepyso\local\template;
  */
 class mobile {
     /**
+     * @var string The only script the page brings to the app, the same on every site and with nothing of the activity:
+     * when the person closes the in-app browser of the routine, the page asks for itself again, so the session just
+     * saved shows in the progress. Without it, the progress waited for a pull to refresh. Agreed with Aty
+     * (Apple's rule 2.5.2: the code that reaches the app is minimal and the same for everyone).
+     */
+    private const REFRESH_ON_RETURN = 'var self = this;' . "\n"
+        . 'this.CoreEventsProvider.once(this.CoreEventsProvider.IAB_EXIT, function() {' . "\n"
+        . '    self.refreshContent(false);' . "\n"
+        . '});';
+
+    /**
      * The page of the activity.
      *
      * @param array $args What the app sends: cmid and courseid among others.
@@ -106,7 +117,7 @@ class mobile {
                 'id' => 'main',
                 'html' => $OUTPUT->render_from_template('mod_oksigeniajepyso/mobile_view', template::inert($data)),
             ]],
-            'javascript' => '',
+            'javascript' => self::REFRESH_ON_RETURN,
             'otherdata' => ['intro' => $intro],
             'files' => [],
         ];

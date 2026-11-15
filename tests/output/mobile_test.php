@@ -75,7 +75,10 @@ final class mobile_test extends \advanced_testcase {
         $this->assertStringNotContainsString('{{', $html);
         $this->assertStringNotContainsString('&#123;', $html);
         $this->assertStringNotContainsString('@if', $html);
-        $this->assertSame('', $result['javascript']);
+        // Only the fixed lines that ask for the page again when the in-app browser closes.
+        $this->assertStringContainsString('CoreEventsProvider.IAB_EXIT', $result['javascript']);
+        $this->assertStringContainsString('refreshContent(false)', $result['javascript']);
+        $this->assertStringNotContainsString('oksigeniajepyso', $result['javascript']);
         // The description goes as data, for the app to show; it never enters the template.
         $this->assertStringContainsString('{{ x }}', $result['otherdata']['intro']);
         $this->assertStringNotContainsString('{{ x }}', $html);

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2026-11-15)
+
+- In the Moodle app, the page of the activity asks for itself again when the routine's in-app browser closes, so
+  the session just saved shows in the progress without a pull to refresh. It is the only script the page brings to
+  the app, fixed and the same on every site.
+
 ## 0.1.1 (2026-11-15)
 
 - The purpose of the activity is «other»: its icon keeps the graphite of Jepyso instead of the theme's colour for
