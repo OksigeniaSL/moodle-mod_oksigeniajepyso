@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6 (2026-11-16)
+
+- The exercises of the sample no longer sink into the mat or the floor: a leg, a hand or a knee went through it in
+  some clips (bird dog, cat-camel, clamshell, knee plank, knee to chest…). Made again with the fixed recipe.
+
 ## 0.1.5 (2026-11-16)
 
 - The player in English as well as Spanish, with its exercises and its recorded voice (Mira and Altair in English). It

@@ -5,7 +5,7 @@
   "almeja": {
    "glb": "modelos/b/almeja.glb",
    "ficha": "modelos/b/almeja.json",
-   "bytes": 41388,
+   "bytes": 41640,
    "lado": "derecho",
    "musculos": {
     "principales": [
@@ -19,7 +19,7 @@
   "bird_dog": {
    "glb": "modelos/b/bird_dog.glb",
    "ficha": "modelos/b/bird_dog.json",
-   "bytes": 46100,
+   "bytes": 53064,
    "lado": "derecho",
    "musculos": {
     "principales": [
@@ -32,7 +32,7 @@
   "equilibrio": {
    "glb": "modelos/b/equilibrio.glb",
    "ficha": "modelos/b/equilibrio.json",
-   "bytes": 68632,
+   "bytes": 69320,
    "lado": "derecho",
    "musculos": {
     "principales": [
@@ -57,7 +57,7 @@
   "gato_camello": {
    "glb": "modelos/b/gato_camello.glb",
    "ficha": "modelos/b/gato_camello.json",
-   "bytes": 44884,
+   "bytes": 45092,
    "lado": "ambos",
    "musculos": {
     "principales": [],
@@ -81,7 +81,7 @@
   "plancha_rodillas": {
    "glb": "modelos/b/plancha_rodillas.glb",
    "ficha": "modelos/b/plancha_rodillas.json",
-   "bytes": 43936,
+   "bytes": 43664,
    "lado": "ambos",
    "musculos": {
     "principales": [
@@ -111,7 +111,7 @@
   "rodilla_pecho": {
    "glb": "modelos/b/rodilla_pecho.glb",
    "ficha": "modelos/b/rodilla_pecho.json",
-   "bytes": 61740,
+   "bytes": 65892,
    "lado": "derecho",
    "musculos": {
     "principales": [
