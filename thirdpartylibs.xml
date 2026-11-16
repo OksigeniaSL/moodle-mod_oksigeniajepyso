@@ -4,7 +4,7 @@
         <location>reproductor</location>
         <name>Jepyso player</name>
         <description>The exercise player of Oksigenia Jepyso, a built copy of its web app (index.html, its JavaScript modules and the exercise catalogue), built with tools/construir-moodle.sh of its repository. It bundles three.js, under the MIT licence. Its content (the figures and stills of the free sample, the plaster headers, the icon, the body map and the recorded voice) is under CC BY-SA 4.0: see the entries below and reproductor/modelos/LICENSE.md.</description>
-        <version>2ac0a91</version>
+        <version>3865e74</version>
         <license>GPL</license>
         <licenseversion>3.0+</licenseversion>
         <repository>https://github.com/OksigeniaSL/jepyso</repository>
