@@ -1,0 +1,3 @@
+# The OAuth client id of Jepyso's Microsoft registration, in the player built from the app: public by design (the app
+# signs in from the browser with PKCE and no secret). Not a key.
+03caf93e149f53d1d2d8433bf93d1697d7f5cb29:reproductor/onedrive.js:generic-api-key:10
