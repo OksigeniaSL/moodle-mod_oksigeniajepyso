@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.11 (2026-11-16)
+
+- Guests can view the activity, as with a page: on a course open to guests they see the routine and try it as a
+  preview, and nothing is saved. Before, they found the activity "currently hidden". New sites get it; on a site that
+  already has the plugin, give `mod/oksigeniajepyso:view` to the guest role if you want it.
+
 ## 0.1.10 (2026-11-16)
 
 - `db/upgrade.php`, with no steps yet, as the Moodle plugins directory asks of every activity.

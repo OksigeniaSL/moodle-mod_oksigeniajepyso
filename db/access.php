@@ -35,10 +35,12 @@ $capabilities = [
         ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
+    // A guest sees the routine and tries it, as a preview: nothing is saved without mod/oksigeniajepyso:submit.
     'mod/oksigeniajepyso:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
+            'guest' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
