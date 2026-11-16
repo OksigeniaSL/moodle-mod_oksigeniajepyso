@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.9 (2026-11-16)
+
+- "Build the routine" on an activity that already has a routine opens the builder with that routine, to change it,
+  instead of an empty builder or the last routine built in that browser.
+
 ## 0.1.8 (2026-11-16)
 
 - Beta: the activity has run on development and test sites with the automated tests green on Moodle 4.5, 5.3 and the
