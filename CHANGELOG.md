@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.8 (2026-11-16)
+
+- Beta: the activity has run on development and test sites with the automated tests green on Moodle 4.5, 5.3 and the
+  development branch. First version for the Moodle plugins directory.
+
 ## 0.1.7 (2026-11-16)
 
 - The routine builder, before any exercise is chosen, shows the figure standing at rest. With the free sample it
