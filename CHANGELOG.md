@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.10 (2026-11-16)
+
+- `db/upgrade.php`, with no steps yet, as the Moodle plugins directory asks of every activity.
+
 ## 0.1.9 (2026-11-16)
 
 - "Build the routine" on an activity that already has a routine opens the builder with that routine, to change it,
