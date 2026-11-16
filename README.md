@@ -35,7 +35,7 @@ coaches or sports scientists.
 
 ### 1. The teacher builds the routine
 
-In the settings of the activity, «Build the routine» opens the builder of Jepyso: the exercises with their sets,
+In the settings of the activity, “Build the routine” opens the builder of Jepyso: the exercises with their sets,
 repetitions, tempo and side, the rest between sets, the days a week and the acceptable discomfort. When it is ready,
 the routine comes back to the form by itself. A routine made at [app.jepyso.com](https://app.jepyso.com) can be pasted
 too, as a link or as its code.
@@ -47,7 +47,7 @@ too, as a link or as its code.
 
 ### 2. Each student follows the figure
 
-The page of the activity shows the routine and how far each student has got. «Start» opens the player: the figure goes
+The page of the activity shows the routine and how far each student has got. “Start” opens the player: the figure goes
 up, holds and comes down at the pace of each exercise, on the right side, set after set, with a sound and a vibration
 on every repetition. At the end the student notes down what was done, the discomfort, whether an exercise was hard or
 could not be done, and a note.
@@ -83,7 +83,7 @@ acceptable level, and every set done against the one asked for.
 ## In the Moodle app
 
 The activity works in the official Moodle app with nothing to set up. Its page shows the routine and the progress;
-«Start» opens the player inside the app, with the student already signed in, and the progress updates as soon as the
+“Start” opens the player inside the app, with the student already signed in, and the progress updates as soon as the
 player closes. Tried on Android with the official app 5.2.
 
 <p align="center">
@@ -97,7 +97,7 @@ player closes. Tried on Android with the official app 5.2.
 - **Discomfort with a method:** each routine has an acceptable level (5 out of 10 unless the teacher sets another),
   after the pain-monitoring model (Thomeé, 1997). The days above it are flagged, and the morning after a session the
   student is asked how the area felt on getting up.
-- **Completion and grade:** the rule «Do the expected sessions»; with a grade in points, the grade follows the share
+- **Completion and grade:** the rule “Do the expected sessions”; with a grade in points, the grade follows the share
   of sessions done, and the teacher can always grade by hand.
 - **Groups**, separate and visible; **backup and restore** with the sessions; **course reset**; **Privacy API**.
 - **Teachers try the routine** as a student would, and nothing they do is saved.
@@ -127,12 +127,12 @@ each user's language in Moodle, and the student can switch it inside the player.
 1. Copy the plugin into `mod/oksigeniajepyso` (in Moodle 5.1 and later, `public/mod/oksigeniajepyso`), or install the
    ZIP from *Site administration > Plugins > Install plugins*.
 2. Visit *Site administration > Notifications*, or run `admin/cli/upgrade.php`.
-3. Add an «Exercise routine (Jepyso)» to a course.
+3. Add an “Exercise routine (Jepyso)” to a course.
 
 ## Privacy
 
 The sessions are kept in the site (`oksigeniajepyso_session`): the day and time, what was done in each set, the
-discomfort, the marks «found it hard» and «could not do it», and the notes. They are declared in the Privacy API,
+discomfort, the marks “found it hard” and “could not do it”, and the notes. They are declared in the Privacy API,
 exported and deleted with it; backup and restore include them with user data, and the course reset can delete them.
 
 ## For developers
