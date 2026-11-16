@@ -45,7 +45,7 @@ $string['buildroutinehint'] = 'The Jepyso builder opens. When you finish, the ro
 $string['completiondetail:sessions'] = 'Do {$a} sessions';
 $string['completiondetail:sessionsone'] = 'Do 1 session';
 $string['completionsessions'] = 'Do the expected sessions';
-$string['completionsessions_help'] = 'The activity is complete when the student has done as many sessions as «Expected sessions» says.';
+$string['completionsessions_help'] = 'The activity is complete when the student has done as many sessions as “Expected sessions” says.';
 $string['completionsessionsgroup'] = 'Sessions';
 $string['completionsessionsneeded'] = 'Set the expected sessions first.';
 $string['corrected'] = 'Day corrected afterwards';
@@ -123,7 +123,7 @@ $string['repsdone'] = 'Done in each set: {$a}';
 $string['resetsessions'] = 'Delete all sessions';
 $string['rest'] = 'Rest between sets: {$a} s';
 $string['routine'] = 'Link or code of the routine';
-$string['routine_help'] = 'Paste the link of a Jepyso routine (the one with «#r=») or its code. «Build the routine» opens the builder: when you finish, the routine comes back to this field by itself.';
+$string['routine_help'] = 'Paste the link of a Jepyso routine (the one with “#r=”) or its code. “Build the routine” opens the builder: when you finish, the routine comes back to this field by itself.';
 $string['routineempty'] = 'Paste the link or the code of the routine.';
 $string['routinehdr'] = 'Routine';
 $string['routineinvalid'] = 'This link or code is not a Jepyso routine.';

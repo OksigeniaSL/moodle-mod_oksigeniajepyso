@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.7 (2026-11-16)
+
+- The routine builder, before any exercise is chosen, shows the figure standing at rest. With the free sample it
+  showed the bare body, headless and cut, from a default camera.
+- English texts quote with “ ” instead of « ».
+- `cli/demo.php --lang=en` makes a sample course in English, with its own accounts, beside the Spanish one; running it
+  again no longer sends the course welcome message again.
+
 ## 0.1.6 (2026-11-16)
 
 - The exercises of the sample no longer sink into the mat or the floor: a leg, a hand or a knee went through it in
