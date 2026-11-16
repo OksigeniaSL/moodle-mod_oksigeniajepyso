@@ -116,8 +116,9 @@ el docente ve cuáles.
 
 ## Idiomas
 
-Las páginas de la actividad están en español y en inglés. El reproductor habla español por ahora; llegarán más
-idiomas.
+Las páginas de la actividad están en español y en inglés, y el reproductor también, con sus ejercicios y su voz
+grabada: sigue el idioma de cada usuario en Moodle, y el estudiante puede cambiarlo dentro del reproductor. Llegarán
+más idiomas.
 
 ## Requisitos
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.5 (2026-11-16)
+
+- The player in English as well as Spanish, with its exercises and its recorded voice (Mira and Altair in English). It
+  follows each user's language in Moodle, and the student can switch it beside «Accessibility».
+- The activity's pages show the exercises' names, positions and materials in the user's language.
+- The mouse wheel over the figure scrolls the page; a trackpad pinch still zooms.
+
 ## 0.1.4 (2026-11-15)
 
 - The player guides the sets with a recorded voice: a woman's or a man's, as each student chooses, or none. It speaks

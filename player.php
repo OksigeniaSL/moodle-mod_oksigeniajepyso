@@ -43,4 +43,7 @@ if (!routine::parse($code)) {
     throw new moodle_exception('noroutine', 'mod_oksigeniajepyso', $back);
 }
 
-redirect($CFG->wwwroot . '/mod/oksigeniajepyso/reproductor/index.html?cm=' . $cm->id . '#r=' . $code);
+// The player speaks the language of this user in Moodle (it maps any Moodle language to Spanish or English), unless
+// the person chose another one inside the player.
+$lang = rawurlencode(current_language());
+redirect($CFG->wwwroot . '/mod/oksigeniajepyso/reproductor/index.html?cm=' . $cm->id . '&idioma=' . $lang . '#r=' . $code);

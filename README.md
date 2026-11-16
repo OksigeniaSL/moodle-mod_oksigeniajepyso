@@ -114,7 +114,8 @@ version does not include it yet. If a routine has exercises the site does not ha
 
 ## Languages
 
-The pages of the activity are in English and Spanish. The player speaks Spanish for now; other languages will follow.
+The pages of the activity are in English and Spanish. The player, its exercises and its recorded voice too: it follows
+each user's language in Moodle, and the student can switch it inside the player. Other languages will follow.
 
 ## Requirements
 

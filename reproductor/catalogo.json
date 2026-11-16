@@ -9,7 +9,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Cama o esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Heel slide",
+    "posicion": "Lying on your back",
+    "material": "Bed or mat"
+   }
   },
   "pierna_recta": {
    "nombre": "Elevación de pierna recta",
@@ -19,7 +24,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Straight leg raise",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "cuadriceps": {
    "nombre": "Apretar el muslo",
@@ -29,7 +39,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Toalla enrollada",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Static quads",
+    "posicion": "Lying on your back",
+    "material": "Rolled-up towel"
+   }
   },
   "arco_corto": {
    "nombre": "Cuádriceps en arco corto",
@@ -39,7 +54,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Toalla enrollada o cojín firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Short arc quads",
+    "posicion": "Lying on your back",
+    "material": "Rolled-up towel or firm cushion"
+   }
   },
   "puente": {
    "nombre": "Puente de glúteo",
@@ -49,7 +69,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Glute bridge",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "gluteos": {
    "nombre": "Apretar los glúteos",
@@ -59,7 +84,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Glute squeeze",
+    "posicion": "Lying on your back",
+    "material": "No equipment"
+   }
   },
   "rodilla_pecho": {
    "nombre": "Rodilla al pecho",
@@ -69,7 +99,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Knee to chest",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "basculacion": {
    "nombre": "Basculación pélvica",
@@ -79,7 +114,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Pelvic tilt",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "abdominal": {
    "nombre": "Activar el abdomen",
@@ -89,7 +129,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Abdominal bracing",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "rodillas_lado": {
    "nombre": "Rodillas a un lado y a otro",
@@ -99,7 +144,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Knee rolls",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "bicho_muerto": {
    "nombre": "Bicho muerto",
@@ -109,7 +159,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Dead bug",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
   },
   "cojin_rodillas": {
    "nombre": "Cojín entre las rodillas",
@@ -119,7 +174,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Cojín o toalla grande",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Cushion squeeze",
+    "posicion": "Lying on your back",
+    "material": "Cushion or large towel"
+   }
   },
   "tobillos": {
    "nombre": "Bombeo de tobillos",
@@ -129,7 +189,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle pumps",
+    "posicion": "Lying on your back",
+    "material": "No equipment"
+   }
   },
   "isquios_toalla": {
    "nombre": "Estiramiento de isquios tumbado",
@@ -139,7 +204,12 @@
    "varios": "repeticiones",
    "posicion": "Boca arriba",
    "material": "Toalla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Lying hamstring stretch",
+    "posicion": "Lying on your back",
+    "material": "Towel"
+   }
   },
   "extension_antebrazos": {
    "nombre": "Extensión boca abajo sobre los antebrazos",
@@ -149,7 +219,12 @@
    "varios": "repeticiones",
    "posicion": "Boca abajo",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Prone on elbows",
+    "posicion": "Lying on your front",
+    "material": "Mat"
+   }
   },
   "extension_lumbar": {
    "nombre": "Extensión boca abajo con los brazos",
@@ -159,7 +234,12 @@
    "varios": "repeticiones",
    "posicion": "Boca abajo",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Prone press-up",
+    "posicion": "Lying on your front",
+    "material": "Mat"
+   }
   },
   "plancha_rodillas": {
    "nombre": "Plancha de rodillas",
@@ -169,7 +249,12 @@
    "varios": "repeticiones",
    "posicion": "Boca abajo",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Kneeling plank",
+    "posicion": "Lying on your front",
+    "material": "Mat"
+   }
   },
   "plancha": {
    "nombre": "Plancha",
@@ -179,7 +264,12 @@
    "varios": "repeticiones",
    "posicion": "Boca abajo",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Plank",
+    "posicion": "Lying on your front",
+    "material": "Mat"
+   }
   },
   "almeja": {
    "nombre": "Almeja",
@@ -189,7 +279,12 @@
    "varios": "repeticiones",
    "posicion": "De lado",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Clamshell",
+    "posicion": "Lying on your side",
+    "material": "Mat"
+   }
   },
   "abduccion_lado": {
    "nombre": "Abducción de cadera de lado",
@@ -199,7 +294,12 @@
    "varios": "repeticiones",
    "posicion": "De lado",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Side-lying hip abduction",
+    "posicion": "Lying on your side",
+    "material": "Mat"
+   }
   },
   "rotacion_lado": {
    "nombre": "Rotación externa tumbado de lado",
@@ -209,7 +309,12 @@
    "varios": "repeticiones",
    "posicion": "De lado",
    "material": "Peso pequeño y una toalla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Side-lying external rotation",
+    "posicion": "Lying on your side",
+    "material": "Small weight and a towel"
+   }
   },
   "plancha_lateral_rodilla": {
    "nombre": "Plancha lateral con la rodilla apoyada",
@@ -219,7 +324,12 @@
    "varios": "repeticiones",
    "posicion": "De lado",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Kneeling side plank",
+    "posicion": "Lying on your side",
+    "material": "Mat"
+   }
   },
   "plancha_lateral": {
    "nombre": "Plancha lateral",
@@ -229,7 +339,12 @@
    "varios": "repeticiones",
    "posicion": "De lado",
    "material": "Esterilla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Side plank",
+    "posicion": "Lying on your side",
+    "material": "Mat"
+   }
   },
   "bird_dog": {
    "nombre": "Brazo y pierna contrarios a cuatro patas",
@@ -239,7 +354,12 @@
    "varios": "repeticiones",
    "posicion": "A cuatro patas",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Bird dog",
+    "posicion": "On all fours",
+    "material": "Mat"
+   }
   },
   "gato_camello": {
    "nombre": "Gato-camello",
@@ -249,7 +369,12 @@
    "varios": "repeticiones",
    "posicion": "A cuatro patas",
    "material": "Esterilla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Cat–camel",
+    "posicion": "On all fours",
+    "material": "Mat"
+   }
   },
   "circulos_tobillo": {
    "nombre": "Círculos de tobillo",
@@ -259,7 +384,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado en el suelo",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle circles",
+    "posicion": "Sitting on the floor",
+    "material": "No equipment"
+   }
   },
   "dorsal_banda": {
    "nombre": "Flexión dorsal con banda",
@@ -269,7 +399,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado en el suelo",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle dorsiflexion with a band",
+    "posicion": "Sitting on the floor",
+    "material": "Resistance band"
+   }
   },
   "plantar_banda": {
    "nombre": "Flexión plantar con banda",
@@ -279,7 +414,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado en el suelo",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle plantarflexion with a band",
+    "posicion": "Sitting on the floor",
+    "material": "Resistance band"
+   }
   },
   "inversion_banda": {
    "nombre": "Inversión de tobillo con banda",
@@ -289,7 +429,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado en el suelo",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle inversion with a band",
+    "posicion": "Sitting on the floor",
+    "material": "Resistance band"
+   }
   },
   "eversion_banda": {
    "nombre": "Eversión de tobillo con banda",
@@ -299,7 +444,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado en el suelo",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Ankle eversion with a band",
+    "posicion": "Sitting on the floor",
+    "material": "Resistance band"
+   }
   },
   "extension_rodilla": {
    "nombre": "Extensión de rodilla sentado",
@@ -309,7 +459,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Seated knee extension",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "extension_rodilla_lastre": {
    "nombre": "Extensión de rodilla sentado con tobillera",
@@ -319,7 +474,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla y una tobillera lastrada",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated knee extension with an ankle weight",
+    "posicion": "Sitting",
+    "material": "Chair and an ankle weight"
+   }
   },
   "marcha_sentado": {
    "nombre": "Marcha sentado",
@@ -329,7 +489,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated marching",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "abduccion_sentado": {
    "nombre": "Separar las rodillas sentado, con banda",
@@ -339,7 +504,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated knee opening with a band",
+    "posicion": "Sitting",
+    "material": "Resistance band"
+   }
   },
   "talones_sentado": {
    "nombre": "Elevación de talones sentado",
@@ -349,7 +519,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated heel raises",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "isquios_sentado": {
    "nombre": "Estiramiento de isquios sentado",
@@ -359,7 +534,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated hamstring stretch",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "curl_sentado": {
    "nombre": "Curl de bíceps sentado",
@@ -369,7 +549,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla y dos pesos pequeños, como dos botellas de agua",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated biceps curl",
+    "posicion": "Sitting",
+    "material": "Chair and two small weights, such as two water bottles"
+   }
   },
   "brazos_arriba": {
    "nombre": "Brazos arriba sentado",
@@ -379,7 +564,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated overhead reach",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "brazos_silla": {
    "nombre": "Brazos atrás a la silla",
@@ -389,7 +579,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme con respaldo",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Seated chest opener",
+    "posicion": "Sitting",
+    "material": "Sturdy chair with a backrest"
+   }
   },
   "estrujar_toalla": {
    "nombre": "Estrujar una toalla",
@@ -399,7 +594,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla y una toalla pequeña",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Towel wringing",
+    "posicion": "Sitting",
+    "material": "Chair and a small towel"
+   }
   },
   "silla": {
    "nombre": "Levantarse de la silla",
@@ -409,7 +609,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Sit to stand",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "silla_dos_manos": {
    "nombre": "Levantarse de la silla con las manos",
@@ -419,7 +624,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Sit to stand using your hands",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "silla_una_mano": {
    "nombre": "Levantarse de la silla con una mano",
@@ -429,7 +639,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Sit to stand using one hand",
+    "posicion": "Sitting",
+    "material": "Sturdy chair"
+   }
   },
   "toalla_dedos": {
    "nombre": "Arrugar una toalla con los dedos del pie",
@@ -439,7 +654,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Toalla pequeña",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Towel scrunches",
+    "posicion": "Sitting",
+    "material": "Small towel"
+   }
   },
   "retraccion": {
    "nombre": "Meter el mentón",
@@ -449,7 +669,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Chin tuck",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "cuello_giro": {
    "nombre": "Rotación de cuello",
@@ -459,7 +684,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Neck rotation",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "cuello_lado": {
    "nombre": "Inclinación de cuello",
@@ -469,7 +699,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Neck side bend",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "iso_cuello": {
    "nombre": "Isométricos de cuello",
@@ -479,7 +714,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Neck isometrics",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "trapecio": {
    "nombre": "Estiramiento del trapecio",
@@ -489,7 +729,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Upper trapezius stretch",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "escapulas": {
    "nombre": "Juntar las escápulas",
@@ -499,7 +744,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Silla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Shoulder blade squeeze",
+    "posicion": "Sitting",
+    "material": "Chair"
+   }
   },
   "muneca": {
    "nombre": "Flexión y extensión de muñeca",
@@ -509,7 +759,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Mesa",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wrist flexion and extension",
+    "posicion": "Sitting at a table",
+    "material": "Table"
+   }
   },
   "prono_supinacion": {
    "nombre": "Girar la palma arriba y abajo",
@@ -519,7 +774,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Mesa",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Forearm rotation",
+    "posicion": "Sitting at a table",
+    "material": "Table"
+   }
   },
   "estira_flexores": {
    "nombre": "Estiramiento de la muñeca hacia atrás",
@@ -529,7 +789,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wrist flexor stretch",
+    "posicion": "Sitting",
+    "material": "No equipment"
+   }
   },
   "estira_extensores": {
    "nombre": "Estiramiento de la muñeca hacia delante",
@@ -539,7 +804,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wrist extensor stretch",
+    "posicion": "Sitting",
+    "material": "No equipment"
+   }
   },
   "tendinoso": {
    "nombre": "Deslizamiento de los tendones de los dedos",
@@ -549,7 +819,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Mesa",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Finger tendon glides",
+    "posicion": "Sitting at a table",
+    "material": "Table"
+   }
   },
   "abrir_cerrar": {
    "nombre": "Abrir y cerrar la mano",
@@ -559,7 +834,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Mesa",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Hand opening and closing",
+    "posicion": "Sitting at a table",
+    "material": "Table"
+   }
   },
   "pelota": {
    "nombre": "Apretar una pelota blanda",
@@ -569,7 +849,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Pelota blanda o esponja",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Soft ball squeeze",
+    "posicion": "Sitting at a table",
+    "material": "Soft ball or sponge"
+   }
   },
   "deslizar_mesa": {
    "nombre": "Deslizar el brazo por la mesa",
@@ -579,7 +864,12 @@
    "varios": "repeticiones",
    "posicion": "Sentado a la mesa",
    "material": "Mesa y una toalla",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Table slide",
+    "posicion": "Sitting at a table",
+    "material": "Table and a towel"
+   }
   },
   "talones": {
    "nombre": "Elevación de talones",
@@ -589,7 +879,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Heel raises",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "talones_sin_apoyo": {
    "nombre": "Elevación de talones sin apoyo",
@@ -599,7 +894,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme, al alcance",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Heel raises without support",
+    "posicion": "Standing",
+    "material": "Sturdy support within reach"
+   }
   },
   "puntas": {
    "nombre": "Elevación de puntas",
@@ -609,7 +909,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Toe raises",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "puntas_sin_apoyo": {
    "nombre": "Elevación de puntas sin apoyo",
@@ -619,7 +924,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme, al alcance",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Toe raises without support",
+    "posicion": "Standing",
+    "material": "Sturdy support within reach"
+   }
   },
   "curl_isquios": {
    "nombre": "Curl de isquios de pie",
@@ -629,7 +939,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing hamstring curl",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "curl_isquios_lastre": {
    "nombre": "Curl de isquios de pie con tobillera",
@@ -639,7 +954,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme y una tobillera lastrada",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing hamstring curl with an ankle weight",
+    "posicion": "Standing",
+    "material": "Sturdy support and an ankle weight"
+   }
   },
   "sentadilla": {
    "nombre": "Media sentadilla",
@@ -649,7 +969,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Half squat",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "sentadilla_sin_apoyo": {
    "nombre": "Media sentadilla sin apoyo",
@@ -659,7 +984,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme, al alcance",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Half squat without support",
+    "posicion": "Standing",
+    "material": "Sturdy support within reach"
+   }
   },
   "abduccion_pie": {
    "nombre": "Abducción de cadera de pie",
@@ -669,7 +999,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing hip abduction",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "abduccion_pie_lastre": {
    "nombre": "Abducción de cadera de pie con tobillera",
@@ -679,7 +1014,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme y una tobillera lastrada",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing hip abduction with an ankle weight",
+    "posicion": "Standing",
+    "material": "Sturdy support and an ankle weight"
+   }
   },
   "equilibrio": {
    "nombre": "Equilibrio a una pierna",
@@ -689,7 +1029,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "Single-leg balance",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "equilibrio_sin_apoyo": {
    "nombre": "Equilibrio a una pierna sin apoyo",
@@ -699,7 +1044,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme, al alcance",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Single-leg balance without support",
+    "posicion": "Standing",
+    "material": "Sturdy support within reach"
+   }
   },
   "tandem_quieto": {
    "nombre": "Tándem quieto con apoyo",
@@ -709,7 +1059,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Tandem stance with support",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "tandem_quieto_sin_apoyo": {
    "nombre": "Tándem quieto sin apoyo",
@@ -719,7 +1074,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme, al alcance",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Tandem stance without support",
+    "posicion": "Standing",
+    "material": "Sturdy support within reach"
+   }
   },
   "cuadriceps_pie": {
    "nombre": "Estiramiento de cuádriceps de pie",
@@ -729,7 +1089,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing quadriceps stretch",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "escalon": {
    "nombre": "Subir un escalón",
@@ -739,7 +1104,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Un escalón",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Step-up",
+    "posicion": "Standing",
+    "material": "A step"
+   }
   },
   "extension_espalda_pie": {
    "nombre": "Extensión de espalda de pie",
@@ -749,7 +1119,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing back extension",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
   },
   "rotacion_tronco_pie": {
    "nombre": "Rotación de tronco de pie",
@@ -759,7 +1134,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing trunk rotation",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
   },
   "caminar": {
    "nombre": "Caminar",
@@ -769,7 +1149,12 @@
    "varios": "minutos",
    "posicion": "De pie",
    "material": "Calzado cómodo",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Walking",
+    "posicion": "Standing",
+    "material": "Comfortable shoes"
+   }
   },
   "andar_atras": {
    "nombre": "Andar hacia atrás",
@@ -779,7 +1164,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Backwards walking",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
   },
   "andar_lado": {
    "nombre": "Andar de lado",
@@ -789,7 +1179,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Sideways walking",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
   },
   "andar_tandem": {
    "nombre": "Andar en tándem",
@@ -799,7 +1194,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Tandem walk",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "andar_tandem_atras": {
    "nombre": "Andar en tándem hacia atrás",
@@ -809,7 +1209,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Backwards tandem walk",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "andar_talones": {
    "nombre": "Andar de talones",
@@ -819,7 +1224,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Heel walking",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "andar_puntillas": {
    "nombre": "Andar de puntillas",
@@ -829,7 +1239,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Apoyo firme",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Toe walking",
+    "posicion": "Standing",
+    "material": "Sturdy support"
+   }
   },
   "andar_ocho": {
    "nombre": "Andar en ocho",
@@ -839,7 +1254,12 @@
    "varios": "vueltas",
    "posicion": "De pie",
    "material": "Dos objetos en el suelo, como dos botellas o dos conos",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Figure-of-eight walk",
+    "posicion": "Standing",
+    "material": "Two objects on the floor, such as two bottles or two cones"
+   }
   },
   "andar_obstaculos": {
    "nombre": "Andar pasando obstáculos",
@@ -849,7 +1269,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Obstáculos bajos, como libros o toallas enrolladas",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Stepping over obstacles",
+    "posicion": "Standing",
+    "material": "Low obstacles, such as books or rolled-up towels"
+   }
   },
   "andar_globo": {
    "nombre": "Andar dando toques a un globo",
@@ -859,7 +1284,12 @@
    "varios": "pasos",
    "posicion": "De pie",
    "material": "Un globo",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Walking while tapping a balloon",
+    "posicion": "Standing",
+    "material": "A balloon"
+   }
   },
   "sentadilla_pared": {
    "nombre": "Sentadilla en la pared",
@@ -869,7 +1299,12 @@
    "varios": "repeticiones",
    "posicion": "De pie, contra la pared",
    "material": "Pared",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wall squat",
+    "posicion": "Standing, back to the wall",
+    "material": "Wall"
+   }
   },
   "gemelo_pared": {
    "nombre": "Estiramiento de gemelo en la pared",
@@ -879,7 +1314,12 @@
    "varios": "repeticiones",
    "posicion": "De pie, frente a la pared",
    "material": "Pared",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wall calf stretch",
+    "posicion": "Standing, facing the wall",
+    "material": "Wall"
+   }
   },
   "flexion_pared": {
    "nombre": "Flexión contra la pared",
@@ -889,7 +1329,12 @@
    "varios": "repeticiones",
    "posicion": "De pie, frente a la pared",
    "material": "Pared",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Wall push-up",
+    "posicion": "Standing, facing the wall",
+    "material": "Wall"
+   }
   },
   "iso_hombro": {
    "nombre": "Isométricos de hombro contra la pared",
@@ -899,7 +1344,12 @@
    "varios": "repeticiones",
    "posicion": "De pie, junto a la pared",
    "material": "Pared",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Shoulder isometrics against the wall",
+    "posicion": "Standing, beside the wall",
+    "material": "Wall"
+   }
   },
   "pendulo": {
    "nombre": "Péndulo de hombro",
@@ -909,7 +1359,12 @@
    "varios": "repeticiones",
    "posicion": "De pie, inclinado",
    "material": "Mesa o encimera",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Shoulder pendulum",
+    "posicion": "Standing, leaning forward",
+    "material": "Table or kitchen counter"
+   }
   },
   "cruzado": {
    "nombre": "Estiramiento cruzado de hombro",
@@ -919,7 +1374,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Sin material",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Cross-body shoulder stretch",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
   },
   "baston": {
    "nombre": "Rotación externa con bastón",
@@ -929,7 +1389,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Bastón o palo ligero",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "External rotation with a stick",
+    "posicion": "Standing",
+    "material": "Walking stick or light pole"
+   }
   },
   "hombro": {
    "nombre": "Rotación externa con banda",
@@ -939,7 +1404,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Banda elástica",
-   "disponible": true
+   "disponible": true,
+   "en": {
+    "nombre": "External rotation with a band",
+    "posicion": "Standing",
+    "material": "Resistance band"
+   }
   },
   "rotacion_interna": {
    "nombre": "Rotación interna con banda",
@@ -949,7 +1419,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Internal rotation with a band",
+    "posicion": "Standing",
+    "material": "Resistance band"
+   }
   },
   "remo": {
    "nombre": "Remo con banda de pie",
@@ -959,7 +1434,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Banda elástica",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Standing row with a band",
+    "posicion": "Standing",
+    "material": "Resistance band"
+   }
   },
   "scaption": {
    "nombre": "Elevación del brazo en diagonal",
@@ -969,7 +1449,12 @@
    "varios": "repeticiones",
    "posicion": "De pie",
    "material": "Sin peso al principio; después, un peso pequeño, como una botella de agua",
-   "disponible": false
+   "disponible": false,
+   "en": {
+    "nombre": "Diagonal arm raise",
+    "posicion": "Standing",
+    "material": "No weight at first; later, a small weight, such as a water bottle"
+   }
   }
  }
 }

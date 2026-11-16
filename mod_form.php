@@ -54,7 +54,7 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
         $mform->addElement('header', 'routinehdr', get_string('routinehdr', 'mod_oksigeniajepyso'));
         // The builder of the player opens in a window of its own and sends the routine back here. Without JavaScript,
         // the link opens it in another tab and the link of the routine is copied from there.
-        $builder = new moodle_url('/mod/oksigeniajepyso/reproductor/index.html', ['armar' => 1]);
+        $builder = new moodle_url('/mod/oksigeniajepyso/reproductor/index.html', ['armar' => 1, 'idioma' => current_language()]);
         $buildlink = html_writer::link(
             $builder,
             get_string('buildroutine', 'mod_oksigeniajepyso'),

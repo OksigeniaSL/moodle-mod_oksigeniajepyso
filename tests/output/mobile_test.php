@@ -43,6 +43,8 @@ final class mobile_test extends \advanced_testcase {
      * Back to the catalogue of the player.
      */
     protected function tearDown(): void {
+        global $SESSION;
+        unset($SESSION->lang);
         catalog::use_file(null);
         parent::tearDown();
     }
@@ -51,7 +53,11 @@ final class mobile_test extends \advanced_testcase {
      * The page opens the player in the browser of the app with the session, and nothing written by people compiles.
      */
     public function test_page(): void {
+        global $SESSION;
         $this->resetAfterTest();
+        // In English, whatever the site's language: the names come from the catalogue in the user's language.
+        $SESSION->lang = 'en';
+        catalog::use_file(null);
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $note = 'j.' . rtrim(strtr(base64_encode(json_encode(['e' => [
@@ -70,7 +76,7 @@ final class mobile_test extends \advanced_testcase {
         $html = $result['templates'][0]['html'];
         $url = (new \moodle_url('/mod/oksigeniajepyso/player.php', ['id' => $jepyso->cmid]))->out(false);
         $this->assertStringContainsString('core-link inApp="true" autoLogin="yes" href="' . s($url) . '"', $html);
-        $this->assertStringContainsString('Levantarse de la silla', $html);
+        $this->assertStringContainsString('Sit to stand', $html);
         $this->assertStringContainsString('2 sets of 8', $html);
         $this->assertStringNotContainsString('{{', $html);
         $this->assertStringNotContainsString('&#123;', $html);

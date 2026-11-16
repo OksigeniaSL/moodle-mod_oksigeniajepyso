@@ -123,6 +123,15 @@ class catalog {
     }
 
     /**
+     * Whether the user reads the exercises in Spanish: the languages of Spain and of Paraguay, as the player decides.
+     *
+     * @return bool
+     */
+    private static function spanish(): bool {
+        return (bool) preg_match('/^(es|ca|gl|eu|ast|an|gn)(_|$)/', current_language());
+    }
+
+    /**
      * The exercises of a catalogue file, or none if it cannot be read.
      *
      * @param string $file The path of the file.
@@ -142,13 +151,18 @@ class catalog {
             if (!preg_match(self::ID, $id) || !is_array($exercise)) {
                 continue;
             }
-            $name = $exercise['nombre'] ?? '';
+            // The name, position and material in the user's language: the catalogue brings them in Spanish and, under
+            // «en», in English.
+            $en = is_array($exercise['en'] ?? null) && !self::spanish() ? $exercise['en'] : [];
+            $text = fn(string $key): string => is_string($en[$key] ?? null) && trim($en[$key]) !== ''
+                ? trim($en[$key]) : (is_string($exercise[$key] ?? null) ? trim($exercise[$key]) : '');
+            $name = $text('nombre');
             $exercises[$id] = [
-                'name' => is_string($name) && trim($name) !== '' ? trim($name) : $id,
+                'name' => $name !== '' ? $name : $id,
                 'oneside' => ($exercise['unLado'] ?? false) === true,
                 'unit' => in_array($exercise['unidad'] ?? '', self::UNITS, true) ? $exercise['unidad'] : 'reps',
-                'position' => is_string($exercise['posicion'] ?? null) ? $exercise['posicion'] : '',
-                'material' => is_string($exercise['material'] ?? null) ? $exercise['material'] : '',
+                'position' => $text('posicion'),
+                'material' => $text('material'),
                 // An exercise is in the sample unless the catalogue says it is not.
                 'available' => ($exercise['disponible'] ?? true) !== false,
             ];

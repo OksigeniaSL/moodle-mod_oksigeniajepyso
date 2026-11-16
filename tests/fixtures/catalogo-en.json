@@ -1,0 +1,8 @@
+{
+    "v": 1,
+    "ejercicios": {
+        "silla": {"nombre": "Levantarse de la silla", "unLado": false, "unidad": "reps", "posicion": "Sentado", "material": "Silla firme", "disponible": true,
+            "en": {"nombre": "Sit to stand", "posicion": "Sitting", "material": "Sturdy chair"}},
+        "puente": {"nombre": "Puente de glúteo", "unLado": false, "unidad": "reps", "posicion": "Boca arriba", "material": "Esterilla", "disponible": true}
+    }
+}

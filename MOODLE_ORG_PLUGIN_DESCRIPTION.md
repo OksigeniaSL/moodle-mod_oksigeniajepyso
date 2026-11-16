@@ -17,7 +17,7 @@
 <h3>Privacy</h3>
 <p>Covered by the Privacy API (export and deletion), with backup and restore of the sessions and course reset. Everything stays in your Moodle: no external services, no CDN, no tracking.</p>
 <h3>Languages</h3>
-<p>The pages of the activity in English and Spanish, other languages through AMOS. The player speaks Spanish for now.</p>
+<p>The pages of the activity in English and Spanish, other languages through AMOS. The player, its exercises and its recorded voice in English and Spanish, following each user's language in Moodle.</p>
 <h3>Requirements</h3>
 <ul>
 <li>Moodle 4.5 to 5.3.</li>
