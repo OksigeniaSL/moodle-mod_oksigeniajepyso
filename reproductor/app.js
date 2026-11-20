@@ -13,6 +13,7 @@ import {
   esDePago, esEntornoDePruebas, leerBorradas, apuntarBorrada, LIMITE_GRATIS, sinNoticias,
 } from './personas.js';
 import { NUBES, nubeElegida, elegirNube, ultimaVez, apuntarVez, nubeAnterior, sincronizar } from './nube.js';
+import { cargarGoogle } from './drive.js';
 import { comprobarLicencia, licencia, licenciaPendiente, licenciaAnulada, comprobarVigencia, guardarLicencia, cuentaDelDrive, licenciaActiva, topeLicencia, nombrePlan } from './licencia.js';
 import { ampliarPlan } from './tienda.js';
 import {
@@ -312,7 +313,31 @@ const botonAcceso = `<button type="button" class="firma-acceso" data-acceso aria
 // The language switch, beside «Accesibilidad» (and «Ayuda»): the other language, in its own name. The page starts again
 // in it, and the choice stays on this device (idioma.js). Routines, summaries and files read the same in both.
 const botonIdioma = `<button type="button" class="firma-acceso firma-idioma" data-idioma lang="${otroIdioma()}">${ICONO.idioma}<span>${IDIOMAS[otroIdioma()]}</span></button>`;
-const firmaPersona = `<div class="firma firma-persona"><span class="firma-botones">${botonAcceso}${botonIdioma}</span>${FIRMA}</div>`;
+// Light or dark, beside them: a goniometer whose arm sweeps more graphite for dark (estilos.css, «.tema-gonio»). The device's
+// mode until someone turns it, then theirs on this device (tema.js); the button says the mode it goes to.
+const GONIO = '<svg class="tema-gonio" viewBox="0 0 32 24" aria-hidden="true" focusable="false"><path class="tg-arco" d="M4 20a12 12 0 0 1 24 0"/><circle class="tg-sector" cx="16" cy="20" r="6"/><path class="tg-marcas" d="M27.52 13.35L28.9 12.55M22.65 8.48L23.45 7.1M16 6.7V5.1M9.35 8.48L8.55 7.1M4.48 13.35L3.1 12.55"/><path class="tg-base" d="M1 20h30"/><path class="tg-brazo" d="M16 20h14.5"/><circle class="tg-eje" cx="16" cy="20" r="1.8"/></svg>';
+const sistemaOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+const modoActual = () => document.documentElement.dataset.modo === 'oscuro' ? 'oscuro' : 'claro';
+const nombreTema = () => t(modoActual() === 'oscuro' ? 'Modo claro' : 'Modo oscuro');
+const botonTema = `<button type="button" class="firma-acceso firma-tema" data-tema>${GONIO}<span>${nombreTema()}</span></button>`;
+function pintarTema() {
+  const raiz = document.documentElement;
+  const oscuro = raiz.dataset.theme ? raiz.dataset.theme === 'dark' : sistemaOscuro.matches;
+  raiz.dataset.modo = oscuro ? 'oscuro' : 'claro';
+  document.querySelectorAll('[data-tema] span').forEach((s) => { s.textContent = nombreTema(); });
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+    const o = raiz.dataset.theme ? oscuro : m.media.includes('dark');
+    m.content = o ? '#121517' : '#e4e6e3';
+  });
+}
+function cambiarTema() {
+  const nuevo = modoActual() === 'oscuro' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = nuevo;
+  try { localStorage.setItem('jepyso-tema', nuevo); } catch { /* it lasts this visit */ }
+  pintarTema();
+}
+sistemaOscuro.addEventListener?.('change', pintarTema);
+const firmaPersona = `<div class="firma firma-persona"><span class="firma-botones">${botonAcceso}${botonIdioma}${botonTema}</span>${FIRMA}</div>`;
 // jepyso.com in the language in use.
 const WEB = idioma() === 'en'
   ? { inicio: 'https://jepyso.com/en/', privacidad: 'https://jepyso.com/en/privacy/', condiciones: 'https://jepyso.com/en/terms/' }
@@ -356,6 +381,7 @@ document.addEventListener('click', (ev) => {
   if (ev.target.closest?.('[data-acceso]')) document.querySelector('oksigenia-access-panel')?.open?.();
   if (ev.target.closest?.('[data-ayuda]')) abrirAyuda();
   if (ev.target.closest?.('[data-idioma]')) ponerIdioma(otroIdioma());
+  if (ev.target.closest?.('[data-tema]')) cambiarTema();
 });
 
 function marcoApp(h) {
@@ -373,7 +399,7 @@ function marcoApp(h) {
     document.body.append(pestanas);
     firmaPro = document.createElement('footer');
     firmaPro.className = 'firma firma-pro';
-    firmaPro.innerHTML = botonAyuda + botonAcceso + botonIdioma + FIRMA;
+    firmaPro.innerHTML = botonAyuda + botonAcceso + botonIdioma + botonTema + FIRMA;
     document.body.append(firmaPro);
   }
   if (firmaPro) firmaPro.hidden = !pro;
@@ -2957,6 +2983,12 @@ const MOTIVOS_LICENCIA = {
   navegador: 'Este navegador no puede comprobar licencias. Actualízalo, o usa Chrome, Edge, Safari o Firefox al día.',
 };
 
+// With Google Drive chosen, its script loads as People opens, so the tap on «Sincronizar» opens Google's window at once:
+// Safari blocks a window asked for after a download.
+function precargarDrive() {
+  if (app.querySelector('.nube') && nubeElegida() === 'google') cargarGoogle().catch(() => {});
+}
+
 // Syncs with the chosen cloud. The licence counts against the connected account's e-mail, whichever the service: one
 // licence, one account. While it runs, the service cannot be changed.
 async function sincronizarNube(seccion) {
@@ -3038,6 +3070,7 @@ function vistaPersonas() {
   pintarLista();
   const huecoGoogle = app.querySelector('.hueco-google');
   if (huecoGoogle) botonGoogle(huecoGoogle);
+  precargarDrive();
   app.oninput = (ev) => {
     if (ev.target.dataset.accion !== 'buscar-persona') return;
     texto = ev.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
@@ -3063,6 +3096,7 @@ function vistaPersonas() {
       const seccion = otra.closest('.nube');
       seccion.outerHTML = seccionNube();
       app.querySelector(`.nube [data-valor="${otra.dataset.valor}"]`)?.focus();
+      precargarDrive();
       return;
     }
     if (ev.target.closest('[data-accion="sincronizar-nube"]')) {
@@ -3337,6 +3371,10 @@ function vistaPersona(id) {
 // ---------- Without a connection ----------
 // sw.js keeps the app. Each routine opened on the phone also keeps its body, clips and the three.js files, so the
 // person can do it later with no signal. The answer says how many of the files are kept.
+// Next to each body's cuerpo.glb: its clothes (ropa.png, outside the GLB so it loads from the site and not as a blob:,
+// which the content policy blocks) and its drawn muscles: TEXTURAS in modelos/musculos.js (not imported here, so
+// three.js does not load with the app's first screen).
+const TEXTURAS_MUSCULOS = ['musculos-0.png', 'musculos-1.png', 'musculos-2.png', 'musculos-3.png', 'musculos-4.png', 'fibras.png'];
 const MOTOR = [
   'libs/three/three.module.js',
   'libs/three/addons/loaders/GLTFLoader.js',
@@ -3407,7 +3445,8 @@ async function guardarParaSinConexion(c, ejercicios) {
     ...fichas.flatMap((f) => (Array.isArray(f?.fases) ? f.fases.map((x) => x.texto).filter(Boolean) : [])),
     ...ejercicios.map(({ i }) => EJERCICIOS[i]?.nombre).filter(Boolean)];
   const voz = vozActiva() ? await rutasDeVoz(textosVoz).catch(() => []) : [];
-  const rutas = [...new Set([...MOTOR, RUTAS[c] || RUTAS.a, m.cuerpo,
+  const rutas = [...new Set([...MOTOR, RUTAS[c] || RUTAS.a, m.cuerpo, m.cuerpo.replace(/cuerpo\.glb$/, 'ropa.png'),
+    ...TEXTURAS_MUSCULOS.map((f) => m.cuerpo.replace(/cuerpo\.glb$/, 'musculos/') + f),
     ...ejercicios.flatMap(({ i, b }) => (m.ejercicios[i] ? [m.ejercicios[i].glb, m.ejercicios[i].ficha, poster(i, c, bandaDe(EJERCICIOS[i], b)?.clave)] : [])),
     ...voz])];
   const listo = await navigator.serviceWorker.ready;

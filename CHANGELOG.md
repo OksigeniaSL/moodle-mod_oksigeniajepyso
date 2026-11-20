@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.12 (2026-11-20)
+
+- The figures wear light sportswear, and the working muscles are drawn over it as in an anatomy plate: their shape
+  with its outline, their heads and their fibres, never mixed with the clothes. The drawing breathes with the effort,
+  from the outline at rest to the whole muscle while holding.
+- The player follows the app's latest: a light and dark switch, kept on the device, and thin scrollbars in the
+  player's colours.
+
 ## 0.1.11 (2026-11-16)
 
 - Guests can view the activity, as with a page: on a course open to guests they see the routine and try it as a
