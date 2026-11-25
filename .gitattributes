@@ -1,4 +1,8 @@
-# What stays in the repository but does not travel in the plugin's package (git archive): the CI, the commit hook
-# and the pictures of the readme.
+# What stays in the repository but does not travel in the plugin's package (git archive): the CI, the commit hook, the
+# pictures of the readme, the files of git and of the secret scan, and the proofs of authorship.
 /.github export-ignore
 /.githooks export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.gitleaksignore export-ignore
+/provenance export-ignore
