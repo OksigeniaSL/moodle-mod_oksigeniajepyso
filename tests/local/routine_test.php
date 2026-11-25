@@ -192,9 +192,6 @@ final class routine_test extends \advanced_testcase {
         $this->assertSame('1 set of 5 min', $caminar['dosage']);
         $this->assertSame('3 sets of 30 s', $plancha['dosage']);
         $this->assertFalse($plancha['available']);
-        $this->assertSame('Days a week: 3', $described['days']);
-        $this->assertSame('2 times a day', $described['times']);
-        $this->assertSame('Rest between sets: 45 s', $described['rest']);
         $this->assertSame('Acceptable discomfort: up to 5 out of 10', $described['limit']);
         $this->assertSame('1 step', routine::amount(1, 'pasos'));
         $this->assertSame('3 laps', routine::amount(3, 'vueltas'));
@@ -236,6 +233,29 @@ final class routine_test extends \advanced_testcase {
         $this->assertSame(2 * (2 * 36 + 30), routine::seconds($both));
         $this->assertSame('1 exercise · about 3 minutes', routine::size(1, 204));
         $this->assertSame('1 exercise · one minute', routine::size(1, 20));
+
+        // A circuit: every exercise once in each round, with its own rests.
+        $circuit = routine::parse(self::plain(['k' => 3, 'kd' => 90, 'd' => 15, 'e' => [
+            ['i' => 'silla', 's' => 1, 'r' => 8, 't' => [2, 1, 2]],
+            ['i' => 'hombro', 'r' => 6, 't' => [2, 1, 2], 'l' => 'ambos'],
+        ]]));
+        $this->assertSame([3, 90, 15], [$circuit['k'], $circuit['kd'], $circuit['d']]);
+        $this->assertSame([3, 3], array_column($circuit['e'], 's'));
+        // A round: 48 s and 36 s by each side, with 15 s between the three turns; three rounds, with 90 s between them.
+        $this->assertSame(3 * (48 + 2 * 36 + 2 * 15) + 2 * 90, routine::seconds($circuit));
+        $described = routine::describe($circuit);
+        $this->assertSame('8 in each round', $described['exercises'][0]['load']);
+        $this->assertSame('8 in each round · out 2 s, hold 1 s, back 2 s', $described['exercises'][0]['dosage']);
+        $this->assertSame([
+            ['factlabel' => 'Rounds of the circuit', 'factfigure' => '3'],
+            ['factlabel' => 'Rest between exercises', 'factfigure' => '15 s'],
+            ['factlabel' => 'Rest between rounds', 'factfigure' => '90 s'],
+        ], $described['facts']);
+        // Rounds and rests that the app does not offer: no circuit, or its own defaults.
+        $odd = routine::parse(self::plain(['k' => 9, 'kd' => 5, 'd' => 15, 'e' => [['i' => 'silla', 's' => 2]]]));
+        $this->assertSame([null, null, 45, 2], [$odd['k'], $odd['kd'], $odd['d'], $odd['e'][0]['s']]);
+        $odd = routine::parse(self::plain(['k' => 2, 'kd' => 5, 'd' => 45.5, 'e' => [['i' => 'silla']]]));
+        $this->assertSame([2, 120, 30], [$odd['k'], $odd['kd'], $odd['d']]);
 
         // The picture of the player, with the band when there is one of it, and of the second figure.
         catalog::use_file(null);

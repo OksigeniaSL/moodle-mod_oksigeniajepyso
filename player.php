@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * The way into the player: the routine of the activity, in the address the player reads.
+ * The player of an activity: its routine, done by whoever is logged in.
  *
- * The routine goes after «#r=» as in the links of the app; moodle_url would encode that sign, so the address is put
- * together here. The code was checked when the activity was saved, and only has letters, digits, «.», «-» and «_».
+ * A page of its own, without the theme (classes/output/player_page.php): what a phone loads is the figure and little
+ * else. What the person does goes to the course through the external functions of the plugin.
  *
  * @package    mod_oksigeniajepyso
  * @copyright  2026 Oksigenia SL <dev@oksigenia.cc>
@@ -28,6 +28,7 @@
 require(__DIR__ . '/../../config.php');
 
 use mod_oksigeniajepyso\local\routine;
+use mod_oksigeniajepyso\output\player_page;
 
 $id = required_param('id', PARAM_INT);
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'oksigeniajepyso');
@@ -37,13 +38,11 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/oksigeniajepyso:view', $context);
 
-$code = routine::code_from((string) $jepyso->routine);
-if (!routine::parse($code)) {
+$PAGE->set_url('/mod/oksigeniajepyso/player.php', ['id' => $cm->id]);
+
+if (!routine::parse(routine::code_from((string) $jepyso->routine))) {
     $back = new moodle_url('/mod/oksigeniajepyso/view.php', ['id' => $cm->id]);
     throw new moodle_exception('noroutine', 'mod_oksigeniajepyso', $back);
 }
 
-// The player speaks the language of this user in Moodle (it maps any Moodle language to Spanish or English), unless
-// the person chose another one inside the player.
-$lang = rawurlencode(current_language());
-redirect($CFG->wwwroot . '/mod/oksigeniajepyso/reproductor/index.html?cm=' . $cm->id . '&idioma=' . $lang . '#r=' . $code);
+player_page::for_activity($jepyso, $cm)->show();

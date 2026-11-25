@@ -3,8 +3,8 @@
     <library>
         <location>reproductor</location>
         <name>Jepyso player</name>
-        <description>The exercise player of Oksigenia Jepyso, a built copy of its web app (index.html, its JavaScript modules and the exercise catalogue), built with tools/construir-moodle.sh of its repository. It bundles three.js, under the MIT licence. Its content (the figures and stills of the free sample, the plaster headers, the icon, the body map and the recorded voice) is under CC BY-SA 4.0: see the entries below and reproductor/modelos/LICENSE.md.</description>
-        <version>c6d6376</version>
+        <description>The exercise player of Oksigenia Jepyso, a built copy of its web app (its JavaScript modules, its styles and the exercise catalogue) with only what a course uses, built with tools/construir-moodle.sh of its repository. It bundles three.js and the accessibility panel of Oksigenia, both under the MIT licence. Its content (the figures and stills of its twelve exercises, the plaster headers, the icon, the body map and the recorded voice) is under CC BY-SA 4.0: see the entries below and reproductor/modelos/LICENSE.md.</description>
+        <version>f788372</version>
         <license>GPL</license>
         <licenseversion>3.0+</licenseversion>
         <repository>https://github.com/OksigeniaSL/jepyso</repository>
@@ -51,8 +51,8 @@
     </library>
     <library>
         <location>reproductor/modelos</location>
-        <name>Jepyso figures (free sample)</name>
-        <description>The two 3D bodies, the movements, props, sheets and stills of the twelve exercises of the free sample, and the sheets they are built from (modelos/fichas/). The bodies are made from the base assets of MakeHuman (CC0). Under CC BY-SA 4.0, compatible with the GNU GPL v3; terms and attribution in reproductor/modelos/LICENSE.md, licence text in reproductor/modelos/CC-BY-SA-4.0.txt.</description>
+        <name>Jepyso figures</name>
+        <description>The two 3D bodies, the movements, props, sheets and stills of the twelve exercises, and the sheets they are built from (modelos/fichas/). The bodies are made from the base assets of MakeHuman (CC0). Under CC BY-SA 4.0, compatible with the GNU GPL v3; terms and attribution in reproductor/modelos/LICENSE.md, licence text in reproductor/modelos/CC-BY-SA-4.0.txt.</description>
         <version>2026-11-15</version>
         <license>CC BY-SA</license>
         <licenseversion>4.0</licenseversion>

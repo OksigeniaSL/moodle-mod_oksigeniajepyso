@@ -1,7 +1,7 @@
 // The goniometer of the builder, for the professional: the joint that moves most in the exercise (from its sheet, the
 // angles at the start and at the top), its angle in degrees while the figure plays, on a protractor with the range it
 // sweeps. Jepyso's exercises are written in degrees; this shows them.
-import { t } from './idioma.js';
+import { t } from './idioma.js?v=f723b7bb65';
 
 const NS = 'http://www.w3.org/2000/svg';
 const ZONAS = { cadera: 'Cadera', rodilla: 'Rodilla', hombro: 'Hombro', codo: 'Codo', tobillo: 'Tobillo', tronco: 'Tronco',

@@ -36,7 +36,7 @@ fisioterapeutas, entrenadores o profesionales de las ciencias del deporte.
 ### 1. El docente arma la rutina
 
 En los ajustes de la actividad, «Armar la rutina» abre el constructor de Jepyso: los ejercicios con sus series,
-repeticiones, ritmo y lado, el descanso entre series, los días a la semana y la molestia aceptable. Cuando está lista,
+repeticiones, ritmo y lado, el descanso entre series o las vueltas de un circuito, los días a la semana y la molestia aceptable. Cuando está lista,
 la rutina vuelve sola al formulario. También se puede pegar una rutina hecha en
 [app.jepyso.com](https://app.jepyso.com), con su enlace o su código.
 
@@ -107,12 +107,10 @@ cierra el reproductor. Probada en Android con la app oficial 5.2.
 
 ## Los ejercicios
 
-El plugin trae una muestra gratis de doce ejercicios para todo el cuerpo, en las dos figuras: levantarse de la silla,
+El plugin trae doce ejercicios para todo el cuerpo, en las dos figuras: levantarse de la silla,
 puente de glúteo, rotación externa con banda, media sentadilla, elevación de talones, equilibrio a una pierna, plancha
 de rodillas, brazo y pierna contrarios a cuatro patas, gato-camello, almeja, extensión de rodilla sentado y rodilla al
-pecho. La biblioteca completa de Jepyso (97 ejercicios, con los programas Otago y Vivifrail) la servirá Oksigenia con
-una clave para cada sitio, de pago; esta versión aún no la trae. Si una rutina lleva ejercicios que el sitio no tiene,
-el docente ve cuáles.
+pecho. Si una rutina lleva ejercicios que el sitio no tiene, el docente ve cuáles.
 
 ## Idiomas
 
@@ -141,20 +139,22 @@ borrarlas.
 
 ## Para quien desarrolla
 
-- El reproductor de `reproductor/` es la app web de Jepyso, construida desde su repositorio con
-  `tools/construir-moodle.sh <esta carpeta>`. No se cambia aquí.
-- El reproductor lee su arranque de `sesion.php` y guarda con los servicios web `mod_oksigeniajepyso_save_sessions` y
-  `mod_oksigeniajepyso_get_sessions`.
+- El reproductor de `reproductor/` es la app web de Jepyso con solo lo que usa un curso, construida desde su
+  repositorio con `tools/construir-moodle.sh <esta carpeta>`, que escribe también `templates/player.mustache`. No se
+  cambian aquí.
+- Sus páginas son `player.php` y `builder.php`. Lee y guarda las sesiones con las funciones externas
+  `mod_oksigeniajepyso_get_sessions` y `mod_oksigeniajepyso_save_sessions`.
+- El guion del formulario de la actividad está en `amd/src/form.js`; tras un cambio, `grunt amd`.
 - PHPUnit cubre las rutinas, las sesiones, los servicios web, la finalización, las calificaciones, la privacidad, la
-  copia de seguridad y la página en la app.
+  copia de seguridad, la página en la app y que el reproductor no sale del sitio.
 
 ## Licencia
 
 GNU GPL v3 o posterior (`LICENSE`). Copyright 2026 Oksigenia SL. El reproductor es la app web de Jepyso
 ([OksigeniaSL/jepyso](https://github.com/OksigeniaSL/jepyso)), GPL v3 o posterior, con three.js (MIT) y las fuentes
-Red Hat (OFL). Su contenido (las dos figuras y los doce ejercicios de la muestra, las cabeceras de yeso, el icono, el
+Red Hat (OFL). Su contenido (las dos figuras y los doce ejercicios, las cabeceras de yeso, el icono, el
 mapa del cuerpo y la voz grabada) va con CC BY-SA 4.0, en `reproductor/modelos/LICENSE.md`, con las fichas de las que
-salen los movimientos en `reproductor/modelos/fichas/`. La biblioteca completa de Jepyso no va en este paquete.
+salen los movimientos en `reproductor/modelos/fichas/`.
 
 ---
 

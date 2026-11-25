@@ -215,7 +215,7 @@ function buildPanelHtml(opts) {
       <button class="oks-access-reset" id="oks-reset" type="button">${escapeHtml(t.reset)}</button>
       ${showFold ? `<button class="oks-access-fold" id="oks-fold" type="button">${escapeHtml(t.fold)}</button>` : ""}
     </div>
-    <div class="oks-access-branding">${escapeHtml(t.dev)} <a href="https://oksigenia.com" target="_blank" rel="noopener noreferrer">Oksigenia</a></div>
+    <div class="oks-access-branding">${escapeHtml(t.dev)} Oksigenia</div>
   </div>
 </div>
 `;

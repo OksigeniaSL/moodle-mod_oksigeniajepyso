@@ -2,7 +2,7 @@
 // Texts are written for any Spanish speaker (tú, no regional words), from open home-exercise guides (AAOS, NHS).
 // They stay in Spanish here, as data: the screens show each one through t() (idioma.js), so a routine reads the same
 // on a phone in any language.
-import { idioma, t, tn } from './idioma.js';
+import { idioma, t, tn } from './idioma.js?v=f723b7bb65';
 
 // Every exercise: the starting position, the steps, where it is felt (only when an open guide says so), the most
 // common mistake, an easier way when the guide gives one, and the open guides it comes from (docs/guias-tanda-1.md
@@ -1790,12 +1790,97 @@ export const EJERCICIOS = {
     error: 'Encoger los hombros. La fuerza, en las manos y en los antebrazos.',
     fuentes: ['Vivifrail, estrujar una toalla (pasaportes C y D, Ministerio de Sanidad)'],
   },
+  // Four for strength, asked by Abakinesis for its article on strength for runners and cyclists (21 and 22-11-2026).
+  zancada: {
+    nombre: 'Zancada fija',
+    otrosNombres: ['split squat', 'zancada estática', 'tijera'],
+    posicion: 'De pie',
+    material: 'Sin material',
+    unLado: true,
+    zonas: ['rodilla', 'cadera'],
+    musculos: { principales: ['cuadriceps', 'gluteo_mayor'], secundarios: ['isquiotibiales', 'aductores'] },
+    porDefecto: { series: 3, reps: 8, tempo: [2, 1, 2] },
+    partida: 'De pie, con un pie delante y el otro detrás, separados como un paso largo: el de delante, entero en el suelo; el de atrás, en la punta, con el talón levantado. Las manos en la cintura.',
+    pasos: [
+      'Baja en vertical: la rodilla de atrás va hacia el suelo, sin llegar a tocarlo.',
+      'Para cuando las dos rodillas estén dobladas en ángulo recto, con la de delante encima del tobillo.',
+      'Sube empujando con la pierna de delante, con el tronco recto.',
+    ],
+    notar: 'En el muslo y el glúteo de la pierna de delante.',
+    error: 'Echar el cuerpo hacia delante, de modo que la rodilla de delante pase de la punta del pie. Baja en vertical, con el tronco recto.',
+    ayuda: 'Si te cuesta el equilibrio, ponte junto a una pared o una silla firme y apoya una mano.',
+    masDificil: 'Cuando te resulte fácil, hazlo con una mochila con peso a la espalda.',
+    fuentes: ['Abakinesis, «¿Hace falta hacer fuerza si solo corrés o pedaleás?»', 'University of Sussex Sport, split squat'],
+  },
+  puente_una_pierna: {
+    nombre: 'Puente de glúteo a una pierna',
+    otrosNombres: ['single leg bridge', 'puente a una pierna', 'elevación de pelvis a una pierna'],
+    posicion: 'Boca arriba',
+    material: 'Esterilla',
+    unLado: true,
+    zonas: ['cadera', 'lumbar', 'rodilla'],
+    musculos: { principales: ['gluteo_mayor'], secundarios: ['isquiotibiales', 'erectores'] },
+    porDefecto: { series: 3, reps: 10, tempo: [2, 1, 2] },
+    partida: 'Boca arriba, con los brazos a los lados y la rodilla de la pierna que trabaja doblada, con el pie apoyado. La otra pierna, estirada en el aire, a la altura del otro muslo.',
+    pasos: [
+      'Aprieta el abdomen y el glúteo.',
+      'Sube la cadera empujando con el talón del pie apoyado, hasta que hombros, cadera y rodilla queden en línea.',
+      'Mantén arriba sin que la cadera se incline hacia un lado.',
+      'Baja despacio, con la pierna estirada a la misma altura.',
+    ],
+    notar: 'En el glúteo y en la parte de atrás del muslo de la pierna apoyada.',
+    error: 'Dejar caer la cadera del lado de la pierna estirada. Las dos caderas suben y bajan a la misma altura.',
+    ayuda: 'Si te cuesta, haz el puente con los dos pies apoyados y pasa a una pierna cuando te resulte fácil.',
+    fuentes: ['Abakinesis, «¿Hace falta hacer fuerza si solo corrés o pedaleás?»', 'University Hospitals of Leicester (NHS), dolor de cadera'],
+  },
+  talones_escalon: {
+    nombre: 'Elevación de talones a una pierna en el escalón',
+    otrosNombres: ['single leg calf raise', 'talones en el escalón', 'gemelo en el escalón'],
+    posicion: 'De pie, frente a la pared',
+    material: 'Un escalón junto a una pared',
+    unLado: true,
+    zonas: ['tobillo', 'rodilla'],
+    musculos: { principales: ['gemelos'], secundarios: [] },
+    porDefecto: { series: 3, reps: 12, tempo: [2, 1, 3] },
+    partida: 'De pie sobre un escalón, de cara a la pared, con la parte delantera del pie que trabaja en el borde y el talón en el aire. La otra pierna, doblada hacia atrás. Las dos manos en la pared, algo por encima de los hombros.',
+    pasos: [
+      'Sube de puntillas todo lo que puedas.',
+      'Mantén arriba un momento.',
+      'Baja despacio, hasta que el talón quede por debajo del escalón y notes el estiramiento en la pantorrilla.',
+    ],
+    notar: 'En la pantorrilla de la pierna que trabaja.',
+    error: 'Bajar de golpe. La bajada es lenta, de unos tres segundos.',
+    ayuda: 'Si te cuesta, hazlo con los dos pies y pasa a uno cuando te resulte fácil.',
+    cuidado: 'Si te duele detrás del talón, donde el tendón se une al hueso, no bajes por debajo del escalón: hazlo en el suelo.',
+    fuentes: ['Abakinesis, «¿Hace falta hacer fuerza si solo corrés o pedaleás?»', 'Newcastle Hospitals (NHS), tendinopatía de Aquiles', 'Leicestershire Partnership (NHS), tendinopatía de Aquiles'],
+  },
+  sentadilla_silla: {
+    nombre: 'Sentadilla a la silla',
+    otrosNombres: ['box squat', 'chair squat', 'sentadilla tocando la silla'],
+    posicion: 'De pie',
+    material: 'Silla firme',
+    unLado: false,
+    zonas: ['rodilla', 'cadera'],
+    musculos: { principales: ['cuadriceps', 'gluteo_mayor'], secundarios: ['isquiotibiales', 'aductores', 'erectores'] },
+    porDefecto: { series: 3, reps: 10, tempo: [2, 0, 1] },
+    partida: 'De pie, de espaldas a una silla firme, sin ruedas y apoyada en la pared, tan cerca que la notes detrás de las piernas. Los pies, a la anchura de los hombros, y los brazos cruzados sobre el pecho.',
+    pasos: [
+      'Baja despacio llevando la cadera hacia atrás, con el pecho alto, como si fueras a sentarte.',
+      'Roza el asiento con los glúteos, sin sentarte ni dejar caer el peso.',
+      'Sube empujando con los talones hasta quedar erguido.',
+    ],
+    notar: 'Delante de los muslos y en los glúteos.',
+    error: 'Dejarte caer en la silla o rebotar en ella. Abajo solo la rozas: el peso sigue en los pies.',
+    ayuda: 'Si te cuesta, pon un cojín firme en el asiento para bajar menos.',
+    masDificil: 'Cuando te resulte fácil, baja más despacio o usa una silla más baja.',
+    fuentes: ['Abakinesis, «¿Hace falta hacer fuerza si solo corrés o pedaleás?»', 'University Hospitals Coventry and Warwickshire (NHS), Exercise Handbook: box squat', 'British Heart Foundation, strength exercises'],
+  },
 };
 
 // The library the professional sees, grouped by position: only exercises whose clips exist for both bodies.
 export const ORDEN = [
   // lying on the back
-  'talon', 'pierna_recta', 'cuadriceps', 'arco_corto', 'puente', 'gluteos', 'rodilla_pecho', 'basculacion', 'abdominal',
+  'talon', 'pierna_recta', 'cuadriceps', 'arco_corto', 'puente', 'puente_una_pierna', 'gluteos', 'rodilla_pecho', 'basculacion', 'abdominal',
   'rodillas_lado', 'bicho_muerto', 'cojin_rodillas', 'tobillos', 'isquios_toalla',
   // face down, on the side and on all fours
   'extension_antebrazos', 'extension_lumbar', 'plancha_rodillas', 'plancha', 'almeja', 'abduccion_lado', 'rotacion_lado', 'plancha_lateral_rodilla', 'plancha_lateral', 'bird_dog', 'gato_camello',
@@ -1804,11 +1889,11 @@ export const ORDEN = [
   // sitting: knee, foot, neck and shoulder blades
   'extension_rodilla', 'extension_rodilla_lastre', 'marcha_sentado', 'abduccion_sentado', 'talones_sentado', 'isquios_sentado', 'curl_sentado', 'brazos_arriba', 'brazos_silla', 'estrujar_toalla', 'silla', 'silla_dos_manos', 'silla_una_mano', 'toalla_dedos', 'retraccion', 'cuello_giro', 'cuello_lado', 'iso_cuello', 'trapecio',
   'escapulas',
-  // sitting at a table: wrist and hand (back on 13 November 2026 with Gaudí's modelled hand)
+  // sitting at a table: wrist and hand (back on 13 November 2026 with the modelled hand)
   'muneca', 'prono_supinacion', 'estira_flexores', 'estira_extensores', 'tendinoso', 'abrir_cerrar', 'pelota',
   'deslizar_mesa',
   // standing by a chair, and on a step
-  'talones', 'talones_sin_apoyo', 'puntas', 'puntas_sin_apoyo', 'curl_isquios', 'curl_isquios_lastre', 'sentadilla', 'sentadilla_sin_apoyo', 'abduccion_pie', 'abduccion_pie_lastre', 'equilibrio', 'equilibrio_sin_apoyo', 'tandem_quieto', 'tandem_quieto_sin_apoyo', 'cuadriceps_pie', 'escalon', 'extension_espalda_pie', 'rotacion_tronco_pie',
+  'talones', 'talones_sin_apoyo', 'puntas', 'puntas_sin_apoyo', 'curl_isquios', 'curl_isquios_lastre', 'sentadilla', 'sentadilla_sin_apoyo', 'sentadilla_silla', 'zancada', 'abduccion_pie', 'abduccion_pie_lastre', 'equilibrio', 'equilibrio_sin_apoyo', 'tandem_quieto', 'tandem_quieto_sin_apoyo', 'cuadriceps_pie', 'escalon', 'talones_escalon', 'extension_espalda_pie', 'rotacion_tronco_pie',
   // walking on the spot, over a running floor tape (counted in steps)
   'caminar', 'andar_atras', 'andar_lado', 'andar_tandem', 'andar_tandem_atras', 'andar_talones', 'andar_puntillas',
   'andar_ocho', 'andar_obstaculos', 'andar_globo',
@@ -1830,7 +1915,7 @@ export const ZONAS = {
   mano: 'Mano y muñeca',
 };
 
-// The twenty muscle groups painted on Gaudí's bodies (modelos/musculos.js), with the name a professional uses.
+// The twenty muscle groups painted on the figures' bodies (modelos/musculos.js), with the name a professional uses.
 export const MUSCULOS = {
   gluteo_mayor: 'Glúteo mayor',
   gluteo_medio: 'Glúteo medio',
@@ -1995,7 +2080,7 @@ async function descomprimir(bytes) {
       // Without deflate-raw: the decoder of our own below.
     }
   }
-  const { inflar } = await import('./inflar.js');
+  const { inflar } = await import('./inflar.js?v=f723b7bb65');
   return new TextDecoder().decode(inflar(bytes));
 }
 
@@ -2008,11 +2093,28 @@ export async function decodificar(codigo) {
 
 // Seconds one exercise takes: every repetition is up + hold + down + one second at rest.
 // Seconds of an exercise. Walking (counted in steps) goes step after step, with no rest: each step takes its own time.
-export function duracionEjercicio(e, descanso, def = null) {
+function duracionSerie(e, def) {
   const [s, m, b] = e.tempo;
+  return porMinutos(def) ? e.reps * 60 : porPasos(def) ? e.reps * ((s + b) / 2) : def?.unidad === 'vueltas' ? e.reps * (s + m + b) : e.reps * (s + m + b + 1);
+}
+
+export function duracionEjercicio(e, descanso, def = null) {
   const lados = e.lado === 'ambos' ? 2 : 1;
-  const serie = porMinutos(def) ? e.reps * 60 : porPasos(def) ? e.reps * ((s + b) / 2) : def?.unidad === 'vueltas' ? e.reps * (s + m + b) : e.reps * (s + m + b + 1);
-  return lados * (e.series * serie + (e.series - 1) * descanso);
+  return lados * (e.series * duracionSerie(e, def) + (e.series - 1) * descanso);
+}
+
+// A circuit: every exercise once in each round, one after the other, with a short rest between exercises (and between
+// the two sides of one) and a longer one between rounds.
+export const DESCANSOS_CIRCUITO = [15, 30, 45, 60];
+export const ENTRE_VUELTAS = [60, 90, 120, 180];
+export const VUELTAS = [2, 3, 4, 5, 6];
+
+// Seconds of a whole routine. lista: [{ e: { series, reps, tempo, lado }, def }]; with vueltas, done as a circuit.
+export function duracionRutina(lista, { descanso, vueltas = 0, entreVueltas = 120 }) {
+  if (!vueltas) return lista.reduce((suma, { e, def }) => suma + duracionEjercicio(e, descanso, def), 0);
+  const tandas = lista.reduce((n, { e }) => n + (e.lado === 'ambos' ? 2 : 1), 0);
+  const vuelta = lista.reduce((suma, { e, def }) => suma + (e.lado === 'ambos' ? 2 : 1) * duracionSerie(e, def), 0) + Math.max(0, tandas - 1) * descanso;
+  return vueltas * vuelta + (vueltas - 1) * entreVueltas;
 }
 
 export function minutos(segundos) {
@@ -2043,6 +2145,3 @@ export const almacen = {
     }
   },
 };
-
-// Kept in Spanish, as the key of its translation: the screens show it through t(SIN_SITIO).
-export const SIN_SITIO = 'No se ha podido guardar: este aparato no tiene más sitio para Jepyso. Guarda una copia en un archivo (en Personas) y borra lo que ya no uses.';

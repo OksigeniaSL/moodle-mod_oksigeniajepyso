@@ -9,7 +9,7 @@
 // Left and right: with textures, from the rest position (sharp on the midline); without them, from the vertex
 // attribute _LADO (1 left, 0 right, soft on the midline).
 //
-//   import { prepararMusculos } from './musculos.js';
+//   import { prepararMusculos } from './musculos.js?v=f723b7bb65';
 //   const musculos = prepararMusculos(gltf.scene, { texturas: 'modelos/musculos/' });   // once, after loading the body
 //   musculos.iluminar({ principales: ['gluteo_mayor'], secundarios: ['isquiotibiales'], lado: 'ambos' });
 //   musculos.fuerza(0.3);     // 0..1: how hard it works now (the player breathes it: low at rest, full when holding)
@@ -17,7 +17,7 @@
 //
 // `lado` is the body's own side ('derecho', 'izquierdo' or 'ambos'), as the exercise sheet says. When the app mirrors
 // the figure to do the other side, the lit muscles go with the arm that works: nothing else to change.
-import * as THREE from '../libs/three/three.module.js';
+import * as THREE from '../libs/three/three.module.js?v=f723b7bb65';
 
 export const GRUPOS = [
   'gluteo_mayor', 'gluteo_medio', 'cuadriceps', 'isquiotibiales',

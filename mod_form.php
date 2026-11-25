@@ -41,7 +41,7 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
      * The fields of the form.
      */
     public function definition() {
-        global $PAGE;
+        global $OUTPUT, $PAGE;
         $mform = $this->_form;
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -52,21 +52,14 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         $mform->addElement('header', 'routinehdr', get_string('routinehdr', 'mod_oksigeniajepyso'));
-        // The builder of the player opens in a window of its own and sends the routine back here. Without JavaScript,
-        // the link opens it in another tab and the link of the routine is copied from there.
-        $builder = new moodle_url('/mod/oksigeniajepyso/reproductor/index.html', ['armar' => 1, 'idioma' => current_language()]);
-        $buildlink = html_writer::link(
-            $builder,
-            get_string('buildroutine', 'mod_oksigeniajepyso'),
-            [
-                'class' => 'btn mod-oksigeniajepyso-button is-secondary',
-                'id' => 'mod_oksigeniajepyso_build',
-                'target' => 'jepyso-armar',
-                'rel' => 'opener',
-            ]
+        // The builder opens in a window of its own and sends the routine back here (amd/src/form.js). Without
+        // JavaScript, the link opens it in another tab and the code of the routine is copied from there.
+        $builder = new moodle_url(
+            '/mod/oksigeniajepyso/builder.php',
+            $this->_cm ? ['id' => $this->_cm->id] : ['course' => $this->get_course()->id]
         );
-        $buildhint = html_writer::span(get_string('buildroutinehint', 'mod_oksigeniajepyso'), 'mod-oksigeniajepyso-hint');
-        $mform->addElement('static', 'buildroutine', '', html_writer::span($buildlink . $buildhint, 'mod-oksigeniajepyso-launch'));
+        $launch = $OUTPUT->render_from_template('mod_oksigeniajepyso/form_builder', ['url' => $builder->out(false)]);
+        $mform->addElement('static', 'buildroutine', '', $launch);
         $mform->addElement('textarea', 'routine', get_string('routine', 'mod_oksigeniajepyso'), ['rows' => 3, 'cols' => 60]);
         $mform->setType('routine', PARAM_RAW_TRIMMED);
         $mform->addRule('routine', null, 'required', null, 'client');
@@ -77,61 +70,11 @@ class mod_oksigeniajepyso_mod_form extends moodleform_mod {
         $mform->setDefault('sessions', 0);
         $mform->addHelpButton('sessions', 'sessions', 'mod_oksigeniajepyso');
 
-        $PAGE->requires->js_amd_inline(self::builder_script($builder));
+        $PAGE->requires->js_call_amd('mod_oksigeniajepyso/form', 'init');
 
         $this->standard_grading_coursemodule_elements();
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
-    }
-
-    /**
-     * The script that opens the builder and takes the routine it sends back.
-     *
-     * @param moodle_url $builder The address of the builder.
-     * @return string
-     */
-    private static function builder_script(moodle_url $builder): string {
-        $url = json_encode($builder->out(false));
-        return <<<JS
-require([], function() {
-    var link = document.getElementById('mod_oksigeniajepyso_build');
-    var field = document.getElementById('id_routine');
-    if (!link || !field) {
-        return;
-    }
-    // A code that changes in the form is not the one its preview shows: the preview goes until the form is saved.
-    var outdated = function() {
-        var preview = document.getElementById('mod_oksigeniajepyso_preview');
-        var stale = document.getElementById('mod_oksigeniajepyso_stale');
-        if (preview && stale) {
-            preview.hidden = true;
-            stale.hidden = false;
-        }
-    };
-    field.addEventListener('input', outdated);
-    link.addEventListener('click', function(e) {
-        // A window of its own; if the browser refuses it, the link opens the builder in another tab.
-        var builder = window.open({$url}, 'jepyso-armar', 'popup,width=1180,height=860');
-        if (builder) {
-            e.preventDefault();
-            builder.focus();
-        }
-    });
-    window.addEventListener('message', function(e) {
-        var data = e.data;
-        if (e.origin !== window.location.origin || !data || data.tipo !== 'jepyso-rutina') {
-            return;
-        }
-        if (typeof data.codigo !== 'string' || !/^[A-Za-z0-9._-]{1,20000}$/.test(data.codigo)) {
-            return;
-        }
-        field.value = data.codigo;
-        outdated();
-        field.dispatchEvent(new Event('change', {bubbles: true}));
-        field.focus();
-    });
-});
-JS;
     }
 
     /**
@@ -159,7 +102,7 @@ JS;
             $mform->insertElementBefore($mform->createElement('static', 'routinepreview', '', $preview), 'sessions');
         }
         if ($check['error'] === null && $warnings) {
-            $notice = html_writer::div(implode('<br>', array_map('s', $warnings)), 'alert alert-warning mb-0');
+            $notice = $OUTPUT->render_from_template('mod_oksigeniajepyso/form_warnings', ['warnings' => $warnings]);
             $element = $mform->createElement('static', 'routinewarning', '', $notice);
             $mform->insertElementBefore($element, 'sessions');
         }

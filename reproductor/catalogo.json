@@ -76,6 +76,21 @@
     "material": "Mat"
    }
   },
+  "puente_una_pierna": {
+   "nombre": "Puente de glúteo a una pierna",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "Boca arriba",
+   "material": "Esterilla",
+   "disponible": false,
+   "en": {
+    "nombre": "Single-leg glute bridge",
+    "posicion": "Lying on your back",
+    "material": "Mat"
+   }
+  },
   "gluteos": {
    "nombre": "Apretar los glúteos",
    "unLado": false,
@@ -991,6 +1006,36 @@
     "material": "Sturdy support within reach"
    }
   },
+  "sentadilla_silla": {
+   "nombre": "Sentadilla a la silla",
+   "unLado": false,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Silla firme",
+   "disponible": false,
+   "en": {
+    "nombre": "Squat to a chair",
+    "posicion": "Standing",
+    "material": "Sturdy chair"
+   }
+  },
+  "zancada": {
+   "nombre": "Zancada fija",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie",
+   "material": "Sin material",
+   "disponible": false,
+   "en": {
+    "nombre": "Split squat",
+    "posicion": "Standing",
+    "material": "No equipment"
+   }
+  },
   "abduccion_pie": {
    "nombre": "Abducción de cadera de pie",
    "unLado": true,
@@ -1109,6 +1154,21 @@
     "nombre": "Step-up",
     "posicion": "Standing",
     "material": "A step"
+   }
+  },
+  "talones_escalon": {
+   "nombre": "Elevación de talones a una pierna en el escalón",
+   "unLado": true,
+   "unidad": "reps",
+   "uno": "repetición",
+   "varios": "repeticiones",
+   "posicion": "De pie, frente a la pared",
+   "material": "Un escalón junto a una pared",
+   "disponible": false,
+   "en": {
+    "nombre": "Single-leg heel raises on a step",
+    "posicion": "Standing, facing the wall",
+    "material": "A step next to a wall"
    }
   },
   "extension_espalda_pie": {

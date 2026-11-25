@@ -6,8 +6,9 @@
 // nothing the person hears is sent anywhere). Without either the routine goes on with its tones. On by default; the
 // person can turn it off, and the choice stays on that phone. In English, the same two brand voices speak English
 // (voz/mira-en, voz/altair-en), and the phone's own voice is an English one.
-import { almacen } from './datos.js';
-import { idioma, t } from './idioma.js';
+import { almacen } from './datos.js?v=f723b7bb65';
+import { idioma, t } from './idioma.js?v=f723b7bb65';
+import { RAIZ } from './raiz.js?v=f723b7bb65';
 
 let voz = null;
 let buscada = false;
@@ -33,10 +34,11 @@ function elegirVoz() {
 // Who speaks: each recorded voice in its folder, with voz/<folder>/indice.json saying the file of each sentence
 // ({ "Descansa": "a1b2c3d4e5f6", … }).
 const CARPETAS_DE = { es: { mujer: 'mira', hombre: 'altair' }, en: { mujer: 'mira-en', hombre: 'altair-en' } };
-const CARPETAS = CARPETAS_DE[idioma()] || CARPETAS_DE.es;
+// Asked each time: the language is only settled once the app has loaded (a published routine brings its own).
+const carpetas = () => CARPETAS_DE[idioma()] || CARPETAS_DE.es;
 export const quienHabla = () => {
   let q = almacen.leer('voz-quien', '');
-  if (!Object.hasOwn(CARPETAS, q)) {
+  if (!Object.hasOwn(carpetas(), q)) {
     q = Math.random() < 0.5 ? 'mujer' : 'hombre';
     almacen.guardar('voz-quien', q);
   }
@@ -62,7 +64,7 @@ function cargarIndice() {
     indiceListo = false;
     tomas.clear();
   }
-  pidiendoIndice ||= pedir(`voz/${CARPETAS[q]}/indice.json`)
+  pidiendoIndice ||= pedir(`${RAIZ}voz/${carpetas()[q]}/indice.json`)
     .then((r) => (r ? r.json() : null))
     .then((i) => {
       if (indiceDe === q) indice = i && typeof i === 'object' && !Array.isArray(i) ? i : null;
@@ -74,7 +76,7 @@ function cargarIndice() {
   return pidiendoIndice;
 }
 export function ponerQuien(q) {
-  if (!Object.hasOwn(CARPETAS, q)) return;
+  if (!Object.hasOwn(carpetas(), q)) return;
   almacen.guardar('voz-quien', q);
   callar();
   cargarIndice();
@@ -113,7 +115,7 @@ function toma(texto) {
   const k = indice?.[texto];
   if (!esClave(k)) return null;
   if (!tomas.has(k)) {
-    tomas.set(k, pedir(`voz/${CARPETAS[indiceDe]}/${k}.mp3`)
+    tomas.set(k, pedir(`${RAIZ}voz/${carpetas()[indiceDe]}/${k}.mp3`)
       .then((r) => (r ? r.arrayBuffer() : Promise.reject(new Error(k))))
       .then((b) => audio().decodeAudioData(b))
       .catch(() => {
@@ -197,7 +199,7 @@ export function callar() {
 export async function rutasDeVoz(textos) {
   await cargarIndice();
   if (!indice) return [];
-  const carpeta = `voz/${CARPETAS[indiceDe]}`;
+  const carpeta = `${RAIZ}voz/${carpetas()[indiceDe]}`;
   const claves = new Set(textos.flatMap((x) => partes(t(x))).map((x) => indice[x]).filter(esClave));
   return [`${carpeta}/indice.json`, ...[...claves].map((k) => `${carpeta}/${k}.mp3`)];
 }

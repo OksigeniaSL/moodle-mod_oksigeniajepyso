@@ -46,9 +46,8 @@ function oksigeniajepyso_supports($feature) {
         case FEATURE_GRADE_OUTCOMES:
             return false;
         case FEATURE_MOD_PURPOSE:
-            // Not «assessment»: its icon would take the theme's colour for it, and the activity keeps the look of Jepyso
-            // (Enrique, 15-11-2026: Oksigenia's plugins do not look like stock Moodle). It still counts for completion
-            // and grade.
+            // Not «assessment»: its icon would take the theme's colour for it, and the activity keeps its own look. It
+            // still counts for completion and grade.
             return MOD_PURPOSE_OTHER;
         default:
             return null;

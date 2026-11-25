@@ -1,32 +1,23 @@
 // Jepyso: the professional builds a routine, sends it as a link, the person does it with the 3D figure and sends
-// back a summary link. No server: everything travels inside the links.
+// back a summary link. No server: everything travels inside the links. Here, the builder and the player; what changes
+// between app.jepyso.com and a Moodle course (who the routine is for, where what is done goes) is in entorno.js.
 import {
   EJERCICIOS, ORDEN, ZONAS, MUSCULOS, buscarEjercicios, LADOS, TOPE_MOLESTIA, pasaDelTope, diaLocal, diaAnterior,
-  codificar, decodificar, duracionEjercicio, minutos, almacen, BANDAS, conBanda, bandaDe, SIN_SITIO, unidad, porPasos, porMinutos, topeReps,
+  decodificar, duracionRutina, minutos, almacen, VUELTAS, DESCANSOS_CIRCUITO, ENTRE_VUELTAS, BANDAS, conBanda, bandaDe, unidad, porPasos, porMinutos, topeReps,
   tituloUnidad, palabraUnidad, cuentaUnidad, deTotalUnidad, fraseUnidad,
-} from './datos.js';
-import { t, tn, idioma, otroIdioma, ponerIdioma, IDIOMAS, locale, cargarIdioma } from './idioma.js';
-import { limpiarRutina, limpiarResumen, limpiarPlantilla, limpiarPlantillas } from './entrada.js';
-import { hayVoz, vozActiva, ponerVoz, decir, callar, numero, modoVoz, quienHabla, ponerQuien, rutasDeVoz, FRASES_GENERALES } from './voz.js';
+} from './datos.js?v=f723b7bb65';
+import { t, tn, idioma, otroIdioma, ponerIdioma, IDIOMAS, locale, cargarIdioma } from './idioma.js?v=f723b7bb65';
+import { limpiarRutina, limpiarPlantilla, limpiarPlantillas } from './entrada.js?v=f723b7bb65';
+import { hayVoz, vozActiva, ponerVoz, decir, callar, numero, modoVoz, quienHabla, ponerQuien, rutasDeVoz, FRASES_GENERALES } from './voz.js?v=f723b7bb65';
+import { MAPA, PUNTOS } from './mapa.js?v=f723b7bb65';
+import { PROGRAMAS } from './programas.js?v=f723b7bb65';
+import { medida, dibujar, actualizar } from './goniometro.js?v=f723b7bb65';
 import {
-  leerPersonas, guardarPersonas, buscarPorNombre, crearPersona, apuntarRutina, apuntarResumen, semanas, copia, cargarCopia, caben, limite,
-  esDePago, esEntornoDePruebas, leerBorradas, apuntarBorrada, LIMITE_GRATIS, sinNoticias,
-} from './personas.js';
-import { NUBES, nubeElegida, elegirNube, ultimaVez, apuntarVez, nubeAnterior, sincronizar } from './nube.js';
-import { cargarGoogle } from './drive.js';
-import { comprobarLicencia, licencia, licenciaPendiente, licenciaAnulada, comprobarVigencia, guardarLicencia, cuentaDelDrive, licenciaActiva, topeLicencia, nombrePlan } from './licencia.js';
-import { ampliarPlan } from './tienda.js';
-import {
-  valesEnMarcha, fichaAbierta, fichaSinPlaza, cuentaDeVales, fichasQuedan, avisoVales, alCambiarVales, comprobarVales, pedirVale, pedirVales,
-  soltarVale, botonGoogle,
-} from './vales.js';
-import { MAPA, PUNTOS } from './mapa.js';
-import { PROGRAMAS } from './programas.js';
-import { medida, dibujar, actualizar } from './goniometro.js';
-import {
-  enMoodle, armandoParaMoodle, rutinaDelFormulario, prepararMoodle, moodle, vistaPrevia, volverAlCurso, juntarHistorial, subirHistorial, recordarClave, TEXTO_ESTADO,
-  devolverRutina, enAppDeMoodle, TEXTO_CERRAR,
-} from './moodle.js';
+  preparar, PESTANAS, INSTALABLE, firma, ayuda, avisoPestana, etapasArmar, textosArmar, pasoPara, bandaArmar, alPintarArmar, alPulsarArmar, alEscribirArmar,
+  antesDeArmar, entregar, alBorrarPlantilla, alAbrir, alGuardar, avisoPersona, destinoMarca, tarjetaEnviar, tarjetaSinNada, tarjetaRecordatorio, invitacion,
+  pieFin, textoFin, textoDejar, textoSinSitio, alPulsarRutina, direccion, vista, inicio,
+} from './entorno.js?v=f723b7bb65';
+import { RAIZ } from './raiz.js?v=f723b7bb65';
 
 // The language first (idioma.js): every text below is written in it, from the first screen on. The page's title and
 // Oksigenia's accessibility panel (which redraws itself when its locale changes) follow it.
@@ -36,11 +27,11 @@ document.querySelector('oksigenia-access-panel')?.setAttribute('locale', idioma(
 
 const app = document.getElementById('app');
 const parametros = new URLSearchParams(location.search);
-const RUTAS = { a: 'modelos/ejercicios.json', b: 'modelos/b/ejercicios.json' };
+const RUTAS = { a: `${RAIZ}modelos/ejercicios.json`, b: `${RAIZ}modelos/b/ejercicios.json` };
 // The still of every exercise, for the library rows and the routine of the person, made by tools/posters/ next to each
 // body's clips. One that is not there leaves its tile empty instead of a broken image.
 // The still of an exercise; with a band colour, the one with the band in that colour.
-const poster = (id, c, banda) => `modelos/${c === 'b' ? 'b/' : ''}posters/${id}${banda ? `-${banda}` : ''}.webp`;
+const poster = (id, c, banda) => `${RAIZ}modelos/${c === 'b' ? 'b/' : ''}posters/${id}${banda ? `-${banda}` : ''}.webp`;
 app.addEventListener('error', (ev) => ev.target.closest?.('.biblio-poster, .tarjeta-poster')?.classList.add('vacio'), true);
 const calidad = parametros.get('calidad') === 'baja' ? 'baja' : 'alta';
 const manifiestos = {};
@@ -58,36 +49,29 @@ const ICONO = {
   completa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
   salirCompleta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>',
   sinVoz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>',
-  puntos: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
-  compartir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>',
-  compartirIos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M8 10H6v11h12V10h-2"/></svg>',
   volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
   cuerpo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M5 9l7 1.5L19 9M12 10.5V15m0 0l-3 6m3-6l3 6"/></svg>',
-  personas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M15.5 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>',
   plantillas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5h11v14H4z"/><path d="M8 8h11v14H8z"/><path d="M11 12h5M11 15.5h5M11 19h3" stroke-linecap="round"/></svg>',
-  candado: '<svg class="candado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="1.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>',
   abrir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"/></svg>',
   girar: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>',
-  telegram: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 4.3 2.9 11.4c-1.3.5-1.3 1.2-.2 1.6l4.7 1.5 1.8 5.5c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.6c.3-1.3-.5-1.9-1.3-1.5zM8.6 14l9.2-5.8c.5-.3.9-.1.5.2l-7.5 6.8-.3 3.3L8.6 14z"/></svg>',
-  whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg>',
   ayuda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg>',
   idioma: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3c2.4 2.6 3.5 5.6 3.5 9s-1.1 6.4-3.5 9c-2.4-2.6-3.5-5.6-3.5-9S9.6 5.6 12 3z"/></svg>',
   // Oksigenia's accessibility sign, the one the panel's own button wears on every Oksigenia website.
   acceso: '<svg viewBox="0 0 122.88 122.88" fill="currentColor"><path d="M61.44,0A61.46,61.46,0,1,1,18,18,61.21,61.21,0,0,1,61.44,0Zm-.39,74.18L52.1,98.91a4.94,4.94,0,0,1-2.58,2.83A5,5,0,0,1,42.7,95.5l6.24-17.28a26.3,26.3,0,0,0,1.17-4,40.64,40.64,0,0,0,.54-4.18c.24-2.53.41-5.27.54-7.9s.22-5.18.29-7.29c.09-2.63-.62-2.8-2.73-3.3l-.44-.1-18-3.39A5,5,0,0,1,27.08,46a5,5,0,0,1,5.05-7.74l19.34,3.63c.77.07,1.52.16,2.31.25a57.64,57.64,0,0,0,7.18.53A81.13,81.13,0,0,0,69.9,42c.9-.1,1.75-.21,2.6-.29l18.25-3.42A5,5,0,0,1,94.5,39a5,5,0,0,1,1.3,7,5,5,0,0,1-3.21,2.09L75.15,51.37c-.58.13-1.1.22-1.56.29-1.82.31-2.72.47-2.61,3.06.08,1.89.31,4.15.61,6.51.35,2.77.81,5.71,1.29,8.4.31,1.77.6,3.19,1,4.55s.79,2.75,1.39,4.42l6.11,16.9a5,5,0,0,1-6.82,6.24,4.94,4.94,0,0,1-2.58-2.83L63,74.23,62,72.4l-1,1.78Zm.39-53.52a8.83,8.83,0,1,1-6.24,2.59,8.79,8.79,0,0,1,6.24-2.59Zm36.35,4.43a51.42,51.42,0,1,0,15,36.35,51.27,51.27,0,0,0-15-36.35Z"/></svg>',
 };
 
-// The two bodies Gaudí made. Named by build, never by sex.
+// The two bodies of the figures. Named by build, never by sex.
 const FIGURAS = [['a', 'Figura 1'], ['b', 'Figura 2']];
 // The figure at ease, with nothing in the hands: the first frame of this exercise.
 const DE_PIE = 'extension_espalda_pie';
-// When the copy does not bring it (the free sample of the Moodle activity), the start of a standing exercise it does.
+// When the copy does not bring it (the Moodle activity), the start of a standing exercise it does.
 const DE_PIE_MUESTRA = ['talones', 'sentadilla', 'equilibrio'];
 
 // The choice of body with the still of each one standing (tools/posters/figuras.mjs): the names alone did not say how
 // they differ.
 function eleccionFigura(actual) {
   return `<div class="segmentos figuras" role="group" aria-label="${t('Figura')}">${FIGURAS.map(
-    ([v, nombre]) => `<button type="button" data-accion="cuerpo" data-valor="${v}" aria-pressed="${v === actual}"><img src="imagenes/figura-${v}.webp" alt="" width="36" height="48">${t(nombre)}</button>`,
+    ([v, nombre]) => `<button type="button" data-accion="cuerpo" data-valor="${v}" aria-pressed="${v === actual}"><img src="${RAIZ}imagenes/figura-${v}.webp" alt="" width="36" height="48">${t(nombre)}</button>`,
   ).join('')}</div>`;
 }
 
@@ -101,9 +85,6 @@ function enLista(cosas) {
   }
 }
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-// A file made from a summary that brought no name is kept as «Sin nombre» (entrada.js): data, shown in the language
-// in use. Any other name is the person's own.
-const nombreDe = (p) => (p.nombre === 'Sin nombre' ? t('Sin nombre') : p.nombre);
 
 // ---------- Tempo line ----------
 // Up, hold, down, then one second at rest: the same cycle the figure plays.
@@ -175,44 +156,6 @@ window.addEventListener('resize', () => medirTempos());
 // Templates come from this browser, a copy or the cloud: read through entrada.js like any outside data.
 const leerPlantillas = () => limpiarPlantillas(almacen.leer('plantillas', []));
 
-// The professional's first use: no link made yet, nobody in Personas and no template. Until then the builder opens with
-// the way (build it and send it, the person does it, the summary comes back) and a routine to try.
-const primerUso = () => !armandoParaMoodle && !almacen.leer('estrenada', false) && !leerPersonas().length && !leerPlantillas().length;
-
-// The routine to try, as the person will see it: three of the first exercises, one short set each, in the figure the
-// professional has chosen. Made once per figure; the link is ready by the time the button is reached. Its note stays in
-// Spanish inside the link, as everything in a link does; the person's screen shows it through t(), like any text.
-const NOTA_EJEMPLO = 'Esta es una rutina de ejemplo: una serie corta de cada ejercicio, para verla entera en un par de minutos.';
-const ejemplos = {};
-const ejemplosListos = {};
-function enlaceEjemplo(c) {
-  ejemplos[c] ??= codificar({
-    v: 1, para: '', de: '', d: 30, x: 1, m: TOPE_MOLESTIA, c,
-    e: [['silla', 5], ['puente', 5], ['hombro', 6]].map(([id, reps], k) => {
-      const d = EJERCICIOS[id].porDefecto;
-      return { i: id, s: 1, r: reps, t: [...d.tempo], l: EJERCICIOS[id].unLado ? 'der' : null, n: k ? undefined : NOTA_EJEMPLO };
-    }),
-  }).then((codigo) => (ejemplosListos[c] = `${location.origin}${location.pathname}#r=${codigo}`));
-  return ejemplos[c];
-}
-
-// «Así funciona», on top of the builder the first time: the way from the routine to its summary in three steps, where it
-// is seen on arrival, and the routine to try.
-function primerUsoBanda(b) {
-  if (!primerUso()) return '';
-  const url = ejemplosListos[b.cuerpo];
-  return `<section class="primer-uso" aria-labelledby="primer-uso-t">
-    <h2 id="primer-uso-t">${t('Así funciona')}</h2>
-    <ol class="camino">
-      <li>${t('<strong>Armas la rutina</strong> y se la mandas por WhatsApp o Telegram.')}</li>
-      <li>${t('<strong>La persona la hace</strong> en su teléfono, con la figura, sin instalar nada.')}</li>
-      <li>${t('<strong>Te vuelve su resumen</strong>: lo que hizo y la molestia que notó.')}</li>
-    </ol>
-    <p class="probar"><a class="boton secundario probar-ejemplo"${url ? ` href="${esc(url)}"` : ''} target="_blank" rel="noopener">${t('Probar con una rutina de ejemplo')}</a>
-      <span>${t('Se abre aparte, tal como la verá la persona.')}</span></p>
-  </section>`;
-}
-
 // Neutral words for the three parts: the first is not always «up» (a squat goes down first). In the player, the exercise
 // names its own phases (figura.textos).
 const textoTempo = ([s, m, b]) => (m ? t('Ida en {s} s, mantén {m} s, vuelta en {b} s', { s, m, b }) : t('Ida en {s} s, vuelta en {b} s', { s, b }));
@@ -232,6 +175,7 @@ async function cargarManifiesto(c = 'a') {
       if (!r.ok) throw new Error(ruta);
       return r.json();
     })
+    .then((m) => Object.assign(m, { _base: m._base || RAIZ }))
     .catch((err) => {
       delete manifiestos[ruta];
       throw err;
@@ -245,7 +189,7 @@ async function cargarManifiesto(c = 'a') {
 let moduloFigura = null;
 let pintarRecorrido = () => {};
 async function cargarFigura() {
-  moduloFigura ??= Promise.all([import('./figura.js'), import('./recorrido.js')])
+  moduloFigura ??= Promise.all([import('./figura.js?v=f723b7bb65'), import('./recorrido.js?v=f723b7bb65')])
     .then(([f, rec]) => {
       pintarRecorrido = rec.pintarRecorrido;
       return f;
@@ -276,39 +220,17 @@ async function figuraEn(contenedor, c = 'a') {
   return figura;
 }
 
-// A message with a link, ready in WhatsApp or in Telegram.
-const enlaceMensaje = (canal, texto, url) =>
-  canal === 'tg'
-    ? `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(texto)}`
-    : `https://wa.me/?text=${encodeURIComponent(`${texto} ${url}`)}`;
-
-// The phone's own share sheet, where there is one: SMS, e-mail, Signal or whatever the professional uses besides
-// WhatsApp and Telegram. Where there is none (most computers), the button is not shown.
-const hayCompartir = () => typeof navigator.share === 'function';
-const botonCompartir = (h) => (hayCompartir() ? `<button type="button" class="boton secundario" data-${h}="compartir">${ICONO.compartir}${t('Mandar con otra app')}</button>` : '');
-async function compartir(texto, url) {
-  try {
-    await navigator.share({ text: texto, url });
-  } catch {
-    // Closed without choosing an app, or the browser said no: nothing to do.
-  }
-}
-
 // ---------- The professional's app ----------
 // The professional's side is an app for the phone and the tablet (Enrique, 11 November 2026): a tab bar at the foot of
 // the phone, a rail at the side of a tablet, a bar on top with the title and, inside a file, the way back. The person's
 // routine (#r=) has none of it, and no manifest: installed from there, its icon would open the builder, not the routine.
-// Building for a Moodle activity there are no people to follow: the course does that.
-const PESTANAS = [['#', 'Nueva rutina', 'mas'], ['#personas', 'Personas', 'personas'], ['#plantillas', 'Plantillas', 'plantillas']].filter(
-  ([href]) => !(armandoParaMoodle && href === '#personas'),
-);
 let pestanas = null;
 let firmaPro = null;
 
 // Oksigenia signs every website it makes (shared/sitios-publicos.md): the line with its link, and beside it the button
 // that opens the accessibility panel (index.html). The professional has it at the foot of the rail, or at the end of
 // the page on a phone; the person, quiet at the end of the list, under the routine and away from «Empezar».
-const FIRMA = `<p class="firma-linea">${t('Jepyso · un producto de <a href="https://oksigenia.com">Oksigenia</a>')}</p>`;
+const FIRMA = `<p class="firma-linea">${firma()}</p>`;
 const botonAcceso = `<button type="button" class="firma-acceso" data-acceso aria-haspopup="dialog">${ICONO.acceso}<span>${t('Accesibilidad')}</span></button>`;
 // The language switch, beside «Accesibilidad» (and «Ayuda»): the other language, in its own name. The page starts again
 // in it, and the choice stays on this device (idioma.js). Routines, summaries and files read the same in both.
@@ -338,31 +260,16 @@ function cambiarTema() {
 }
 sistemaOscuro.addEventListener?.('change', pintarTema);
 const firmaPersona = `<div class="firma firma-persona"><span class="firma-botones">${botonAcceso}${botonIdioma}${botonTema}</span>${FIRMA}</div>`;
-// jepyso.com in the language in use.
-const WEB = idioma() === 'en'
-  ? { inicio: 'https://jepyso.com/en/', privacidad: 'https://jepyso.com/en/privacy/', condiciones: 'https://jepyso.com/en/terms/' }
-  : { inicio: 'https://jepyso.com', privacidad: 'https://jepyso.com/privacidad/', condiciones: 'https://jepyso.com/condiciones/' };
 // Help and contact for the professional, beside «Accesibilidad»: what is asked most, and where to write. Someone who
 // arrives from an app store finds them in the app itself.
 const botonAyuda = `<button type="button" class="firma-acceso" data-ayuda aria-haspopup="dialog">${ICONO.ayuda}<span>${t('Ayuda')}</span></button>`;
 function abrirAyuda() {
   const volverA = document.activeElement;
-  const pregunta = (p, r) => `<details class="ayuda-plegada"><summary>${p}</summary><p>${r}</p></details>`;
   const dialogo = document.createElement('dialog');
   dialogo.className = 'hoja hoja-ayuda';
   dialogo.setAttribute('aria-labelledby', 'ayuda-titulo');
   dialogo.innerHTML = `<h2 id="ayuda-titulo" tabindex="-1">${t('Ayuda')}</h2>
-    ${pregunta(t('¿Cómo le mando una rutina a alguien?'), t('Ármala en «Nueva rutina» y pulsa «Crear enlace»: se lo mandas por WhatsApp, Telegram u otra app. Lo abre en su teléfono, sin instalar nada.'))}
-    ${pregunta(t('¿Qué hace la persona?'), t('Sigue a la figura, que lleva el ritmo, el lado y las series que pusiste. Al acabar apunta lo que hizo y la molestia que notó, y te manda su resumen con un enlace: ábrelo en este aparato y se guarda en su ficha.'))}
-    ${pregunta(t('¿Dónde se guardan mis fichas?'), t('En este aparato, y con un plan de pago también en tu nube (Google Drive, OneDrive o Dropbox), para tenerlas en todos tus aparatos. Desde «Personas» puedes guardar una copia en un archivo cuando quieras.'))}
-    ${pregunta(t('¿Cuántas personas caben?'), `${t('Gratis, {n} con ficha; con un plan, las que diga tu licencia. Las rutinas se mandan igual a cualquiera, con ficha o sin ella.', { n: LIMITE_GRATIS })} ${ampliarPlan()}`)}
-    ${pregunta(t('¿Cómo activo mi licencia?'), t('Abre el enlace que te llegó con ella, o pégala en «Personas», en «¿Tienes una licencia de Jepyso?». Después conecta tu nube con la cuenta de la licencia.'))}
-    ${pregunta(t('¿Se puede cambiar la voz?'), t('Sí: al abrir su rutina, cada persona elige voz de mujer, voz de hombre o sin voz.'))}
-    <section class="ayuda-contacto">
-      <h3>${t('Contacto')}</h3>
-      <p>${t('¿Algo no va como esperabas o tienes una idea? Escríbenos a <a href="mailto:contacto@oksigenia.com">contacto@oksigenia.com</a>.')}</p>
-      <p><a href="${WEB.privacidad}" target="_blank" rel="noopener">${t('Privacidad')}</a> · <a href="${WEB.condiciones}" target="_blank" rel="noopener">${t('Condiciones')}</a> · <a href="${WEB.inicio}" target="_blank" rel="noopener">jepyso.com</a></p>
-    </section>
+    ${ayuda()}
     <div class="hoja-como-pie"><button type="button" class="boton">${t('Entendido')}</button></div>`;
   document.body.appendChild(dialogo);
   dialogo.addEventListener('close', () => {
@@ -407,38 +314,15 @@ function marcoApp(h) {
     pestanas.hidden = !pro;
     const actual = h.startsWith('#persona') ? '#personas' : h === '#plantillas' ? '#plantillas' : h.startsWith('#s=') ? '' : '#';
     pestanas.querySelectorAll('a').forEach((a) => (a.dataset.pestana === actual ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
-    if (pro) avisoPestana();
+    if (pro) avisoPestana(pestanas);
   }
   let m = document.querySelector('link[rel="manifest"]');
-  // Inside a Moodle course the plugin serves the app and nothing installs it.
-  if (pro && !m && !armandoParaMoodle) {
+  if (pro && !m && INSTALABLE) {
     m = document.createElement('link');
     m.rel = 'manifest';
     m.href = 'manifest.json';
     document.head.append(m);
   } else if (!pro && m) m.remove();
-}
-
-// The tab of Personas carries how many people have sent nothing since their routine (sinNoticias): the professional
-// sees it from any screen, without opening the list.
-function avisoPestana() {
-  const a = pestanas?.querySelector('[data-pestana="#personas"]');
-  if (!a) return;
-  const n = leerPersonas().filter((p) => fichaAbierta(p) && sinNoticias(p)).length;
-  let marca = a.querySelector('.pestana-cuenta');
-  if (!n) {
-    marca?.remove();
-    a.removeAttribute('aria-label');
-    return;
-  }
-  if (!marca) {
-    marca = document.createElement('span');
-    marca.className = 'pestana-cuenta';
-    marca.setAttribute('aria-hidden', 'true');
-    a.append(marca);
-  }
-  marca.textContent = n;
-  a.setAttribute('aria-label', tn(n, 'Personas: {n} sin noticias desde su rutina', 'Personas: {n} sin noticias desde su rutina'));
 }
 
 const barraApp = (titulo, { volver = '', accion = '' } = {}) => `<header class="barra-app">
@@ -447,40 +331,9 @@ const barraApp = (titulo, { volver = '', accion = '' } = {}) => `<header class="
 </header>`;
 const botonNueva = `<a class="boton barra-boton" href="#">${ICONO.mas}${t('Nueva rutina')}</a>`;
 
-// The free version keeps up to five people with a file (Enrique, 11 November 2026): how many there are, in sight, as five
-// squares; full, said before a routine for someone new is made. A paid plan says its name and its top (Enrique, 15-11).
-function capacidad(lista) {
-  const n = lista.length;
-  const max = limite();
-  if (esDePago()) {
-    const plan = licenciaActiva() ? t('plan {nombre}', { nombre: nombrePlan(topeLicencia()) }) : t('versión de pago');
-    return `<p class="capacidad${n >= max ? ' llena' : ''}"><span>${t('<b>{n} de {max}</b> personas con ficha · {plan}', { n: Math.min(n, max), max, plan })}${n >= max ? `. ${ampliarPlan()}` : ''}</span></p>`;
-  }
-  const marcas = Array.from({ length: max }, (_, i) => `<i${i < n ? ' class="usada"' : ''}></i>`).join('');
-  const cuantas = { n: Math.min(n, max), max };
-  return `<p class="capacidad${n >= max ? ' llena' : ''}"><span class="capacidad-marcas" aria-hidden="true">${marcas}</span>
-    <span>${n >= max ? t('<b>{n} de {max}</b> personas con ficha. Las rutinas para alguien nuevo van igual, sin ficha.', cuantas) : t('<b>{n} de {max}</b> personas con ficha.', cuantas)} ${ampliarPlan()}</span></p>`;
-}
-// The line of the link sheet about the file. A free file whose ticket waits for the Google sign-in says so.
-function enFicha(p, esperaCuenta) {
-  if (esperaCuenta) return t('Guardada en la ficha de {nombre}. Para abrirla, entra con tu cuenta de Google en <a href="#personas">Mis personas</a>.', { nombre: esc(nombreDe(p)) });
-  return `${t('Guardada en la ficha de {nombre}.', { nombre: esc(nombreDe(p)) })} <a href="#persona=${esc(p.id)}">${t('Ver su ficha')}</a>`;
-}
-function avisoLleno(b) {
-  const lista = leerPersonas();
-  const nombre = b.para.trim();
-  if (!nombre || caben(lista) || buscarPorNombre(lista, nombre).length) return '';
-  return `<p class="aviso-lleno">${t('Tus {n} fichas están llenas: esta rutina va en el enlace, pero no se guarda en Personas.', { n: limite() })}</p>`;
-}
-
 // The steps of the builder, on top: for whom, the exercises, the settings and the link. One tap goes to each.
 function etapasApp(b) {
-  const pasos = [
-    ['para', t('Para quién'), b.para.trim() ? b.para.trim() : ''],
-    ['ejercicios', t('Ejercicios'), b.orden.length ? String(b.orden.length) : ''],
-    ['ajustes', t('Ajustes'), ''],
-    ['enlace', t('Enlace'), ''],
-  ];
+  const pasos = etapasArmar(b);
   return pasos
     .map(([k, rotulo, hecho], i) => `<button type="button" class="etapa-ir${hecho ? ' hecha' : ''}" data-accion="ir-etapa" data-etapa="${k}"${k === 'enlace' && !b.orden.length ? ' disabled' : ''}>
       <b>${hecho ? ICONO.check : i + 1}</b><span>${rotulo}</span></button>`)
@@ -499,6 +352,7 @@ function ajustesIniciales(id) {
 function borradorInicial() {
   return {
     para: '', de: '', descanso: 45, veces: 1, semana: 0, tope: TOPE_MOLESTIA, cuerpo: 'a',
+    vueltas: 0, entreEjercicios: 30, entreVueltas: 120, publicar: false, volver: '',
     activo: ORDEN[0], orden: [], ejercicios: {}, filtro: { zona: '', musculo: '', texto: '' }, mirado: false,
   };
 }
@@ -524,8 +378,25 @@ function ponerAlDia(b) {
   Object.assign(b, { descanso: limpia.d, veces: limpia.x, semana: limpia.w || 0, tope: limpia.m, cuerpo: limpia.c, ejercicios: limpia.ejercicios });
   b.para = typeof b.para === 'string' ? b.para : '';
   b.de = typeof b.de === 'string' ? b.de : '';
+  // A circuit (vueltas, 0 for a routine by sets) keeps its own rests, so going from one way to the other loses neither.
+  b.vueltas = VUELTAS.includes(b.vueltas) ? b.vueltas : 0;
+  b.entreEjercicios = DESCANSOS_CIRCUITO.includes(b.entreEjercicios) ? b.entreEjercicios : 30;
+  b.entreVueltas = ENTRE_VUELTAS.includes(b.entreVueltas) ? b.entreVueltas : 120;
+  b.publicar = b.publicar === true;
+  b.volver = typeof b.volver === 'string' ? b.volver.slice(0, 300) : '';
   return b;
 }
+
+// The routine's settings as a link or a template carries them: d is the rest between sets or, in a circuit, between
+// exercises; k and kd, the rounds and the rest between them.
+const ajustesDeRutina = (b) => (b.vueltas ? { d: b.entreEjercicios, k: b.vueltas, kd: b.entreVueltas } : { d: b.descanso });
+// And back, from a link or a template to the draft.
+const rutinaEnBorrador = (x) => (x.k ? { vueltas: x.k, entreEjercicios: x.d, entreVueltas: x.kd || 120 } : { vueltas: 0, descanso: x.d });
+// Seconds of the draft's routine.
+const duracionBorrador = (b) =>
+  duracionRutina(b.orden.map((id) => ({ e: b.vueltas ? { ...b.ejercicios[id], series: b.vueltas } : b.ejercicios[id], def: EJERCICIOS[id] })), {
+    descanso: b.vueltas ? b.entreEjercicios : b.descanso, vueltas: b.vueltas, entreVueltas: b.entreVueltas,
+  });
 
 function paso(accion, valor, etiqueta, min, max) {
   return `<div class="paso" role="group" aria-label="${esc(etiqueta)}">
@@ -534,6 +405,9 @@ function paso(accion, valor, etiqueta, min, max) {
     <button type="button" data-accion="${accion}" data-delta="1" aria-label="${t('Más')}" ${valor >= max ? 'disabled' : ''}>+</button>
   </div>`;
 }
+
+// A rest in words, as the builder offers it: 2 min, 1 min 30, 45 s.
+const segundosEnTexto = (s) => ({ 60: '1 min', 90: t('1 min 30'), 120: '2 min', 180: '3 min' })[s] || `${s} s`;
 
 function segmentos(accion, opciones, actual, etiqueta) {
   return `<div class="segmentos" role="group" aria-label="${esc(etiqueta)}">${opciones
@@ -576,17 +450,18 @@ const chipsEjercicio = (def) =>
     .join('')}`;
 
 // What a folded card says: sets and repetitions, the tempo line, the side and the band.
-function dosis(def, e) {
+function dosis(def, e, vueltas = 0) {
   const banda = bandaDe(def, e.banda);
   const tempo = def.unidad ? `<span>${palabraUnidad(def)}</span>` : `${svgTempo(e.tempo, { ancho: 52, alto: 22 })}<span class="sr">${textoTempo(e.tempo)}</span>`;
-  return `<span class="num">${e.series} × ${e.reps}</span>${tempo}${
+  return `<span class="num">${vueltas ? e.reps : `${e.series} × ${e.reps}`}</span>${tempo}${
     def.unLado && LADOS[e.lado] ? `<span>${esc(t(LADOS[e.lado]))}</span>` : ''
   }${banda ? `<span class="con-banda">${muestraBanda(banda)}${esc(t(banda.nombre))}</span>` : ''}`;
 }
 
 // An exercise of the routine, with its number in the routine and everything the professional sets for it. Only the
 // one being looked at is open; the others fold to one line with their dose, so a long routine still fits.
-function tarjetaEjercicio(id, e, activo, pos, total) {
+// In a circuit (vueltas) there are no sets to set: every exercise does one in each round.
+function tarjetaEjercicio(id, e, activo, pos, total, vueltas = 0) {
   const def = EJERCICIOS[id];
   const [s, m, b] = e.tempo;
   return `<article class="ejercicio incluido ${activo ? 'activo' : ''}" data-id="${id}">
@@ -595,14 +470,14 @@ function tarjetaEjercicio(id, e, activo, pos, total) {
       <span class="titulo">
         <h3>${esc(t(def.nombre))}</h3>
         <span class="linea-chips">${chipsEjercicio(def)}</span>
-        <span class="dosis">${dosis(def, e)}</span>
+        <span class="dosis">${dosis(def, e, vueltas)}</span>
       </span>
       <span class="plegar" aria-hidden="true">${ICONO.abrir}</span>
     </button>
     <div class="ejercicio-ajustes">
       <div class="mini-figura"></div>
       <div class="fila">
-        <div class="ajuste"><span>${t('Series')}</span>${paso('series', e.series, t('Series'), 1, 6)}</div>
+        ${vueltas ? '' : `<div class="ajuste"><span>${t('Series')}</span>${paso('series', e.series, t('Series'), 1, 6)}</div>`}
         <div class="ajuste"><span>${tituloUnidad(def)}</span>${paso('reps', e.reps, tituloUnidad(def), 1, topeReps(def))}</div>
         ${def.unLado ? `<div class="ajuste"><span>${t('Lado')}</span>${segmentos('lado', [['der', t('Derecho')], ['izq', t('Izquierdo')], ['ambos', t('Los dos')]], e.lado, t('Lado'))}</div>` : ''}
       </div>
@@ -635,14 +510,26 @@ function tarjetaEjercicio(id, e, activo, pos, total) {
   </article>`;
 }
 
+// Step 3: how the routine goes. By sets, exercise after exercise; or as a circuit, every exercise once in each round,
+// one after the other, with a short rest between exercises and a longer one between rounds.
+function ajustesForma(b) {
+  const forma = `<div class="ajuste"><span>${t('Cómo se hace')}</span>${segmentos('forma', [['series', t('Por series')], ['circuito', t('En circuito')]], b.vueltas ? 'circuito' : 'series', t('Cómo se hace'))}</div>`;
+  if (!b.vueltas) return `${forma}<div class="ajuste"><span>${t('Descanso entre series')}</span>${segmentos('descanso', [[30, '30 s'], [45, '45 s'], [60, '1 min'], [90, t('1 min 30')]], b.descanso, t('Descanso entre series'))}</div>`;
+  return `${forma}
+    <div class="ajuste"><span>${t('Vueltas del circuito')}</span>${segmentos('vueltas', VUELTAS.map((v) => [v, String(v)]), b.vueltas, t('Vueltas del circuito'))}</div>
+    <div class="ajuste"><span>${t('Descanso entre ejercicios')}</span>${segmentos('entreEjercicios', [[15, '15 s'], [30, '30 s'], [45, '45 s'], [60, '1 min']], b.entreEjercicios, t('Descanso entre ejercicios'))}</div>
+    <div class="ajuste"><span>${t('Descanso entre vueltas')}</span>${segmentos('entreVueltas', [[60, '1 min'], [90, t('1 min 30')], [120, '2 min'], [180, '3 min']], b.entreVueltas, t('Descanso entre vueltas'))}</div>`;
+}
+
 function seccionRutina(b, vaciada = null) {
   return `<section class="rutina-armada" aria-labelledby="rutina-titulo">
     <h2 id="rutina-titulo">${t('La rutina')}</h2>
     ${b.orden.length ? `<button type="button" class="boton fantasma vaciar" data-accion="vaciar">${t('Vaciar')}</button>` : ''}
     ${vaciada ? `<p class="vaciada" role="status">${t('Rutina vaciada.')} <button type="button" class="enlace" data-accion="deshacer-vaciar">${t('Deshacer')}</button></p>` : ''}
+    ${b.vueltas && b.orden.length ? `<p class="ayuda circuito-nota">${tn(b.vueltas, 'En circuito: {n} vuelta, con una serie de cada ejercicio.', 'En circuito: {n} vueltas, con una serie de cada ejercicio en cada una.')}</p>` : ''}
     ${
       b.orden.length
-        ? b.orden.map((id, i) => tarjetaEjercicio(id, b.ejercicios[id], id === b.activo, i, b.orden.length)).join('')
+        ? b.orden.map((id, i) => tarjetaEjercicio(id, b.ejercicios[id], id === b.activo, i, b.orden.length, b.vueltas)).join('')
         : `<div class="rutina-vacia"><p>${t('Todavía no tiene ejercicios.')}</p></div>`
     }
   </section>`;
@@ -702,7 +589,7 @@ const zonasConEjercicios = () => Object.keys(ZONAS).filter((z) => ORDEN.some((id
 const musculosDe = (id) => [...EJERCICIOS[id].musculos.principales, ...EJERCICIOS[id].musculos.secundarios];
 const musculosConEjercicios = () => Object.keys(MUSCULOS).filter((mu) => ORDEN.some((id) => musculosDe(id).includes(mu)));
 
-// The body map: Gaudí's body from the front and from the back, a point on every area with exercises and the muscle
+// The body map: the figure's body from the front and from the back, a point on every area with exercises and the muscle
 // groups the figure lights. Touching a point or a muscle filters the library; touching it again lets it go. The
 // muscle chosen lights as on the figure, so the map and the list below say the same thing.
 // Places the map's points where their data says, through the style object, which a strict content policy allows.
@@ -823,44 +710,17 @@ function seccionPlantillas(b) {
   </section>`;
 }
 
-// Under «Para», the people seen most recently: one tap fills the name, links the routine to their file and brings
-// their acceptable discomfort.
-function personasRecientes(b) {
-  const lista = leerPersonas();
-  if (!lista.length) return '';
-  const reciente = (p) => [p.ultimoResumen, ...p.rutinas.map((r) => r.f)].filter(Boolean).sort().at(-1) || p.creada;
-  const seis = [...lista].sort((x, y) => reciente(y).localeCompare(reciente(x))).slice(0, 6);
-  return `<div class="recientes" role="group" aria-label="${t('Para una de tus personas')}">
-    <span>${t('Para una de tus personas')}</span>
-    ${seis.map((p) => `<button type="button" class="filtro" data-accion="persona" data-id="${esc(p.id)}" aria-pressed="${b.persona === p.id}">${esc(nombreDe(p))}</button>`).join('')}
-    ${lista.length > 6 ? `<a href="#personas">${t('Todas')}</a>` : ''}
-  </div>`;
-}
-
 // A routine back in the builder, to change it: its exercises with their settings, and the routine's own settings.
 function rutinaAlBorrador(r, extra = {}) {
   const b = ponerAlDia(almacen.leer('borrador', null) || borradorInicial());
-  Object.assign(b, { descanso: r.d, veces: r.x, semana: r.w || 0, tope: Number.isInteger(r.m) ? r.m : TOPE_MOLESTIA, cuerpo: r.c || 'a', ...extra });
+  Object.assign(b, {
+    ...rutinaEnBorrador(r), veces: r.x, semana: r.w || 0, tope: Number.isInteger(r.m) ? r.m : TOPE_MOLESTIA, cuerpo: r.c || 'a',
+    publicar: r.o === 1, volver: r.u || '', ...extra,
+  });
   b.orden = r.e.map((e) => e.i).filter((i) => ORDEN.includes(i));
   for (const e of r.e) if (ORDEN.includes(e.i)) b.ejercicios[e.i] = { series: e.s, reps: e.r, tempo: [...e.t], lado: e.l ?? null, banda: e.b || '', nota: e.n || '' };
   b.activo = b.orden[0] || b.activo;
   almacen.guardar('borrador', b);
-}
-
-// In the Moodle activity form, «Armar la rutina» on an activity that has one opens the builder with it, once per window.
-let formularioLeido = false;
-async function rutinaDelFormularioAlBorrador() {
-  if (formularioLeido) return;
-  formularioLeido = true;
-  const codigo = rutinaDelFormulario();
-  if (!codigo) return;
-  let r = null;
-  try {
-    r = limpiarRutina(await decodificar(codigo));
-  } catch {
-    // A code that cannot be read: the form says so itself when it is saved.
-  }
-  if (r?.e?.length) rutinaAlBorrador(r, { para: '', ...(r.de ? { de: r.de } : {}) });
 }
 
 function vistaArmar() {
@@ -871,8 +731,8 @@ function vistaArmar() {
 
   const resumenCorto = () => {
     if (!b.orden.length) return t('Elige al menos un ejercicio');
-    const seg = b.orden.reduce((suma, id) => suma + duracionEjercicio(b.ejercicios[id], b.descanso, EJERCICIOS[id]), 0);
-    return `${tn(b.orden.length, '{n} ejercicio', '{n} ejercicios')} · ${minutos(seg)}`;
+    const vueltas = b.vueltas ? ` · ${tn(b.vueltas, 'circuito de {n} vuelta', 'circuito de {n} vueltas')}` : '';
+    return `${tn(b.orden.length, '{n} ejercicio', '{n} ejercicios')}${vueltas} · ${minutos(duracionBorrador(b))}`;
   };
 
   function pintar() {
@@ -882,19 +742,9 @@ function vistaArmar() {
         ${barraApp(t('Nueva rutina'))}
         <nav class="etapas-app" aria-label="${t('Pasos')}">${etapasApp(b)}</nav>
         <div class="armar-cuerpo">
-          ${primerUsoBanda(b)}
+          ${bandaArmar(b)}
           <section class="etapa" id="etapa-para" aria-labelledby="etapa-para-t">
-            ${armandoParaMoodle ? `<p class="etapa-titulo" id="etapa-para-t"><b>1</b>${t('Quién la manda')}</p>
-            <div class="campos">
-              <div class="campo"><label for="de">${t('Tu nombre')}</label><input id="de" data-accion="de" autocomplete="off" value="${esc(b.de)}"></div>
-            </div>
-            <p class="ayuda">${t('Es para toda la clase: cada uno la verá con su nombre, como «Tu rutina de» y el tuyo.')}</p>` : `<p class="etapa-titulo" id="etapa-para-t"><b>1</b>${t('Para quién')}</p>
-            <div class="campos">
-              <div class="campo"><label for="para">${t('Nombre de la persona')}</label><input id="para" data-accion="para" autocomplete="off" value="${esc(b.para)}"></div>
-              <div class="campo"><label for="de">${t('Tu nombre')}</label><input id="de" data-accion="de" autocomplete="off" value="${esc(b.de)}"></div>
-            </div>
-            <div class="hueco-recientes">${personasRecientes(b)}</div>
-            <div class="hueco-lleno">${avisoLleno(b)}</div>`}
+            ${pasoPara(b)}
           </section>
           <section class="etapa" id="etapa-ejercicios" aria-labelledby="etapa-ejercicios-t">
             <p class="etapa-titulo" id="etapa-ejercicios-t"><b>2</b>${t('Ejercicios')}</p>
@@ -906,20 +756,20 @@ function vistaArmar() {
             <p class="etapa-titulo" id="etapa-ajustes-t"><b>3</b>${t('Ajustes')}</p>
             <section class="general">
               <h2>${t('Para toda la rutina')}</h2>
+              <div class="fila hueco-forma">${ajustesForma(b)}</div>
               <div class="fila">
-                <div class="ajuste"><span>${t('Descanso entre series')}</span>${segmentos('descanso', [[30, '30 s'], [45, '45 s'], [60, '1 min'], [90, t('1 min 30')]], b.descanso, t('Descanso entre series'))}</div>
                 <div class="ajuste"><span>${t('Veces al día')}</span>${segmentos('veces', [[1, '1'], [2, '2'], [3, '3']], b.veces, t('Veces al día'))}</div>
                 <div class="ajuste"><span>${t('Días a la semana')}</span>${segmentos('semana', [[0, t('Libre')], [2, '2'], [3, '3'], [4, '4'], [5, '5'], [7, '7']], b.semana, t('Días a la semana'))}</div>
                 <div class="ajuste"><span>${t('Figura')}</span>${eleccionFigura(b.cuerpo)}</div>
                 <div class="ajuste"><span>${t('Molestia aceptable, de 0 a 10')}</span>${paso('tope', b.tope, t('Molestia aceptable'), 0, 9)}</div>
               </div>
-              <p class="ayuda">${armandoParaMoodle ? t('Si alguien pasa de esa molestia, el día te sale marcado en su seguimiento.') : t('Si la persona pasa de esa molestia, el día te sale marcado en su resumen.')}</p>
+              <p class="ayuda">${textosArmar().molestia}</p>
             </section>
           </section>
         </div>
         <div class="barra-crear" id="etapa-enlace">
           <span class="resumen-corto">${resumenCorto()}</span>
-          <button type="button" class="boton" data-accion="crear" ${b.orden.length ? '' : 'disabled'}>${armandoParaMoodle ? t('Usar en la actividad') : t('Crear enlace')}</button>
+          <button type="button" class="boton" data-accion="crear" ${b.orden.length ? '' : 'disabled'}>${textosArmar().crear}</button>
           <button type="button" class="boton anadir-en-barra" data-accion="abrir-biblioteca" aria-haspopup="dialog">${ICONO.mas}${t('Añadir ejercicio')}</button>
         </div>
       </div>
@@ -931,7 +781,7 @@ function vistaArmar() {
     </div>`;
     colocarPuntos(app);
     colocarFigura();
-    ponerEjemplo();
+    alPintarArmar(b);
   }
 
   // The preview: in the side panel on wide screens; on a phone, inside the active card or library row.
@@ -1015,11 +865,15 @@ function vistaArmar() {
     if (lienzo && zona.contains(lienzo)) lienzo.remove();
   }
 
+  function pintarEtapas() {
+    const etapas = app.querySelector('.etapas-app');
+    if (etapas) etapas.innerHTML = etapasApp(b);
+  }
+
   function actualizarBarra() {
     app.querySelector('.resumen-corto').textContent = resumenCorto();
     app.querySelector('.armar').classList.toggle('sin-ejercicios', !b.orden.length);
-    const etapas = app.querySelector('.etapas-app');
-    if (etapas) etapas.innerHTML = etapasApp(b);
+    pintarEtapas();
     app.querySelector('[data-accion="crear"]').disabled = !b.orden.length;
     const nueva = app.querySelector('[data-accion="nueva-plantilla"]');
     if (nueva) nueva.hidden = !b.orden.length;
@@ -1031,7 +885,7 @@ function vistaArmar() {
     const conservar = lienzo && vieja.contains(lienzo);
     const nueva = document.createElement('div');
     const pos = b.orden.indexOf(id);
-    nueva.innerHTML = tarjetaEjercicio(id, b.ejercicios[id], id === b.activo, pos, b.orden.length);
+    nueva.innerHTML = tarjetaEjercicio(id, b.ejercicios[id], id === b.activo, pos, b.orden.length, b.vueltas);
     const art = nueva.firstElementChild;
     if (conservar) art.querySelector('.mini-figura').appendChild(lienzo);
     vieja.replaceWith(art);
@@ -1045,13 +899,7 @@ function vistaArmar() {
     apartarLienzo(hueco);
     hueco.innerHTML = seccionRutina(b, vaciada);
     actualizarBarra();
-    ponerEjemplo();
-  }
-
-  // The link of the routine to try, in the figure chosen, on its button as soon as it is made.
-  function ponerEjemplo() {
-    const boton = app.querySelector('.probar-ejemplo');
-    if (boton) enlaceEjemplo(b.cuerpo).then((url) => boton.isConnected && (boton.href = url));
+    alPintarArmar(b);
   }
 
   function refrescarBiblioteca() {
@@ -1156,7 +1004,7 @@ function vistaArmar() {
   function guardarPlantilla(nombre) {
     const lista = leerPlantillas().filter((p) => p.nombre !== nombre);
     lista.unshift({
-      nombre, cambiada: new Date().toISOString(), d: b.descanso, x: b.veces, w: b.semana || undefined, m: b.tope, c: b.cuerpo, orden: [...b.orden],
+      nombre, cambiada: new Date().toISOString(), ...ajustesDeRutina(b), x: b.veces, w: b.semana || undefined, m: b.tope, c: b.cuerpo, orden: [...b.orden],
       ejercicios: Object.fromEntries(b.orden.map((id) => [id, JSON.parse(JSON.stringify(b.ejercicios[id]))])),
     });
     almacen.guardar('plantillas', lista.slice(0, 60));
@@ -1176,7 +1024,7 @@ function vistaArmar() {
   }
 
   function usarPlantilla(p) {
-    Object.assign(b, { descanso: p.d, veces: p.x, semana: p.w || 0, tope: p.m ?? TOPE_MOLESTIA, cuerpo: p.c || 'a' });
+    Object.assign(b, { ...rutinaEnBorrador(p), veces: p.x, semana: p.w || 0, tope: p.m ?? TOPE_MOLESTIA, cuerpo: p.c || 'a' });
     b.orden = p.orden.filter((id) => ORDEN.includes(id));
     for (const id of b.orden) b.ejercicios[id] = { ...ajustesIniciales(id), ...JSON.parse(JSON.stringify(p.ejercicios[id] || {})) };
     b.activo = b.orden[0] || b.activo;
@@ -1294,14 +1142,23 @@ function vistaArmar() {
       el.parentElement.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === el)));
       refrescarBiblioteca();
       colocarFigura();
-      ponerEjemplo();
+      alPintarArmar(b);
     } else if (a === 'tope') {
       b.tope = Math.min(9, Math.max(0, b.tope + delta));
       el.closest('.paso').outerHTML = paso('tope', b.tope, t('Molestia aceptable'), 0, 9);
-    } else if (a === 'descanso' || a === 'veces' || a === 'semana') {
+    } else if (a === 'descanso' || a === 'veces' || a === 'semana' || a === 'entreEjercicios' || a === 'entreVueltas') {
       b[a] = Number(el.dataset.valor);
       el.parentElement.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === el)));
       actualizarBarra();
+    } else if (a === 'forma' || a === 'vueltas') {
+      // By sets or as a circuit, and its rounds: the cards lose or get back their sets.
+      b.vueltas = a === 'vueltas' ? Number(el.dataset.valor) : el.dataset.valor === 'circuito' ? b.vueltas || 3 : 0;
+      app.querySelector('.hueco-forma').innerHTML = ajustesForma(b);
+      refrescarRutina();
+      colocarFigura();
+      app.querySelector(`.hueco-forma [data-accion="${a}"][data-valor="${el.dataset.valor}"]`)?.focus({ preventScroll: true });
+    } else if (a === 'destino' || a === 'persona') {
+      alPulsarArmar(a, el, { b, actualizarBarra });
     } else if (a === 'nueva-plantilla') {
       const form = app.querySelector('.plantilla-nueva');
       form.hidden = false;
@@ -1317,7 +1174,7 @@ function vistaArmar() {
         deshacerBorrar = null;
         const lista = leerPlantillas();
         const [borrada] = lista.splice(Number(el.dataset.i), 1);
-        if (borrada) apuntarBorrada('plantillas', borrada.nombre);
+        if (borrada) alBorrarPlantilla(borrada.nombre);
         almacen.guardar('plantillas', lista);
         refrescarPlantillas();
       } else {
@@ -1336,19 +1193,8 @@ function vistaArmar() {
           }
         };
       }
-    } else if (a === 'persona') {
-      const p = leerPersonas().find((x) => x.id === el.dataset.id);
-      if (p) {
-        b.para = p.nombre;
-        b.persona = p.id;
-        if (Number.isInteger(p.m)) b.tope = p.m;
-        app.querySelector('#para').value = p.nombre;
-        app.querySelector('.hueco-recientes').innerHTML = personasRecientes(b);
-        const tope = app.querySelector('.general [data-accion="tope"]')?.closest('.paso');
-        if (tope) tope.outerHTML = paso('tope', b.tope, t('Molestia aceptable'), 0, 9);
-      }
     } else if (a === 'crear') {
-      crearEnlace(b, empezarOtra);
+      crear(b, empezarOtra);
       app.querySelector('.primer-uso')?.remove();
     } else if (a === 'vaciar') {
       // Emptying keeps each exercise's settings, so «Deshacer» brings the routine back exactly.
@@ -1374,20 +1220,8 @@ function vistaArmar() {
 
   app.oninput = (ev) => {
     const a = ev.target.dataset.accion;
-    if (a === 'para' || a === 'de') b[a] = ev.target.value;
-    if (a === 'para') {
-      const etapas = app.querySelector('.etapas-app');
-      if (etapas) etapas.innerHTML = etapasApp(b);
-      const lleno = app.querySelector('.hueco-lleno');
-      if (lleno) lleno.innerHTML = avisoLleno(b);
-    }
-    if (a === 'para' && b.persona) {
-      const elegida = leerPersonas().find((x) => x.id === b.persona);
-      if (!elegida || elegida.nombre !== b.para.trim()) {
-        b.persona = null;
-        app.querySelector('.hueco-recientes').innerHTML = personasRecientes(b);
-      }
-    }
+    if (a === 'para' || a === 'de' || a === 'volver') b[a] = ev.target.value;
+    alEscribirArmar(a, { b, pintarEtapas });
     if (a === 'nota') b.ejercicios[ev.target.closest('.ejercicio').dataset.id].nota = ev.target.value;
     if (a === 'buscar') {
       b.filtro.texto = ev.target.value;
@@ -1452,14 +1286,13 @@ function vistaArmar() {
   };
 }
 
-async function crearEnlace(b, empezarOtra = null) {
-  // The first link made: from now on the empty routine no longer explains the way.
-  almacen.guardar('estrenada', true);
+// The routine of the draft, as a link carries it. Where it goes (a link to send, the form of an activity) is entorno.js's.
+function crear(b, empezarOtra) {
   const rutina = {
     v: 1,
     para: b.para.trim(),
     de: b.de.trim(),
-    d: b.descanso,
+    ...ajustesDeRutina(b),
     x: b.veces,
     w: b.semana || undefined,
     m: b.tope,
@@ -1467,138 +1300,10 @@ async function crearEnlace(b, empezarOtra = null) {
     f: diaLocal(),
     e: b.orden.map((id) => {
       const e = b.ejercicios[id];
-      return { i: id, s: e.series, r: e.reps, t: e.tempo, l: e.lado, b: bandaDe(EJERCICIOS[id], e.banda)?.clave, n: e.nota.trim() || undefined };
+      return { i: id, s: b.vueltas || e.series, r: e.reps, t: e.tempo, l: e.lado, b: bandaDe(EJERCICIOS[id], e.banda)?.clave, n: e.nota.trim() || undefined };
     }),
   };
-  // For a Moodle activity: the routine goes back to the activity form, for the whole class and with no file. Opened by
-  // hand, without the form behind, it goes on as a link to copy.
-  if (armandoParaMoodle && devolverRutina(await codificar({ ...rutina, para: '' }))) return;
-  // With a name, the routine goes to that person's file: the one chosen in the builder, the only one with that name,
-  // or a new one. Its id travels in the link (p) and comes back with each summary.
-  const lista = leerPersonas();
-  let persona = null;
-  let sinSitio = false;
-  if (rutina.para) {
-    const iguales = buscarPorNombre(lista, rutina.para);
-    persona = (b.persona && lista.find((x) => x.id === b.persona)) || (iguales.length === 1 ? iguales[0] : null);
-    if (!persona && iguales.length > 1) sinSitio = 'elegir';
-    else if (!persona && caben(lista)) persona = crearPersona(lista, rutina.para);
-    if (persona) rutina.p = persona.id;
-    else if (!sinSitio) sinSitio = true;
-  }
-  const codigo = await codificar(rutina);
-  if (persona) {
-    apuntarRutina(lista, { id: persona.id, nombre: rutina.para }, rutina, codigo);
-    if (guardarPersonas(lista)) {
-      b.persona = persona.id;
-      almacen.guardar('borrador', b);
-    } else {
-      persona = null;
-      sinSitio = 'lleno';
-    }
-  }
-  // The free version: a file needs its ticket to open (vales.js). With the Google sign-in at hand it is asked now, while
-  // the sheet opens; without it, the file waits locked until the professional signs in at Personas.
-  const sinVale = persona && !fichaAbierta(persona);
-  const url = `${location.origin}${location.pathname}#r=${codigo}`;
-  // The message is the professional's, in their language; the link inside it reads the same in any.
-  const mensaje = rutina.para
-    ? t('Hola, {nombre}. Aquí tienes tu rutina de ejercicios. Ábrela en tu teléfono y sigue a la figura:', { nombre: rutina.para })
-    : t('Aquí tienes tu rutina de ejercicios. Ábrela en tu teléfono y sigue a la figura:');
-
-  let qr = '';
-  try {
-    const q = window.qrcode(0, 'L');
-    q.addData(url);
-    q.make();
-    qr = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
-  } catch {
-    qr = `<p>${t('El enlace es demasiado largo para un código QR.')}</p>`;
-  }
-
-  // The sheet of the link: first what sends it (WhatsApp, Telegram, copy), under the message as it will arrive; the
-  // code and the address folded, open by default on a computer, where the person scans it in the consultation. A
-  // <dialog>: its ×, Escape and the phone's «back» close it, and the focus goes back to «Crear enlace».
-  const nombre = rutina.para ? esc(rutina.para) : '';
-  const dialogo = document.createElement('dialog');
-  dialogo.className = 'hoja hoja-enlace';
-  dialogo.setAttribute('aria-labelledby', 'hoja-titulo');
-  const lleno = { n: limite() };
-  dialogo.innerHTML = `<div class="hoja-cabeza"><h2 id="hoja-titulo" tabindex="-1">${t('La rutina, lista')}</h2>
-      <button type="button" class="redondo" data-h="cerrar" aria-label="${t('Cerrar')}">${ICONO.cerrar}</button></div>
-    ${persona ? `<p class="en-ficha">${enFicha(persona, sinVale && !cuentaDeVales())}</p>` : ''}
-    ${sinSitio === 'lleno' ? `<p class="en-ficha">${t(SIN_SITIO)} ${t('La rutina va igual en el enlace.')}</p>` : ''}
-    ${sinSitio === 'elegir' ? `<p class="en-ficha">${t('Tienes más de una ficha con el nombre {nombre}: elige cuál en «Para» y vuelve a crear el enlace para guardarla en su ficha. La rutina va igual en este enlace.', { nombre: esc(rutina.para) })}</p>` : ''}
-    ${sinSitio === true ? `<p class="en-ficha">${esDePago()
-      ? t('No se guarda en una ficha: ya tienes {n} personas con ficha, el máximo de tu plan. La rutina va igual en el enlace.', lleno)
-      : t('No se guarda en una ficha: ya tienes {n} personas con ficha, el máximo de la versión gratis. La rutina va igual en el enlace.', lleno)} ${ampliarPlan()}</p>` : ''}
-    <figure class="burbuja"><figcaption>${nombre ? t('Así le llega a {nombre}', { nombre }) : t('Así llega')}</figcaption><p>${esc(mensaje)} <span class="burbuja-enlace">${esc(location.host)}/…</span></p></figure>
-    <div class="hoja-mandar">
-      <a class="boton" href="${esc(enlaceMensaje('wa', mensaje, url))}" target="_blank" rel="noopener">${ICONO.whatsapp}${t('Mandar por WhatsApp')}</a>
-      <a class="boton" href="${esc(enlaceMensaje('tg', mensaje, url))}" target="_blank" rel="noopener">${ICONO.telegram}${t('Mandar por Telegram')}</a>
-      ${botonCompartir('h')}
-      <button type="button" class="boton secundario" data-h="copiar">${t('Copiar enlace')}</button>
-    </div>
-    <a class="boton fantasma hoja-ver" href="${esc(url)}" target="_blank" rel="noopener">${nombre ? t('Ver la rutina como {nombre}', { nombre }) : t('Ver la rutina como la persona')}</a>
-    <details class="hoja-mas"${window.matchMedia('(min-width: 700px)').matches ? ' open' : ''}><summary>${t('El código QR y el enlace')}</summary>
-      <div class="qr">${qr}</div>
-      <div class="enlace-texto">${esc(url)}</div>
-    </details>
-    <p class="hoja-pie">${t('Cuando la haga, te mandará su resumen: ábrelo en este aparato y se guarda en su ficha. Todo va dentro del enlace: no pasa por ningún servidor de Oksigenia.')}</p>
-    ${empezarOtra ? `<button type="button" class="boton secundario hoja-otra" data-h="otra">${t('Hecho: empezar otra rutina')}</button>` : ''}`;
-  document.body.appendChild(dialogo);
-  const volverA = document.activeElement;
-  let destino = null;
-  const alAtras = () => dialogo.open && dialogo.close();
-  dialogo.addEventListener('close', () => {
-    window.removeEventListener('popstate', alAtras);
-    dialogo.remove();
-    // Closed by its × or Escape: its entry in the history goes too. «Ver su ficha» goes there after it.
-    if (history.state?.jepysoHoja === 'enlace') {
-      if (destino) window.addEventListener('popstate', () => (location.hash = destino), { once: true });
-      history.back();
-    } else if (destino) location.hash = destino;
-    if (!destino) volverA?.focus?.({ preventScroll: true });
-  });
-  dialogo.showModal();
-  if (sinVale && cuentaDeVales()) {
-    pedirVale(persona.id).then((bien) => {
-      const linea = dialogo.querySelector('.en-ficha');
-      if (!linea) return;
-      if (bien) linea.innerHTML = enFicha(persona, false);
-      else if (fichaSinPlaza(persona.id)) linea.textContent = t('Guardada en la ficha de {nombre}, pero tu cuenta de Google ya tiene sus {n} fichas gratis: esta no se abrirá hasta que borres otra. La rutina va igual en el enlace.', { nombre: nombreDe(persona), n: LIMITE_GRATIS });
-    });
-  }
-  history.pushState({ jepysoHoja: 'enlace' }, '');
-  window.addEventListener('popstate', alAtras);
-  dialogo.querySelector('#hoja-titulo').focus({ preventScroll: true });
-  dialogo.addEventListener('click', async (ev) => {
-    // A tap outside the sheet, on the dimmed page, closes it as before.
-    if (ev.target === dialogo) {
-      const r = dialogo.getBoundingClientRect();
-      if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) return dialogo.close();
-    }
-    if (ev.target.closest('[data-h="cerrar"]')) return dialogo.close();
-    if (ev.target.closest('[data-h="otra"]')) {
-      dialogo.close();
-      return empezarOtra?.();
-    }
-    const ficha = ev.target.closest('.en-ficha a');
-    if (ficha) {
-      ev.preventDefault();
-      destino = ficha.getAttribute('href');
-      return dialogo.close();
-    }
-    if (ev.target.closest('[data-h="compartir"]')) return compartir(mensaje, url);
-    if (ev.target.closest('[data-h="copiar"]')) {
-      try {
-        await navigator.clipboard.writeText(url);
-        ev.target.closest('button').textContent = t('Copiado');
-      } catch {
-        ev.target.closest('button').textContent = t('No se pudo copiar');
-      }
-    }
-  });
+  return entregar(b, rutina, empezarOtra);
 }
 
 // ---------- Routine (the person) ----------
@@ -1651,18 +1356,15 @@ async function vistaRutina(codigo) {
     return () => {};
   }
   const clave = 'hist:' + hashCorto(codigo);
-  // In a Moodle course the history is the course's, joined to what this device kept, and the person is the one logged in.
-  if (enMoodle) {
-    await prepararMoodle();
-    juntarHistorial(clave);
-    recordarClave(clave);
-    if (!r.para && moodle()?.nombre) r.para = moodle().nombre;
-  }
-  // Where what is done goes: to the course, or in a summary the person sends.
-  const destinoMarca = (q) => (enMoodle ? t('saldrá marcado en lo que ve {quien} en el curso', { quien: q }) : t('saldrá marcado en el resumen que le mandes a {quien}', { quien: q }));
-  const totalSeg = ejercicios.reduce((t, e) => t + duracionEjercicio({ series: e.s, reps: e.r, tempo: e.t, lado: e.l }, r.d, EJERCICIOS[e.i]), 0);
+  await alAbrir(r, clave);
+  // Above the acceptable discomfort: where it will show. A published routine sends nothing, so it only says so.
+  const masDelTope = (q) => (r.o ? t('Es más de {tope}.', { tope }) : t('Es más de {tope}: {destino}.', { tope, destino: destinoMarca(q) }));
+  // A circuit: every exercise once in each round (its sets are the rounds), the rest between rounds in r.kd.
+  const circuito = r.k > 0;
+  const totalSeg = duracionRutina(ejercicios.map((e) => ({ e: { series: e.s, reps: e.r, tempo: e.t, lado: e.l }, def: EJERCICIOS[e.i] })), { descanso: r.d, vueltas: r.k, entreVueltas: r.kd });
   const tope = Number.isInteger(r.m) ? r.m : TOPE_MOLESTIA;
   const quien = r.de ? esc(r.de) : t('quien te dio la rutina');
+  const persona = { r, clave, codigo, tope, totalSeg };
   let mananaOmitida = false;
 
   // The day after a session, the person says how the area felt on getting up: under the pain-monitoring model the
@@ -1693,10 +1395,10 @@ async function vistaRutina(codigo) {
     if (i < 0) return;
     hist[i].a = valor;
     almacen.guardar(clave, hist);
-    subirHistorial(clave);
+    alGuardar(clave);
     const tarjeta = app.querySelector('.manana');
     tarjeta.innerHTML = `<p class="apuntado">${t('Apuntado: {v} de 10 al levantarte.', { v: valor })}${
-      pasaDelTope(valor, tope) ? ` ${t('Es más de {tope}: {destino}.', { tope, destino: destinoMarca(quien) })}` : ''
+      pasaDelTope(valor, tope) ? ` ${masDelTope(quien)}` : ''
     }</p>`;
     pintarPie(hist);
   }
@@ -1709,20 +1411,14 @@ async function vistaRutina(codigo) {
     const recientes = hist.map((d, k) => ({ d, k })).slice(-7).reverse();
     const fila = ({ d, k }) => `<li><span>${esc(fechaCorta(d.f))}${d.h ? ` · ${esc(d.h)}` : ''}${d.sinApp ? ` · ${t('sin la app')}` : ''}</span>
         <button type="button" class="enlace" data-r="corregir" data-k="${k}">${t('Corregir')}</button></li>`;
-    // In a Moodle course it goes to the course by itself: the card says where it is and leads back.
-    const salida = volverAlCurso() ? `<a class="boton secundario" href="${esc(volverAlCurso())}">${ICONO.volver}${t('Volver al curso')}</a>` : enAppDeMoodle ? `<p class="moodle-cerrar">${t(TEXTO_CERRAR)}</p>` : '';
-    const enviar = enMoodle
-      ? `<p class="moodle-estado" aria-live="polite"></p>${salida}`
-      : `<p>${t('Mándaselo a {quien}: así ve cómo te va y te ajusta la rutina.', { quien })}</p>
-        <div class="dos-botones"><button type="button" class="boton secundario" data-r="mandar" data-canal="wa">${ICONO.whatsapp}WhatsApp</button>
-        <button type="button" class="boton secundario" data-r="mandar" data-canal="tg">${ICONO.telegram}Telegram</button></div>`;
+    const enviar = tarjetaEnviar(r, quien);
     sitio.innerHTML = `<section class="tarjeta mandar-hecho" aria-labelledby="mandar-titulo">
         <h3 id="mandar-titulo">${t('Lo que llevas hecho')}</h3>
         ${hist.length ? `<ul class="dias-hechos">${recientes.map(fila).join('')}</ul>
-        ${enviar}` : `<p>${t('Todavía nada.')}</p>${enMoodle ? salida : ''}`}
+        ${enviar}` : `<p>${t('Todavía nada.')}</p>${tarjetaSinNada()}`}
         <button type="button" class="enlace" data-r="sin-app">${t('Apuntar una vez que la hice sin la app')}</button>
       </section>`;
-    if (enMoodle && hist.length) subirHistorial(clave);
+    if (hist.length) alGuardar(clave);
   }
 
   // Who guides the sets: each person chooses (Enrique, 15-11-2026: «que cada usuario elija»).
@@ -1743,10 +1439,11 @@ async function vistaRutina(codigo) {
     app.innerHTML = `<div class="rutina rutina-intro">
       <header class="saludo">
         <div class="cabecera-yeso cabecera-rutina" aria-hidden="true"></div>
-        ${r.de ? `<div class="de">${t('Tu rutina de {de}', { de: esc(r.de) })}</div>` : ''}
+        <div class="de-fila">${r.de ? `<div class="de">${r.o ? t('Rutina de {de}', { de: esc(r.de) }) : t('Tu rutina de {de}', { de: esc(r.de) })}</div>` : ''}${botonIdioma}</div>
         <h1>${r.para ? t('Hola, {nombre}', { nombre: esc(r.para) }) : t('Tu rutina')}</h1>
         ${r.w ? `<p class="semana-rutina">${r.w === 7 ? t('Todos los días') : r.w <= 3 ? tn(r.w, '{n} día a la semana, mejor no seguidos', '{n} días a la semana, mejor no seguidos') : tn(r.w, '{n} día a la semana', '{n} días a la semana')}</p>` : ''}
-        ${vistaPrevia() ? `<p class="moodle-aviso">${t(TEXTO_ESTADO['vista-previa'])}</p>` : ''}
+        ${circuito ? `<p class="semana-rutina">${tn(r.k, 'En circuito: {n} vuelta, con los ejercicios uno detrás de otro.', 'En circuito: {n} vueltas, con los ejercicios uno detrás de otro y {descanso} de descanso entre vueltas.', { descanso: segundosEnTexto(r.kd) })}</p>` : ''}
+        ${avisoPersona()}
         ${r.x > 1 ? `<p class="veces-hoy"><span class="casillas" aria-hidden="true">${Array.from({ length: r.x }, (_, n) => `<i${n < vecesHoy ? ' class="hecha"' : ''}></i>`).join('')}</span>${t('Hoy: {n} de {x} veces', { n: Math.min(vecesHoy, r.x), x: r.x })}</p>` : ''}
       </header>
       <section class="lista">
@@ -1765,7 +1462,7 @@ async function vistaRutina(codigo) {
                 <span class="tarjeta-poster"><img src="${poster(e.i, r.c, banda?.clave)}" alt="" width="112" height="84" decoding="async"${e.l === 'izq' ? ' class="espejo"' : ''}></span>
                 <div>
                   <h3>${esc(t(def.nombre))}</h3>
-                  <p class="tarjeta-dosis num">${tn(e.s, '{n} serie', '{n} series')} · ${cuentaUnidad(def, e.r)}</p>
+                  <p class="tarjeta-dosis num">${circuito ? cuentaUnidad(def, e.r) : `${tn(e.s, '{n} serie', '{n} series')} · ${cuentaUnidad(def, e.r)}`}</p>
                 </div>
               </div>
               <p class="tarjeta-pauta">${esc(textoTempo(e.t))}</p>
@@ -1775,21 +1472,14 @@ async function vistaRutina(codigo) {
           })
           .join('')}
         ${tarjetaVoz()}
-        ${enMoodle ? '' : `<section class="tarjeta recordatorio" aria-labelledby="recordar-titulo">
-          <h3 id="recordar-titulo">${t('Que no se te olvide')}</h3>
-          <p>${t('Pon un aviso cada día en el calendario de tu teléfono, con el enlace a esta rutina.')}</p>
-          <div class="recordatorio-fila">
-            <label class="hora"><span>${t('A las')}</span><input type="time" value="10:00" data-r="hora-recordatorio"></label>
-            <button type="button" class="boton secundario" data-r="recordatorio">${t('Añadir al calendario')}</button>
-          </div>
-          <p class="recordatorio-hecho" aria-live="polite"></p>
-        </section>`}
+        ${tarjetaRecordatorio()}
+        ${invitacion(r, 'lista')}
         <p class="sin-conexion" aria-live="polite"></p>
         ${firmaPersona}
       </section>
       <footer class="pie pie-fijo">
         ${ejercicios[0] ? `<span class="pie-poster" aria-hidden="true"><img src="${poster(ejercicios[0].i, r.c, bandaDe(EJERCICIOS[ejercicios[0].i], ejercicios[0].b)?.clave)}" alt="" width="112" height="84" decoding="async"${ejercicios[0].l === 'izq' ? ' class="espejo"' : ''}></span>` : ''}
-        <p class="pie-resumen num">${tn(ejercicios.length, '{n} ejercicio', '{n} ejercicios')} · ${minutos(totalSeg)}</p>
+        <p class="pie-resumen num">${tn(ejercicios.length, '{n} ejercicio', '{n} ejercicios')}${circuito ? ` · ${tn(r.k, 'circuito de {n} vuelta', 'circuito de {n} vueltas')}` : ''} · ${minutos(totalSeg)}</p>
         ${(() => {
           const c = enCurso();
           return c
@@ -1801,6 +1491,7 @@ async function vistaRutina(codigo) {
           <button type="button" class="boton secundario" data-r="grupo">${ICONO.pantalla}${t('Ponerla en pantalla grande')}</button>
           <p>${t('Para seguirla en grupo en una tele, un proyector o una pizarra. Sin preguntas a nadie y sin guardar nada.')}</p>
         </div>
+        ${invitacion(r, 'panel')}
       </footer>
     </div>`;
     pintarPie(hist);
@@ -1945,10 +1636,15 @@ async function vistaRutina(codigo) {
   }
 
   const actual = () => cola[sesion.item];
+  // «Ejercicio 2 de 7», and in a circuit, the round first.
+  const enQueVamos = (e) => {
+    const ejercicio = t('Ejercicio {n} de {total}', { n: ejercicios.indexOf(e) + 1, total: ejercicios.length });
+    return circuito ? `${t('Vuelta {n} de {total}', { n: sesion.serie + 1, total: r.k })} · ${ejercicio}` : ejercicio;
+  };
   // Under the name: the set, and the band to use when the professional said its colour.
   const subtitulo = (e, serie) => {
     const banda = bandaDe(EJERCICIOS[e.i], e.b);
-    return `${t('Serie {n} de {total}', { n: serie, total: e.s })}${banda ? ` · ${t(banda.nombre).toLowerCase()}` : ''}`;
+    return `${circuito ? t('Vuelta {n} de {total}', { n: serie, total: r.k }) : t('Serie {n} de {total}', { n: serie, total: e.s })}${banda ? ` · ${t(banda.nombre).toLowerCase()}` : ''}`;
   };
 
   async function prepararSerie() {
@@ -1986,9 +1682,14 @@ async function vistaRutina(codigo) {
     if (sesion.item !== item) return;
     // A new exercise waits for the person: from the band on the door to the chair takes longer than any countdown.
     // Between sets of the same exercise, and when only the side changes, the rest leads into the countdown.
+    // In a circuit, from the second round on, the next exercise comes after a short rest (a longer one between rounds),
+    // with the figure already in its starting position.
     const nuevo = sesion.retomada || (sesion.serie === 0 && (item === 0 || cola[item - 1].e !== e));
+    const transicion = sesion.transicion;
     sesion.retomada = false;
+    sesion.transicion = null;
     if (nuevo) preparacion();
+    else if (transicion) descanso(transicion.segundos, { siguiente: true, vuelta: transicion.vuelta });
     else cuentaAtras(5);
   }
 
@@ -1999,7 +1700,7 @@ async function vistaRutina(codigo) {
     const { e } = actual();
     const def = EJERCICIOS[e.i];
     const banda = bandaDe(def, e.b);
-    app.querySelector('.j-sub').textContent = t('Ejercicio {n} de {total}', { n: ejercicios.indexOf(e) + 1, total: ejercicios.length });
+    app.querySelector('.j-sub').textContent = enQueVamos(e);
     const queHace = def.material && def.material !== 'Sin material' ? t(def.material) : '';
     const material = banda
       ? `${muestraBanda(banda)}${esc(t(banda.nombre).toLowerCase())}`
@@ -2105,6 +1806,7 @@ async function vistaRutina(codigo) {
   // other side, or the rating (serie past the last one).
   function siguiente() {
     const { e } = actual();
+    if (circuito) return siguienteEnCircuito(e);
     if (sesion.serie + 1 < e.s) {
       sesion.serie++;
       guardarCurso();
@@ -2117,7 +1819,7 @@ async function vistaRutina(codigo) {
       sesion.item++;
       sesion.serie = 0;
       guardarCurso();
-      descanso(r.d, true);
+      descanso(r.d, { cambiaLado: true });
       return;
     }
     if (grupo) {
@@ -2130,6 +1832,36 @@ async function vistaRutina(codigo) {
     guardarCurso();
     sesion.serie = e.s - 1;
     valorar();
+  }
+
+  // A circuit: the other side at once, as by sets; after the last round of an exercise, its rating (in the last round,
+  // so each one is rated once, as by sets); otherwise on to the next exercise or the next round.
+  function siguienteEnCircuito(e) {
+    const sigue = cola[sesion.item + 1];
+    if (sigue && sigue.e === e) {
+      sesion.item++;
+      guardarCurso();
+      return descanso(r.d, { cambiaLado: true });
+    }
+    if (sesion.serie + 1 >= r.k && !grupo) {
+      sesion.serie = e.s;
+      guardarCurso();
+      sesion.serie = e.s - 1;
+      return valorar();
+    }
+    return pasarEnCircuito();
+  }
+  function pasarEnCircuito() {
+    if (sesion.item + 1 < cola.length) {
+      sesion.item++;
+      sesion.transicion = { segundos: r.d };
+    } else if (sesion.serie + 1 < r.k) {
+      sesion.item = 0;
+      sesion.serie++;
+      sesion.transicion = { segundos: r.kd, vuelta: true };
+    } else return grupo ? finDeGrupo() : terminar();
+    guardarCurso();
+    return prepararSerie();
   }
 
   // A group: in, wide and with full screen where the screen allows it; out, as the person's routine left it.
@@ -2197,20 +1929,29 @@ async function vistaRutina(codigo) {
   };
   document.addEventListener('fullscreenchange', alCambiarCompleta);
 
-  function descanso(segundos, cambiaLado = false) {
-    decir(cambiaLado ? t('Descansa. Ahora, el otro lado') : t('Descansa'));
+  // siguiente: in a circuit, the rest before the next exercise (vuelta: before the next round), with its figure in place.
+  function descanso(segundos, { cambiaLado = false, siguiente = false, vuelta = false } = {}) {
+    const { e, lado } = actual();
+    const nombre = t(EJERCICIOS[e.i].nombre);
+    decir(cambiaLado ? t('Descansa. Ahora, el otro lado') : siguiente ? `${t('Descansa')}. ${nombre}` : t('Descansa'));
     sesion.estado = 'descanso';
     const mando = app.querySelector('.j-mando');
-    const { e, lado } = actual();
     const total = segundos;
     let quedan = segundos;
     const radio = 56;
     const largo = 2 * Math.PI * radio;
-    mando.innerHTML = `<div class="centro"><h3>${t('Descansa')}</h3><p>${cambiaLado ? t('Ahora, {lado}', { lado: t(LADOS[lado]).toLowerCase() }) : t('Siguiente: serie {n} de {total}', { n: sesion.serie + 1, total: e.s })}</p></div>
+    const queSigue = cambiaLado
+      ? t('Ahora, {lado}', { lado: t(LADOS[lado]).toLowerCase() })
+      : vuelta
+        ? t('Ahora, la vuelta {n} de {total}, empezando por {ejercicio}', { n: sesion.serie + 1, total: r.k, ejercicio: esc(nombre.toLowerCase()) })
+        : siguiente
+          ? t('Siguiente: {ejercicio}', { ejercicio: esc(nombre.toLowerCase()) })
+          : t('Siguiente: serie {n} de {total}', { n: sesion.serie + 1, total: e.s });
+    mando.innerHTML = `<div class="centro"><h3>${t('Descansa')}</h3><p>${queSigue}</p></div>
       <svg class="anillo" viewBox="0 0 132 132"><circle class="fondo-anillo" cx="66" cy="66" r="${radio}"/><circle class="avance" cx="66" cy="66" r="${radio}" stroke-dasharray="${largo}" stroke-dashoffset="0" transform="rotate(-90 66 66)"/><text x="66" y="66" class="num">${quedan}</text></svg>
       <div class="mando-botones"><button type="button" class="boton fantasma" data-r="mas">+15 s</button><span></span><button type="button" class="boton fantasma" data-r="ya">${t('Seguir ya')}</button></div>`;
     if (cambiaLado) {
-      app.querySelector('.j-sub').textContent = subtitulo(e, 1);
+      app.querySelector('.j-sub').textContent = subtitulo(e, circuito ? sesion.serie + 1 : 1);
       app.querySelector('.j-lado').textContent = t(LADOS[lado]);
       figura.lado(lado);
     } else {
@@ -2245,6 +1986,7 @@ async function vistaRutina(codigo) {
   // What the person may add about an exercise, for the professional: it cost them, or they could not do it, and a short
   // note in their own words («me molestó la rodilla al bajar»). Optional; it travels in the summary.
   function extraValorar(e) {
+    if (r.o) return '';
     const x = (sesion.extra ||= {})[e.i] || {};
     const boton = (v, texto) => `<button type="button" class="chip-elegir" data-r="dificultad" data-v="${v}" aria-pressed="${x.c === v}">${texto}</button>`;
     return `<section class="valorar-extra" aria-labelledby="v-extra">
@@ -2261,7 +2003,7 @@ async function vistaRutina(codigo) {
     figura?.parar();
     app.querySelector('.jugador')?.classList.add('valorando');
     const { e } = actual();
-    app.querySelector('.j-sub').textContent = t('Ejercicio {n} de {total}', { n: ejercicios.indexOf(e) + 1, total: ejercicios.length });
+    app.querySelector('.j-sub').textContent = enQueVamos(e);
     const def = EJERCICIOS[e.i];
     const banda = bandaDe(def, e.b);
     const items = cola.map((c, i) => ({ c, i })).filter(({ c }) => c.e === e);
@@ -2270,7 +2012,9 @@ async function vistaRutina(codigo) {
     const seguir = ultimo ? t('Terminar') : t('Siguiente ejercicio');
     const lado = (c) => `<img src="${poster(e.i, r.c, banda?.clave)}" alt="" width="112" height="84" decoding="async"${c.lado === 'izq' ? ' class="espejo"' : ''}>`;
     const cabeza = `<div class="valorar-cabeza"><span class="tarjeta-poster">${lado(items[0].c)}</span>
-      <div><h3>${t('Hecho')}</h3><p class="num">${dosLados ? tn(e.s, '{n} serie de cada lado', '{n} series de cada lado') : tn(e.s, '{n} serie', '{n} series')} · ${cuentaUnidad(def, e.r)}</p></div></div>`;
+      <div><h3>${t('Hecho')}</h3><p class="num">${circuito
+        ? dosLados ? tn(e.s, '{n} vuelta de cada lado', '{n} vueltas de cada lado') : tn(e.s, '{n} vuelta', '{n} vueltas')
+        : dosLados ? tn(e.s, '{n} serie de cada lado', '{n} series de cada lado') : tn(e.s, '{n} serie', '{n} series')} · ${cuentaUnidad(def, e.r)}</p></div></div>`;
     let cuerpo = '';
     let pie = '';
     if (sesion.paso === 'reps') {
@@ -2279,7 +2023,11 @@ async function vistaRutina(codigo) {
     } else if (sesion.paso === 'menos') {
       cuerpo = `<section class="valorar-paso" aria-labelledby="v-menos"><h4 class="pregunta" id="v-menos" tabindex="-1">${fraseUnidad(def, 'cuantas')}</h4>
         ${items.map(({ c, i }) => `<div class="series-lado">${dosLados ? `<h5>${t(LADOS[c.lado])}</h5>` : ''}${sesion.hechas[i]
-          .map((v, n) => `<div class="serie-fila"><span>${t('Serie {n}', { n: n + 1 })}</span>${paso(`h-${i}-${n}`, v, dosLados ? t('{lado}, serie {n}', { lado: t(LADOS[c.lado]), n: n + 1 }) : t('Serie {n}', { n: n + 1 }), 0, 50)}</div>`)
+          .map((v, n) => {
+            const cual = circuito ? t('Vuelta {n}', { n: n + 1 }) : t('Serie {n}', { n: n + 1 });
+            const etiqueta = dosLados ? (circuito ? t('{lado}, vuelta {n}', { lado: t(LADOS[c.lado]), n: n + 1 }) : t('{lado}, serie {n}', { lado: t(LADOS[c.lado]), n: n + 1 })) : cual;
+            return `<div class="serie-fila"><span>${cual}</span>${paso(`h-${i}-${n}`, v, etiqueta, 0, 50)}</div>`;
+          })
           .join('')}</div>`).join('')}</section>`;
       pie = `<button type="button" class="boton" data-r="reps-listo">${t('Listo')}</button>`;
     } else {
@@ -2324,47 +2072,19 @@ async function vistaRutina(codigo) {
     hist.push(dia);
     almacen.guardar(clave, hist.slice(-200));
     const trabajo = t('{tiempo} de trabajo.', { tiempo: mayuscula(minutos((ahora - sesion.inicio) / 1000)) });
-    // In a Moodle course the session goes to the course by itself; the way out leads back to it.
-    const pie = enMoodle
-      ? `<p class="moodle-estado" aria-live="polite"></p>
-        ${volverAlCurso() ? `<a class="boton" href="${esc(volverAlCurso())}">${ICONO.volver}${t('Volver al curso')}</a>` : enAppDeMoodle ? `<p class="moodle-cerrar">${t(TEXTO_CERRAR)}</p>` : ''}
-        <button type="button" class="boton fantasma" data-r="volver">${t('Volver a la rutina')}</button>`
-      : `<button type="button" class="boton" data-r="mandar" data-canal="wa">${ICONO.whatsapp}${t('Mandar por WhatsApp')}</button>
-        <button type="button" class="boton" data-r="mandar" data-canal="tg">${ICONO.telegram}${t('Mandar por Telegram')}</button>
-        <button type="button" class="boton fantasma" data-r="volver">${t('Volver a la rutina')}</button>
-        ${tarjetaAMano()}`;
     const faltan = [...new Set(cola.filter((c) => !dia.e.some((x) => x.i === c.e.i)).map((c) => EJERCICIOS[c.e.i].nombre))].map((n) => esc(t(n)));
     app.innerHTML = `<div class="rutina">
       <header class="saludo"><div class="de">${t('Hecho')}</div><h1>${parcial ? t('Lo de hoy, guardado') : t('Rutina de hoy, completa')}</h1>${
         parcial ? `<p>${t('Te faltó: {ejercicios}.', { ejercicios: faltan.join(', ') })}</p>` : ''
-      }<p>${trabajo} ${r.de && !enMoodle ? t('Mándale a {de} cómo te ha ido.', { de: esc(r.de) }) : ''}</p></header>
-      <section class="lista">${resumenDia(dia, tope)}</section>
+      }<p>${trabajo} ${textoFin(r)}</p></header>
+      <section class="lista">${resumenDia(dia, tope)}${invitacion(r, 'fin')}</section>
       <footer class="pie">
-        ${pie}
+        ${pieFin(r)}
       </footer>
     </div>`;
-    subirHistorial(clave);
+    alGuardar(clave);
   }
 
-  // «Tenla a mano» (Fable B6): the routine lives in a message that tomorrow will be buried. On a phone, and until the
-  // person says «Ya la tengo», the two steps to put it on the home screen, drawn as their browser shows them.
-  function tarjetaAMano() {
-    const instalada = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-    if (instalada || !window.matchMedia('(pointer: coarse)').matches || almacen.leer('a-mano', false)) return '';
-    const iphone = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const pasos = iphone
-      ? [[ICONO.compartirIos, t('Toca <b>Compartir</b>, abajo, en la barra del navegador.')], [ICONO.mas, t('Toca <b>Añadir a pantalla de inicio</b>.')]]
-      : [[ICONO.puntos, t('Toca los <b>tres puntos</b>, arriba a la derecha.')], [ICONO.mas, t('Toca <b>Añadir a pantalla de inicio</b>.')]];
-    return `<section class="tarjeta a-mano" aria-labelledby="a-mano-titulo">
-      <h3 id="a-mano-titulo">${t('Tenla a mano')}</h3>
-      <p>${t('Así mañana no tendrás que buscar el mensaje: ponla en la pantalla de inicio del teléfono, como una app.')}</p>
-      <ol class="a-mano-pasos">${pasos.map(([icono, texto]) => `<li><span class="a-mano-icono" aria-hidden="true">${icono}</span><span>${texto}</span></li>`).join('')}</ol>
-      <button type="button" class="boton secundario" data-r="ya-la-tengo">${t('Ya la tengo')}</button>
-    </section>`;
-  }
-
-  // The summary goes back by WhatsApp or Telegram, as the person prefers. It carries the id of their file on the
-  // professional's side (p), so it lands on the right person even when two share a name.
   // Correcting a day after the fact, or noting one done without the app: the repetitions of each set, the discomfort,
   // «me ha costado» or «no he podido» and the note, in a sheet. The corrected day carries the moment (ed), so the
   // professional's copy takes it in place of the old one, and the next summary brings it.
@@ -2442,60 +2162,6 @@ async function vistaRutina(codigo) {
     dialogo.querySelector('#corregir-titulo').focus({ preventScroll: true });
   }
 
-  // A daily event in the phone's own calendar, with the link to this routine: an .ics file made here, opened by the
-  // phone's calendar; nothing goes through any server, and no app is needed for the reminder.
-  function recordatorio() {
-    const [hh, mm] = (app.querySelector('[data-r="hora-recordatorio"]')?.value || '10:00').split(':').map(Number);
-    const hoy = new Date();
-    const fecha = `${hoy.getFullYear()}${String(hoy.getMonth() + 1).padStart(2, '0')}${String(hoy.getDate()).padStart(2, '0')}`;
-    const hora = `${String(hh || 0).padStart(2, '0')}${String(mm || 0).padStart(2, '0')}00`;
-    const url = `${location.origin}${location.pathname}#r=${codigo}`;
-    const ahora = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
-    // The event is the person's, in their language: the link inside it reads the same in any.
-    const titulo = r.x > 1 ? t('Tu rutina de ejercicios ({x} veces al día)', { x: r.x }) : t('Tu rutina de ejercicios');
-    const aviso = r.de ? t('{titulo}, de {de}', { titulo, de: r.de }) : titulo;
-    const ics = archivoCalendario([
-      'BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//Oksigenia//Jepyso//${idioma().toUpperCase()}`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-      'BEGIN:VEVENT', `UID:${hashCorto(codigo)}-${fecha}@jepyso`, `DTSTAMP:${ahora}`, `DTSTART:${fecha}T${hora}`,
-      `DURATION:PT${Math.max(5, Math.round(totalSeg / 60))}M`, 'RRULE:FREQ=DAILY', `SUMMARY:${textoCalendario(aviso)}`,
-      `DESCRIPTION:${textoCalendario(t('Ábrela aquí: {url}', { url }))}`, `URL:${url}`,
-      'BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER:PT0M', `DESCRIPTION:${textoCalendario(titulo)}`, 'END:VALARM',
-      'END:VEVENT', 'END:VCALENDAR',
-    ]);
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-    a.download = t('rutina.ics');
-    document.body.append(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 60000);
-    const hecho = app.querySelector('.recordatorio-hecho');
-    if (hecho) hecho.textContent = t('Ábrelo y elige «Añadir» en tu calendario: te avisará cada día a las {hora}.', { hora: `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}` });
-  }
-
-  async function mandar(canal = 'wa') {
-    const hist = almacen.leer(clave, []);
-    // What was not sent yet (however long ago) and the last two weeks, at most the 40 latest: a weekly summary of two
-    // routines a day leaves nothing out. Sending marks them, so the next one starts after them.
-    const enviado = almacen.leer(`env:${clave}`, '');
-    const hace14 = new Date();
-    hace14.setDate(hace14.getDate() - 14);
-    const desde = diaLocal(hace14);
-    const marca = (d) => `${d.f} ${d.h || ''}`;
-    const enviadoEn = almacen.leer(`envT:${clave}`, '');
-    const dias = hist.filter((d) => d.f >= desde || marca(d) > enviado || (d.ed && d.ed > enviadoEn)).slice(-40);
-    const resumen = { v: 1, p: r.p, para: r.para, de: r.de, m: tope, dias };
-    if (hist.length) almacen.guardar(`env:${clave}`, marca(hist[hist.length - 1]));
-    almacen.guardar(`envT:${clave}`, new Date().toISOString());
-    const cod = await codificar(resumen);
-    const url = `${location.origin}${location.pathname}#s=${cod}`;
-    // The message is the person's, in their language; the summary in the link reads the same in any.
-    const texto = r.para
-      ? tn(hist.length, '{nombre}: así va mi rutina ({n} vez).', '{nombre}: así va mi rutina ({n} veces).', { nombre: r.para })
-      : tn(hist.length, 'así va mi rutina ({n} vez).', 'así va mi rutina ({n} veces).');
-    window.open(enlaceMensaje(canal, texto, url), '_blank', 'noopener');
-  }
-
   function como() {
     const { e } = actual();
     const def = EJERCICIOS[e.i];
@@ -2562,8 +2228,7 @@ async function vistaRutina(codigo) {
       el.innerHTML = vozActiva() ? ICONO.voz : ICONO.sinVoz;
       return vozActiva() && decir(t('Voz encendida'));
     }
-    if (a === 'mandar') return mandar(el.dataset.canal);
-    if (a === 'recordatorio') return recordatorio();
+    if (alPulsarRutina(a, el, persona)) return;
     if (a === 'corregir') return editarDia(Number(el.dataset.k));
     if (a === 'sin-app') return editarDia(-1);
     if (a === 'volver') return intro();
@@ -2580,7 +2245,7 @@ async function vistaRutina(codigo) {
       app.querySelector('.j-mando').innerHTML = grupo
         ? `<div class="centro"><p>${t('¿Salir de la rutina?')}</p><p>${t('El grupo va por el ejercicio {n} de {total}.', { n: ejercicios.indexOf(actual().e) + 1, total: ejercicios.length })}</p></div>
         <div class="mando-botones"><button type="button" class="boton fantasma" data-r="seguir-rutina">${t('Seguir')}</button><span></span><button type="button" class="boton fantasma" data-r="dejar">${t('Salir')}</button></div>`
-        : `<div class="centro"><p>${t('¿Dejas la rutina aquí?')}</p><p>${enMoodle ? t('Lo que has hecho se guarda en el curso.') : t('Lo que has hecho se guarda y puedes mandarlo.')}</p></div>
+        : `<div class="centro"><p>${t('¿Dejas la rutina aquí?')}</p><p>${textoDejar()}</p></div>
         <div class="mando-botones"><button type="button" class="boton fantasma" data-r="seguir-rutina">${t('Seguir')}</button><span></span><button type="button" class="boton fantasma" data-r="dejar">${t('Dejarla')}</button></div>`;
       return;
     }
@@ -2613,10 +2278,6 @@ async function vistaRutina(codigo) {
         fase.textContent = t('En pausa');
       } else if (fase?.dataset.antes) fase.textContent = fase.dataset.antes;
       return;
-    }
-    if (a === 'ya-la-tengo') {
-      almacen.guardar('a-mano', true);
-      return app.querySelector('.a-mano')?.remove();
     }
     if (a === 'recolocar') {
       figura.girado = false;
@@ -2653,7 +2314,7 @@ async function vistaRutina(codigo) {
       const aviso = app.querySelector('.aviso-molestia');
       if (aviso) {
         aviso.textContent = pasaDelTope(v, tope)
-          ? `${t('Es más de {tope}: {destino}.', { tope, destino: destinoMarca(r.de || t('quien te dio la rutina')) })} ${t('La próxima vez, hazlo más suave o con menos repeticiones. Si es un dolor fuerte, para este ejercicio.')}`
+          ? `${masDelTope(r.de || t('quien te dio la rutina'))} ${t('La próxima vez, hazlo más suave o con menos repeticiones. Si es un dolor fuerte, para este ejercicio.')}`
           : '';
       }
       return;
@@ -2680,6 +2341,7 @@ async function vistaRutina(codigo) {
       if (el.disabled) return;
       el.disabled = true;
       sesion.paso = null;
+      if (circuito) return pasarEnCircuito();
       if (sesion.item + 1 < cola.length) {
         sesion.item++;
         sesion.serie = 0;
@@ -2772,27 +2434,6 @@ function listaDias(fechas) {
   return enLista(nombres);
 }
 
-// Text in a calendar file: backslash, semicolon, comma and line breaks escaped.
-const textoCalendario = (t) => String(t).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
-// Lines of at most 75 bytes, the rest on the next one after a space, joined with CRLF.
-function archivoCalendario(lineas) {
-  const cod = new TextEncoder();
-  const plegar = (linea) => {
-    const trozos = [];
-    let actual = '';
-    for (const c of linea) {
-      if (cod.encode(actual + c).length > (trozos.length ? 74 : 75)) {
-        trozos.push(actual);
-        actual = '';
-      }
-      actual += c;
-    }
-    trozos.push(actual);
-    return trozos.join('\r\n ');
-  };
-  return lineas.map(plegar).join('\r\n') + '\r\n';
-}
-
 // A session belongs to the day it started, and one started before five in the morning to the night before: a routine
 // done from 23:50 to 00:10, or at half past midnight, is that evening's, and the next morning's question finds it.
 function diaDeSesion(inicio) {
@@ -2801,572 +2442,11 @@ function diaDeSesion(inicio) {
   return diaLocal(d);
 }
 
-// ---------- Summary (the professional) ----------
-async function vistaResumen(codigo) {
-  let s = null;
-  try {
-    s = limpiarResumen(await decodificar(codigo));
-  } catch {
-    // Read below as a summary that cannot be opened.
-  }
-  if (!s) {
-    app.innerHTML = avisoRoto(t('Este resumen no se puede abrir'), t('Suele pasar cuando el enlace se corta al copiarlo y pegarlo. Pídele a la persona que te lo reenvíe, y ábrelo tocándolo en el mensaje, sin copiarlo.'));
-    return () => {};
-  }
-  const dias = [...s.dias].reverse();
-  const tope = Number.isInteger(s.m) ? s.m : TOPE_MOLESTIA;
-  const marcados = [...new Set(dias.filter((d) => diaMarcado(d, tope)).map((d) => d.f))].reverse();
-  const molestia = marcados.length
-    ? t('La molestia pasó de {tope} {dias}.', { tope, dias: listaDias(marcados) })
-    : t('La molestia no pasó de {tope} ningún día.', { tope });
-  app.innerHTML = `<div class="rutina">
-    <header class="saludo">
-      <div class="de">${s.de ? t('Resumen para {de}', { de: esc(s.de) }) : t('Resumen para ti')}</div>
-      <h1>${tn(dias.length, '{nombre} ha hecho su rutina {n} vez', '{nombre} ha hecho su rutina {n} veces', { nombre: esc(s.para || t('La persona')) })}</h1>
-      <p class="${marcados.length ? 'molestia-alta' : ''}">${molestia}</p>
-      <p class="en-ficha" aria-live="polite">${guardarEnFicha(s)}</p>
-      <p>${t('Lo que ha hecho, de lo más reciente a lo más antiguo.')}</p>
-    </header>
-    <section class="lista">${dias.map((d) => resumenDia(d, tope)).join('')}</section>
-  </div>`;
-  app.onclick = (ev) => {
-    const boton = ev.target.closest('[data-accion="guardar-resumen"]');
-    if (!boton) return;
-    app.querySelector('.en-ficha').innerHTML = guardarEnFicha(s, boton.dataset.destino);
-  };
-  return () => {
-    app.onclick = null;
-  };
-}
-
-// The summary joins the person's file on its own only when it brings that file's id (p): the routine was sent from
-// this browser to that person. Anything else waits for a tap that says where it goes, the only person with that name or
-// a new file, so a link from anyone cannot fill or change a file by itself. A new file never takes an id from the link.
-function guardarEnFicha(s, destino = '') {
-  const lista = leerPersonas();
-  const suya = s.p ? lista.find((x) => x.id === s.p) : null;
-  const iguales = s.para ? buscarPorNombre(lista, s.para) : [];
-  const porNombre = !suya && iguales.length === 1 ? iguales[0] : null;
-  let p = suya || (destino === 'nombre' ? porNombre : null);
-  if (!p && destino !== 'nueva') {
-    if (porNombre) {
-      return `<button type="button" class="boton secundario" data-accion="guardar-resumen" data-destino="nombre">${t('Guardar en la ficha de {nombre}', { nombre: esc(nombreDe(porNombre)) })}</button>`;
-    }
-    if (!caben(lista)) return t('No se ha guardado en una ficha: ya tienes {n} personas con ficha, el máximo de la versión gratis.', { n: limite() });
-    const texto = !lista.length ? t('Guardar en mis personas')
-      : s.para ? t('Guardar en una ficha nueva para {nombre}', { nombre: esc(s.para) }) : t('Guardar en una ficha nueva para esta persona');
-    return `<button type="button" class="boton secundario" data-accion="guardar-resumen" data-destino="nueva">${texto}</button>`;
-  }
-  if (!p && !caben(lista)) return t('No se ha guardado en una ficha: ya tienes {n} personas con ficha, el máximo de la versión gratis.', { n: limite() });
-  const nueva = !p;
-  // «Sin nombre» is data, the same in every language (entrada.js); nombreDe() shows it in the language in use.
-  if (!p) p = crearPersona(lista, s.para || 'Sin nombre');
-  const n = apuntarResumen(p, s);
-  if (!guardarPersonas(lista)) return t(SIN_SITIO);
-  const nombre = { nombre: esc(nombreDe(p)) };
-  const que = nueva ? t('Ficha nueva para {nombre}', nombre) : n ? t('Guardado en la ficha de {nombre}', nombre) : t('Ya estaba en la ficha de {nombre}', nombre);
-  if (!fichaAbierta(p)) {
-    if (cuentaDeVales()) pedirVale(p.id);
-    else return `${que}. ${t('Para abrirla, entra con tu cuenta de Google en <a href="#personas">Mis personas</a>.')}`;
-  }
-  return `${que}. <a href="#persona=${esc(p.id)}">${t('Ver su ficha')}</a>`;
-}
-
-// ---------- The professional's people ----------
 // «jueves, 13 de noviembre», for the person's own days.
 const fechaCorta = (f) => {
   const d = new Date(f + 'T12:00:00');
   return Number.isNaN(d.getTime()) ? t('día sin fecha') : new Intl.DateTimeFormat(locale(), { weekday: 'long', day: 'numeric', month: 'long' }).format(d);
 };
-const fechaLarga = (f) => {
-  const d = new Date(f + 'T12:00:00');
-  return Number.isNaN(d.getTime()) ? t('sin fecha') : new Intl.DateTimeFormat(locale(), { day: 'numeric', month: 'long' }).format(d);
-};
-const ultimaFecha = (p) => [p.ultimoResumen, ...p.rutinas.map((r) => r.f)].filter(Boolean).sort().at(-1) || p.creada;
-
-// A day that passed the person's level in the last two weeks, the latest one, to see at a glance who needs a look.
-function ultimoMarcado(p) {
-  const tope = Number.isInteger(p.m) ? p.m : TOPE_MOLESTIA;
-  const desde = new Date();
-  desde.setDate(desde.getDate() - 14);
-  const limite = diaLocal(desde);
-  const d = [...p.dias].reverse().find((x) => x.f >= limite && diaMarcado(x, tope));
-  return d ? { f: d.f, tope } : null;
-}
-
-function filaPersona(p) {
-  // A free file without its ticket: its name, and what opens it. Nothing of its content until then.
-  if (!fichaAbierta(p)) {
-    const sinPlaza = fichaSinPlaza(p.id);
-    return `<li><a class="persona-fila cerrada" href="#persona=${esc(p.id)}">
-    <span class="nombre">${ICONO.candado}${esc(nombreDe(p))}</span>
-    <span class="meta">${sinPlaza ? t('Tu cuenta de Google ya tiene {n} fichas', { n: LIMITE_GRATIS }) : t('Entra con tu cuenta de Google para abrirla')}</span>
-  </a></li>`;
-  }
-  const marcado = ultimoMarcado(p);
-  const callado = sinNoticias(p);
-  const rutinas = p.rutinas.length ? tn(p.rutinas.length, '{n} rutina', '{n} rutinas') : t('sin rutinas');
-  const resumen = p.ultimoResumen ? t('último resumen el {fecha}', { fecha: fechaLarga(p.ultimoResumen) }) : t('sin resúmenes todavía');
-  return `<li><a class="persona-fila" href="#persona=${esc(p.id)}">
-    <span class="nombre">${esc(nombreDe(p))}</span>
-    <span class="meta">${rutinas} · ${resumen}</span>
-    ${marcado || callado ? `<span class="marcas">${marcado ? `<span class="chip alta">${t('Pasó de {tope} {dias}', { tope: marcado.tope, dias: listaDias([marcado.f]) })}</span>` : ''}${callado ? `<span class="chip">${tn(callado.dias, '{n} día sin noticias', '{n} días sin noticias')}</span>` : ''}</span>` : ''}
-  </a></li>`;
-}
-
-// The paid version keeps the files in the professional's own cloud (nube.js): Google Drive, Dropbox or OneDrive, as
-// they choose on this device, each with one folder the app only can see. Syncing joins what this device has with what
-// that cloud has, and keeps it in both places.
-const ultimaSincronia = (id) => {
-  const f = ultimaVez(id);
-  if (!f) return t('Todavía sin conectar.');
-  const d = new Date(f);
-  const hora = d.toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
-  return diaLocal(d) === diaLocal() ? t('Última vez: hoy, a las {hora}.', { hora }) : t('Última vez: el {fecha}, a las {hora}.', { fecha: fechaLarga(diaLocal(d)), hora });
-};
-
-// The three services side by side, the chosen one pressed; what it keeps and where; the licence; and one button.
-// Moving to a service this device has never synced with says what happens: this device's data joins what is there,
-// and the other one keeps what it had. With a cancelled licence there is nothing to choose or sync.
-function seccionNube() {
-  const id = nubeElegida();
-  const nube = NUBES[id];
-  const pendiente = licenciaPendiente();
-  const antes = nubeAnterior(id);
-  return `<section class="general nube">
-    <h2>${t('Tu nube')}</h2>
-    ${licenciaAnulada() ? '' : `<div class="segmentos" role="group" aria-label="${t('Dónde se guardan tus fichas')}">${Object.entries(NUBES)
-    .map(([k, n]) => `<button type="button" data-accion="elegir-nube" data-valor="${k}" aria-pressed="${k === id}">${n.nombre}</button>`)
-    .join('')}</div>`}
-    <p class="ayuda">${t('Tus fichas y tus plantillas se guardan en una carpeta «Jepyso» de tu {nube}, y así las tienes en todos tus aparatos. Jepyso solo ve esa carpeta.', { nube: nube.corto })}</p>
-    ${antes && !licenciaAnulada() ? `<p class="ayuda cambio-nube">${t('Al sincronizar, lo de este aparato se junta con lo que haya en tu {nube}. Lo que tienes en {antes} se queda allí, sin tocar.', { nube: nube.nombre, antes: NUBES[antes].nombre })}</p>` : ''}
-    ${pendiente ? `<p class="ayuda">${t('<strong>Para activar tu licencia,</strong> conecta el {nube} con la cuenta {cuenta}.', { nube: nube.corto, cuenta: esc(licencia().cuenta) })}</p>` : ''}
-    ${licenciaAnulada()
-    ? `<p class="ayuda licencia-anulada">${t('<strong>Esta licencia ya no vale:</strong> Oksigenia la ha pasado a otra cuenta. Tus fichas siguen aquí y se pueden leer, pero no se sincronizan ni se crean nuevas. Pega abajo tu licencia nueva.')}</p>`
-    : `${licencia().valida ? `<p class="ayuda plan">${t('Plan {nombre}: hasta {n} personas con ficha, de por vida. Licencia de {cuenta}.', { nombre: esc(nombrePlan(topeLicencia())), n: topeLicencia(), cuenta: esc(licencia().cuenta) })}</p>` : ''}
-    <div class="botones"><button type="button" class="boton" data-accion="sincronizar-nube">${t('Sincronizar con {nube}', { nube: nube.nombre })}</button></div>`}
-    <p class="aviso-nube" aria-live="polite">${ultimaSincronia(id)}</p>
-  </section>`;
-}
-
-// The free version's Google account (vales.js): who is in and how many files are left, or Google's own button. Said
-// plainly what goes to the server and what does not.
-function seccionCuenta() {
-  const correo = cuentaDeVales();
-  const quedan = fichasQuedan();
-  const cerradas = leerPersonas().filter((p) => !fichaAbierta(p)).length;
-  const estado = correo
-    ? `<p class="cuenta-dentro">${t('Con la cuenta <strong>{correo}</strong>', { correo: esc(correo) })}${Number.isInteger(quedan) ? ` · ${quedan === 0 ? t('no le quedan fichas nuevas') : tn(quedan, 'le queda {n} ficha nueva', 'le quedan {n} fichas nuevas')}` : ''}</p>`
-    : '<div class="hueco-google"></div>';
-  return `<section class="general cuenta-fichas${cerradas && !correo ? ' pide' : ''}">
-    <h2>${t('Tus fichas, con tu cuenta de Google')}</h2>
-    ${correo ? '' : `<p class="ayuda">${t('La versión gratis tiene {n} fichas por cuenta de Google. Entra con la tuya para abrirlas y para hacer fichas nuevas. Oksigenia solo guarda una huella de tu cuenta y el código de cada ficha: los nombres, las rutinas y los resúmenes se quedan en este aparato.', { n: LIMITE_GRATIS })}</p>`}
-    ${estado}
-    <p class="aviso-vales" aria-live="polite">${esc(avisoVales())}</p>
-  </section>`;
-}
-
-// Where to paste a licence, in Personas, for the free version.
-function seccionLicencia() {
-  return `<details class="general licencia-pegar">
-    <summary>${t('¿Tienes una licencia de Jepyso?')}</summary>
-    <p class="ayuda">${t('Pégala aquí, o abre el enlace que te llegó con ella. Se activa al conectar tu nube (Google Drive, OneDrive o Dropbox) con la cuenta de la licencia.')}</p>
-    <div class="licencia-fila"><input type="text" data-accion="licencia" autocomplete="off" spellcheck="false" aria-label="${t('Tu licencia')}"><button type="button" class="boton secundario" data-accion="guardar-licencia">${t('Guardar')}</button></div>
-    <p class="aviso-licencia" aria-live="polite"></p>
-  </details>`;
-}
-
-// Shown through t(), as the keys of their translation.
-const MOTIVOS_LICENCIA = {
-  formato: 'Eso no es una licencia de Jepyso: cópiala entera, sin espacios.',
-  firma: 'Esa licencia no es válida: no la ha firmado Oksigenia, o ha cambiado al copiarla.',
-  navegador: 'Este navegador no puede comprobar licencias. Actualízalo, o usa Chrome, Edge, Safari o Firefox al día.',
-};
-
-// With Google Drive chosen, its script loads as People opens, so the tap on «Sincronizar» opens Google's window at once:
-// Safari blocks a window asked for after a download.
-function precargarDrive() {
-  if (app.querySelector('.nube') && nubeElegida() === 'google') cargarGoogle().catch(() => {});
-}
-
-// Syncs with the chosen cloud. The licence counts against the connected account's e-mail, whichever the service: one
-// licence, one account. While it runs, the service cannot be changed.
-async function sincronizarNube(seccion) {
-  const aviso = seccion.querySelector('.aviso-nube');
-  const id = nubeElegida();
-  const nube = NUBES[id];
-  const botones = [...seccion.querySelectorAll('button')];
-  for (const b of botones) b.disabled = true;
-  try {
-    aviso.textContent = t('Conectando con {empresa}…', { empresa: nube.empresa });
-    await nube.conectar();
-    // With a licence: it counts once the cloud is connected with its account; with another account, nothing is synced.
-    if (licencia().valida) {
-      const cuenta = await nube.cuenta();
-      if (!(await cuentaDelDrive(cuenta))) {
-        nube.olvidar();
-        aviso.textContent = t('Tu licencia es de {licencia}, y has conectado el {nube} de {cuenta}. Conéctalo con la cuenta de la licencia.', { licencia: licencia().cuenta, nube: nube.corto, cuenta: cuenta || t('otra cuenta') });
-        return;
-      }
-      // Still alive? A licence moved to another account syncs no more (the page shows why).
-      if (!(await comprobarVigencia())) {
-        ir();
-        return;
-      }
-    }
-    aviso.textContent = t('Sincronizando…');
-    const local = { personas: leerPersonas(), plantillas: leerPlantillas(), borradas: leerBorradas() };
-    const r = await sincronizar(id, local, (junto) => {
-      const bien = guardarPersonas(junto.personas) && almacen.guardar('plantillas', junto.plantillas) && almacen.guardar('borradas', junto.borradas);
-      if (!bien) throw new Error(t(SIN_SITIO));
-    });
-    apuntarVez(id);
-    seccion.querySelector('.cambio-nube')?.remove();
-    aviso.textContent = t('Hecho: {personas} y {plantillas} en tu {nube} y en este aparato.', {
-      nube: nube.corto,
-      personas: tn(r.personas, '{n} persona', '{n} personas'),
-      plantillas: tn(r.plantillas, '{n} plantilla', '{n} plantillas'),
-    });
-  } catch (err) {
-    aviso.textContent = err.message;
-  } finally {
-    for (const b of botones) b.disabled = false;
-  }
-}
-
-function vistaPersonas() {
-  let texto = '';
-  let buscando = null;
-  const pintarLista = () => {
-    const todas = leerPersonas().sort((x, y) => ultimaFecha(y).localeCompare(ultimaFecha(x)));
-    const lista = todas.filter((p) => !texto || p.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(texto));
-    const cap = app.querySelector('.hueco-capacidad');
-    if (cap) cap.innerHTML = todas.length ? capacidad(todas) : '';
-    const ul = app.querySelector('.lista-personas');
-    ul.innerHTML = todas.length
-      ? lista.map(filaPersona).join('') || `<li class="vacio">${t('Nadie con ese nombre.')}</li>`
-      : `<li class="vacio">${t('Todavía no hay nadie. Cuando mandes una rutina con el nombre de la persona, aparece aquí con su ficha.')}</li>`;
-  };
-  app.innerHTML = `<div class="personas">
-    ${barraApp(t('Personas'), { accion: botonNueva })}
-    <div class="armar-cuerpo">
-      <input type="search" class="buscar" data-accion="buscar-persona" autocomplete="off" placeholder="${t('Buscar por nombre')}" aria-label="${t('Buscar personas por nombre')}">
-      <div class="hueco-capacidad"></div>
-      ${valesEnMarcha() ? seccionCuenta() : ''}
-      <ul class="lista-personas"></ul>
-      <details class="ayuda-plegada"><summary>${t('Cómo funciona')}</summary><p>${t('Cada rutina que mandas y cada resumen que te devuelven quedan en la ficha de su persona. Se guardan en este aparato; con una copia te las llevas a otro.')}</p></details>
-      ${licenciaAnulada() ? `${seccionNube()}${seccionLicencia()}` : esDePago() || licenciaPendiente() ? seccionNube() : seccionLicencia()}
-      <section class="general copia">
-        <h2>${t('Copia')}</h2>
-        <p class="ayuda">${t('Al cargarla se añade lo que falte; no se borra nada.')}</p>
-        <div class="botones">
-          <button type="button" class="boton secundario" data-accion="exportar">${t('Guardar copia')}</button>
-          <label class="boton secundario">${t('Cargar copia')}<input type="file" accept=".json,application/json" data-accion="importar" class="oculto"></label>
-        </div>
-        <p class="aviso-copia" aria-live="polite"></p>
-      </section>
-    </div>
-  </div>`;
-  pintarLista();
-  const huecoGoogle = app.querySelector('.hueco-google');
-  if (huecoGoogle) botonGoogle(huecoGoogle);
-  precargarDrive();
-  app.oninput = (ev) => {
-    if (ev.target.dataset.accion !== 'buscar-persona') return;
-    texto = ev.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
-    // With hundreds of files, painting on every key made typing lag: the list follows a moment after the last one.
-    clearTimeout(buscando);
-    buscando = setTimeout(pintarLista, 150);
-  };
-  app.onclick = async (ev) => {
-    if (ev.target.closest('[data-accion="guardar-licencia"]')) {
-      const aviso = app.querySelector('.aviso-licencia');
-      const l = await guardarLicencia(app.querySelector('[data-accion="licencia"]')?.value);
-      if (!l.valida) {
-        aviso.textContent = t(MOTIVOS_LICENCIA[l.motivo] || MOTIVOS_LICENCIA.formato);
-        return;
-      }
-      return vistaPersonas();
-    }
-    // Another service: the section says what it keeps and where; nothing is synced until the button.
-    const otra = ev.target.closest('[data-accion="elegir-nube"]');
-    if (otra) {
-      if (otra.getAttribute('aria-pressed') === 'true') return;
-      elegirNube(otra.dataset.valor);
-      const seccion = otra.closest('.nube');
-      seccion.outerHTML = seccionNube();
-      app.querySelector(`.nube [data-valor="${otra.dataset.valor}"]`)?.focus();
-      precargarDrive();
-      return;
-    }
-    if (ev.target.closest('[data-accion="sincronizar-nube"]')) {
-      await sincronizarNube(ev.target.closest('.nube'));
-      return pintarLista();
-    }
-    if (!ev.target.closest('[data-accion="exportar"]')) return;
-    const archivo = new Blob([JSON.stringify(copia(leerPersonas()))], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(archivo);
-    a.download = t('jepyso-personas-{fecha}.json', { fecha: diaLocal() });
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-      a.remove();
-    }, 1000);
-    app.querySelector('.aviso-copia').textContent = t('Copia guardada en tus descargas.');
-  };
-  app.onchange = async (ev) => {
-    if (ev.target.dataset.accion !== 'importar' || !ev.target.files[0]) return;
-    const aviso = app.querySelector('.aviso-copia');
-    try {
-      const lista = leerPersonas();
-      const r = cargarCopia(lista, JSON.parse(await ev.target.files[0].text()));
-      if (!guardarPersonas(lista)) {
-        aviso.textContent = t(SIN_SITIO);
-        return;
-      }
-      const cargadas = t('Copia cargada: {personas}, {nuevas}.', {
-        personas: tn(r.total, '{n} persona', '{n} personas'),
-        nuevas: r.nuevas ? tn(r.nuevas, '{n} nueva', '{n} nuevas') : t('ninguna nueva'),
-      });
-      aviso.textContent = `${cargadas}${r.fuera ? ` ${tn(r.fuera, '{n} no cabe: la versión gratis guarda hasta {max}.', '{n} no caben: la versión gratis guarda hasta {max}.', { max: limite() })}` : ''}`;
-      await comprobarVales();
-      pintarLista();
-      if (cuentaDeVales()) pedirVales().then(() => location.hash === '#personas' && pintarLista());
-    } catch {
-      aviso.textContent = t('Ese archivo no es una copia de Jepyso.');
-    }
-    ev.target.value = '';
-  };
-  return () => {
-    app.oninput = app.onclick = app.onchange = null;
-  };
-}
-
-// The week-by-week evolution: the highest discomfort during the exercises and on getting up, against the person's
-// level. Graphite only; the numbers are written, and the bars only repeat them.
-function barraMolestia(v, tope) {
-  if (typeof v !== 'number') return '<span class="sin-dato">—</span>';
-  return `<span class="valor-molestia ${pasaDelTope(v, tope) ? 'pasa' : ''}">
-    <svg class="barra-molestia" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
-      <rect class="pista" x="0" y="5" width="100" height="2"/>
-      ${v > 0 ? `<rect class="valor" x="0" y="3" width="${v * 10}" height="6" rx="1"/>` : ''}
-      <line class="tope" x1="${tope * 10}" x2="${tope * 10}" y1="0" y2="12"/>
-    </svg>
-    <span class="num">${v}</span>
-  </span>`;
-}
-
-function tablaSemanas(p) {
-  const tope = Number.isInteger(p.m) ? p.m : TOPE_MOLESTIA;
-  const lista = semanas(p.dias, tope);
-  if (!lista.length) return '';
-  return `<section class="general evolucion">
-    <h2>${t('Evolución por semanas')}</h2>
-    <p class="ayuda">${t('La molestia más alta de cada semana. La raya marca su molestia aceptable, {tope}. Según el modelo de control del dolor, no debería subir de una semana a la siguiente.', { tope })}</p>
-    <table class="semanas">
-      <thead><tr><th scope="col">${t('Semana del')}</th><th scope="col">${t('Sesiones')}</th><th scope="col">${t('Durante')}</th><th scope="col">${t('Al levantarse')}</th></tr></thead>
-      <tbody>${lista
-        .map((s) => `<tr class="${s.sube ? 'sube' : ''}">
-          <th scope="row">${fechaLarga(s.desde)}${s.sube ? ` <span class="marca-dia">${t('Sube')}</span>` : ''}</th>
-          <td class="num" data-etiqueta="${t('Sesiones')}">${s.sesiones}</td>
-          <td data-etiqueta="${t('Durante')}">${barraMolestia(s.durante, tope)}</td>
-          <td data-etiqueta="${t('Al levantarse')}">${barraMolestia(s.manana, tope)}</td>
-        </tr>`)
-        .join('')}</tbody>
-    </table>
-  </section>`;
-}
-
-// A free file without its ticket: its name, Google's button and, if it has no room on the account, the way to delete
-// it. What is inside stays kept, but out of sight, until it opens.
-function vistaFichaCerrada(p) {
-  const sinPlaza = fichaSinPlaza(p.id);
-  app.innerHTML = `<div class="personas persona ficha-cerrada">
-    ${barraApp(esc(nombreDe(p)), { volver: '#personas' })}
-    <div class="armar-cuerpo">
-      <section class="general cuenta-fichas pide">
-        <h2>${ICONO.candado}${sinPlaza ? t('Esta ficha no cabe en tu cuenta') : t('Entra para abrir esta ficha')}</h2>
-        <p class="ayuda">${sinPlaza
-          ? `${t('Tu cuenta de Google ya tiene sus {n} fichas gratis. Borra una que ya no uses, aquí o en otro aparato.', { n: LIMITE_GRATIS })} ${ampliarPlan()}`
-          : t('En la versión gratis, cada ficha va con tu cuenta de Google: {n} por cuenta. Entra con la tuya y la ficha se abre en este aparato, también sin conexión.', { n: LIMITE_GRATIS })}</p>
-        ${cuentaDeVales() ? '' : '<div class="hueco-google"></div>'}
-        <p class="aviso-vales" aria-live="polite">${esc(avisoVales())}</p>
-      </section>
-      ${sinPlaza ? `<div class="botones"><button type="button" class="boton fantasma" data-accion="borrar-cerrada">${t('Borrar esta ficha')}</button></div>` : ''}
-    </div>
-  </div>`;
-  const hueco = app.querySelector('.hueco-google');
-  if (hueco) botonGoogle(hueco);
-  let confirmar = null;
-  app.onclick = (ev) => {
-    const el = ev.target.closest('[data-accion="borrar-cerrada"]');
-    if (!el) return;
-    if (!confirmar) {
-      el.textContent = t('¿Borrar la ficha de {nombre}? Toca otra vez', { nombre: nombreDe(p) });
-      confirmar = setTimeout(() => {
-        confirmar = null;
-        if (el.isConnected) el.textContent = t('Borrar esta ficha');
-      }, 4000);
-      return;
-    }
-    clearTimeout(confirmar);
-    apuntarBorrada('personas', p.id);
-    guardarPersonas(leerPersonas().filter((x) => x.id !== p.id));
-    location.hash = '#personas';
-  };
-  return () => {
-    clearTimeout(confirmar);
-    app.onclick = null;
-  };
-}
-
-function vistaPersona(id) {
-  const lista = leerPersonas();
-  const p = lista.find((x) => x.id === id);
-  if (!p) {
-    app.innerHTML = `<div class="personas"><header class="armar-cabecera"><a class="ir-personas" href="#personas">${t('Mis personas')}</a><h1>${t('Esta ficha no está en este navegador')}</h1><p>${t('Si la tienes en otro aparato, trae su copia desde Mis personas.')}</p></header></div>`;
-    return () => {};
-  }
-  if (!fichaAbierta(p)) return vistaFichaCerrada(p);
-  const tope = Number.isInteger(p.m) ? p.m : TOPE_MOLESTIA;
-  const dias = [...p.dias].reverse();
-  const callado = sinNoticias(p);
-  const urlCallado = callado ? `${location.origin}${location.pathname}#r=${callado.codigo}` : '';
-  // The professional's message, in their language; the routine in the link reads the same in any.
-  const textoCallado = t('Hola, {nombre}. ¿Qué tal vas con la rutina? Si algún ejercicio te cuesta o te molesta, dímelo y lo ajustamos. Aquí la tienes otra vez:', { nombre: p.nombre });
-  app.innerHTML = `<div class="personas persona">
-    ${barraApp(esc(nombreDe(p)), { volver: '#personas' })}
-    <div class="ficha-cabeza">
-      <p>${t('Ficha desde el {fecha} · molestia aceptable {tope}', { fecha: fechaLarga(p.creada), tope })}</p>
-      <div class="botones"><button type="button" class="boton" data-accion="rutina-para">${ICONO.mas}${t('Nueva rutina para {nombre}', { nombre: esc(nombreDe(p)) })}</button></div>
-    </div>
-    <div class="armar-cuerpo">
-      <div class="persona-ficha">
-      ${callado ? `<section class="general sin-noticias" aria-labelledby="sin-noticias">
-        <h2 id="sin-noticias">${tn(callado.dias, '{n} día sin noticias', '{n} días sin noticias')}</h2>
-        <p>${t('Le mandaste la rutina el {fecha} y todavía no te ha llegado nada. Las dos primeras semanas son las que más cuestan: es buen momento para preguntarle qué tal va.', { fecha: fechaLarga(callado.f) })}</p>
-        <div class="botones">
-          <a class="boton" href="${esc(enlaceMensaje('wa', textoCallado, urlCallado))}" target="_blank" rel="noopener">${ICONO.whatsapp}${t('Escribirle por WhatsApp')}</a>
-          <a class="boton secundario" href="${esc(enlaceMensaje('tg', textoCallado, urlCallado))}" target="_blank" rel="noopener">${ICONO.telegram}${t('Por Telegram')}</a>
-          ${botonCompartir('accion')}
-        </div>
-      </section>` : ''}
-      <section class="general notas">
-        <h2><label for="notas">${t('Notas')}</label></h2>
-        <textarea id="notas" data-accion="notas" rows="3" placeholder="${t('Lo que quieras recordar de esta persona')}">${esc(p.notas)}</textarea>
-      </section>
-      ${tablaSemanas(p)}
-      <section class="general mandadas">
-        <h2>${t('Rutinas que le has mandado')}</h2>
-        ${p.rutinas.length ? '' : `<p class="ayuda">${t('Ninguna desde este navegador. Las que le mandes con su nombre se apuntan aquí.')}</p>`}
-        <ul class="rutinas-mandadas">${[...p.rutinas]
-          .reverse()
-          .map((r) => `<li>
-            <span><strong>${fechaLarga(r.f)}</strong> · ${r.e.map((i) => esc(EJERCICIOS[i] ? t(EJERCICIOS[i].nombre) : i)).join(', ')}</span>
-            <span class="botones-fila">
-              <button type="button" class="boton fantasma" data-accion="abrir-rutina" data-codigo="${esc(r.codigo)}">${t('Abrir en el constructor')}</button>
-              <button type="button" class="boton fantasma" data-accion="copiar-rutina" data-codigo="${esc(r.codigo)}">${t('Copiar enlace')}</button>
-            </span>
-          </li>`)
-          .join('')}</ul>
-      </section>
-      <section class="borrar-ficha">
-        <button type="button" class="boton fantasma" data-accion="borrar-persona">${t('Borrar su ficha')}</button>
-      </section>
-      </div>
-      <section class="lo-hecho">
-        <h2>${t('Lo que ha hecho')}</h2>
-        ${dias.length ? dias.map((d) => resumenDia(d, tope)).join('') : `<p class="vacio">${t('Aún no te ha mandado ningún resumen. Cuando lo abras, se guarda aquí.')}</p>`}
-      </section>
-    </div>
-  </div>`;
-
-  const guardar = () => {
-    // Only the notes change here, on the file as it is now: a summary kept from another tab meanwhile (WhatsApp Web
-    // opens each link in a new one) must stay.
-    const todas = leerPersonas();
-    const fresca = todas.find((x) => x.id === id);
-    if (!fresca) return;
-    fresca.notas = p.notas;
-    fresca.cambiada = p.cambiada;
-    if (!guardarPersonas(todas)) app.querySelector('.notas h2').insertAdjacentHTML('afterend', `<p class="aviso-nube">${t(SIN_SITIO)}</p>`);
-  };
-  // Saved a moment after the last key (every save reads and writes all the files), and at once on leaving the file,
-  // closing or reloading the page.
-  let porGuardar = null;
-  const guardarYa = () => {
-    if (!porGuardar) return;
-    clearTimeout(porGuardar);
-    porGuardar = null;
-    guardar();
-  };
-  window.addEventListener('pagehide', guardarYa);
-  app.oninput = (ev) => {
-    if (ev.target.dataset.accion !== 'notas') return;
-    p.notas = ev.target.value;
-    p.cambiada = new Date().toISOString();
-    clearTimeout(porGuardar);
-    porGuardar = setTimeout(() => {
-      porGuardar = null;
-      guardar();
-    }, 400);
-  };
-  let confirmar = null;
-  app.onclick = async (ev) => {
-    const el = ev.target.closest('[data-accion]');
-    const a = el?.dataset.accion;
-    if (a !== 'borrar-persona' && confirmar) {
-      clearTimeout(confirmar);
-      confirmar = null;
-      const b = app.querySelector('[data-accion="borrar-persona"]');
-      if (b) b.textContent = t('Borrar su ficha');
-    }
-    if (a === 'compartir') return compartir(textoCallado, urlCallado);
-    if (a === 'rutina-para') {
-      const b = ponerAlDia(almacen.leer('borrador', null) || borradorInicial());
-      Object.assign(b, { para: p.nombre, persona: p.id, tope });
-      almacen.guardar('borrador', b);
-      location.hash = '';
-    } else if (a === 'abrir-rutina') {
-      // The routine as it was sent, back in the builder for this person, to change it and send it again.
-      const r = limpiarRutina(await decodificar(el.dataset.codigo));
-      if (!r) return;
-      rutinaAlBorrador(r, { para: p.nombre, persona: p.id, tope: Number.isInteger(r.m) ? r.m : tope });
-      location.hash = '';
-    } else if (a === 'copiar-rutina') {
-      const url = `${location.origin}${location.pathname}#r=${el.dataset.codigo}`;
-      try {
-        await navigator.clipboard.writeText(url);
-        el.textContent = t('Copiado');
-      } catch {
-        el.textContent = t('No se pudo copiar');
-      }
-    } else if (a === 'borrar-persona') {
-      // A first touch asks; the second one deletes. Waiting, or touching anything else, leaves it as it was.
-      if (!confirmar) {
-        el.textContent = t('¿Borrar la ficha de {nombre}? Toca otra vez', { nombre: nombreDe(p) });
-        confirmar = setTimeout(() => {
-          confirmar = null;
-          if (el.isConnected) el.textContent = t('Borrar su ficha');
-        }, 4000);
-        return;
-      }
-      clearTimeout(confirmar);
-      apuntarBorrada('personas', id);
-      guardarPersonas(leerPersonas().filter((x) => x.id !== id));
-      soltarVale(p);
-      location.hash = '#personas';
-    }
-  };
-  return () => {
-    guardarYa();
-    window.removeEventListener('pagehide', guardarYa);
-    clearTimeout(confirmar);
-    app.oninput = app.onclick = null;
-  };
-}
 
 // ---------- Without a connection ----------
 // sw.js keeps the app. Each routine opened on the phone also keeps its body, clips and the three.js files, so the
@@ -3383,8 +2463,7 @@ const MOTOR = [
 ];
 
 function registrarTrabajador() {
-  // Inside a Moodle course the plugin serves the app: no worker of its own there.
-  if (!('serviceWorker' in navigator) || enMoodle || armandoParaMoodle) return null;
+  if (!('serviceWorker' in navigator) || !INSTALABLE) return null;
   // Offline, the update check of an existing worker fails; the one already installed keeps working.
   return navigator.serviceWorker.register('sw.js').catch(async (err) => {
     const ya = await navigator.serviceWorker.getRegistration().catch(() => null);
@@ -3408,7 +2487,7 @@ window.addEventListener('jepyso-lleno', () => {
   const aviso = document.createElement('div');
   aviso.className = 'nueva-version aviso-almacen';
   aviso.setAttribute('role', 'alert');
-  aviso.innerHTML = `<p>${t(SIN_SITIO)}</p><button type="button" class="nueva-version-cerrar" aria-label="${t('Cerrar')}">${ICONO.cerrar}</button>`;
+  aviso.innerHTML = `<p>${textoSinSitio()}</p><button type="button" class="nueva-version-cerrar" aria-label="${t('Cerrar')}">${ICONO.cerrar}</button>`;
   aviso.querySelector('button').addEventListener('click', () => aviso.remove());
   document.body.append(aviso);
 });
@@ -3439,7 +2518,7 @@ async function guardarParaSinConexion(c, ejercicios) {
   const m = await cargarManifiesto(c);
   // The voice too, in the voice this person chose: the count up to the top of the routine, the player's own sentences
   // and the words of each phase of these exercises (from their sheets, which are kept as well).
-  const fichas = await Promise.all(ejercicios.map(({ i }) => (m.ejercicios[i] ? fetch(m.ejercicios[i].ficha).then((r) => r.json()).catch(() => null) : null)));
+  const fichas = await Promise.all(ejercicios.map(({ i }) => (m.ejercicios[i] ? fetch(m._base + m.ejercicios[i].ficha).then((r) => r.json()).catch(() => null) : null)));
   const tope = Math.max(3, ...ejercicios.map((e) => e.r));
   const textosVoz = [...FRASES_GENERALES, ...Array.from({ length: Math.min(tope, 60) + 1 }, (_, n) => [numero(n), numero(n, true)]).flat(),
     ...fichas.flatMap((f) => (Array.isArray(f?.fases) ? f.fases.map((x) => x.texto).filter(Boolean) : [])),
@@ -3479,7 +2558,7 @@ function vistaPlantillas() {
     ${barraApp(t('Plantillas'), { accion: botonNueva })}
     <div class="armar-cuerpo">
       <ul class="lista-plantillas-app"></ul>
-      <section class="programas">
+      ${PROGRAMAS.length ? `<section class="programas">
         <h2>${t('Programas de referencia')}</h2>
         <p class="ayuda">${t('Otago y Vivifrail, dos programas probados para prevenir caídas en personas mayores, con la dosis de partida de cada nivel. Se abren como una plantilla: cambia lo que haga falta antes de mandarla.')}</p>
         <ul class="lista-plantillas-app">${PROGRAMAS.map((p) => `<li class="plantilla-fila">
@@ -3488,7 +2567,7 @@ function vistaPlantillas() {
             <span class="meta">${esc(t(p.descripcion))} · ${tn(p.orden.length, '{n} ejercicio', '{n} ejercicios')}</span>
           </button>
         </li>`).join('')}</ul>
-      </section>
+      </section>` : ''}
       <details class="ayuda-plegada"><summary>${t('Cómo funciona')}</summary><p>${t('Una plantilla guarda los ejercicios y sus ajustes. Al usarla se abre una rutina nueva con ellos, para cambiar lo que haga falta y mandarla. Se guardan en este aparato.')}</p></details>
     </div>
   </div>`;
@@ -3508,7 +2587,7 @@ function vistaPlantillas() {
       if (el.dataset.confirmar) {
         const lista = leerPlantillas();
         const [borrada] = lista.splice(Number(el.dataset.i), 1);
-        if (borrada) apuntarBorrada('plantillas', borrada.nombre);
+        if (borrada) alBorrarPlantilla(borrada.nombre);
         almacen.guardar('plantillas', lista);
         clearTimeout(confirmar);
         pintarLista();
@@ -3531,65 +2610,20 @@ function vistaPlantillas() {
 async function ir() {
   limpiar();
   document.querySelectorAll('.capa').forEach((c) => c.remove());
-  let h = location.hash;
-  // A licence arriving in its link: kept, and the address cleaned (it is in the fragment, so no server saw it), then
-  // the professional's people, where it says what to do next.
-  if (h.startsWith('#licencia=')) {
-    const l = await guardarLicencia(h.slice(10));
-    history.replaceState(null, '', `${location.pathname}#personas`);
-    h = '#personas';
-    if (!l.valida) setTimeout(() => {
-      const aviso = app.querySelector('.aviso-licencia');
-      if (aviso) aviso.textContent = t(MOTIVOS_LICENCIA[l.motivo] || MOTIVOS_LICENCIA.formato);
-    }, 0);
-  }
+  const h = await direccion(location.hash);
   marcoApp(h);
   if (h.startsWith('#r=')) limpiar = await vistaRutina(h.slice(3));
-  else if (h.startsWith('#s=')) limpiar = await vistaResumen(h.slice(3));
-  else if (h === '#personas') limpiar = vistaPersonas();
   else if (h === '#plantillas') limpiar = vistaPlantillas();
-  else if (h.startsWith('#persona=')) {
-    let id = '';
-    try {
-      id = decodeURIComponent(h.slice(9));
-    } catch {
-      // A mistyped address: read as a file that is not here.
-    }
-    limpiar = vistaPersona(id);
-  }
+  else if (vista(h)) limpiar = await vista(h)();
   else {
-    if (armandoParaMoodle) await rutinaDelFormularioAlBorrador();
+    await antesDeArmar();
     limpiar = vistaArmar();
   }
 }
-// The paid version without a licence, for the tests: ?pago=1 switches it on in this browser, ?pago=0 off, only on
-// this laptop (personas.js). Anywhere else a switch left from before is cleared.
-if (!esEntornoDePruebas()) {
-  if (almacen.leer('version', '') === 'pago') almacen.guardar('version', '');
-} else {
-  if (parametros.has('pago')) almacen.guardar('version', parametros.get('pago') === '1' ? 'pago' : '');
-  // The free files' tickets, on this laptop only when a test asks for them (?vales=1): on a public address, always.
-  if (parametros.has('vales')) almacen.guardar('vales', parametros.get('vales') === '1' ? 'si' : '');
-}
 window.addEventListener('hashchange', ir);
-// After the Google sign-in, the files that opened: the professional's people, painted again where they are on view.
-alCambiarVales(() => {
-  if (location.hash === '#personas' || location.hash.startsWith('#persona=')) ir();
+preparar({
+  app, ICONO, esc, barraApp, botonNueva, segmentos, paso, avisoRoto, resumenDia, diaMarcado, listaDias, hashCorto, leerPlantillas, ponerAlDia, borradorInicial, rutinaAlBorrador,
+  cargarManifiesto, ir,
 });
-// The licence and the free files' tickets are checked once, before the first view: what is open must be known when it
-// paints.
-// Building for a Moodle activity, the library and the programmes offer only what the plugin brings (its free sample,
-// or the whole library): the exercises with their clip in both figures.
-async function soloLoQueHay() {
-  if (!armandoParaMoodle) return;
-  try {
-    const [a, b] = await Promise.all([cargarManifiesto('a'), cargarManifiesto('b')]);
-    const hay = (id) => !!(a.ejercicios[id] && b.ejercicios[id]);
-    for (let k = ORDEN.length - 1; k >= 0; k--) if (!hay(ORDEN[k])) ORDEN.splice(k, 1);
-    for (let k = PROGRAMAS.length - 1; k >= 0; k--) if (!PROGRAMAS[k].orden.every(hay)) PROGRAMAS.splice(k, 1);
-  } catch {
-    // Without the lists the whole library stays: the activity form says which exercises the site does not have.
-  }
-}
-// In a Moodle course neither applies: the course is the licence and keeps the sessions.
-(enMoodle || armandoParaMoodle ? soloLoQueHay() : comprobarLicencia().then(comprobarVales)).finally(ir);
+// Before the first view: what is open here, or what this copy brings (entorno.js).
+inicio().finally(ir);

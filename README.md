@@ -36,8 +36,8 @@ coaches or sports scientists.
 ### 1. The teacher builds the routine
 
 In the settings of the activity, “Build the routine” opens the builder of Jepyso: the exercises with their sets,
-repetitions, tempo and side, the rest between sets, the days a week and the acceptable discomfort. When it is ready,
-the routine comes back to the form by itself. A routine made at [app.jepyso.com](https://app.jepyso.com) can be pasted
+repetitions, tempo and side, the rest between sets or the rounds of a circuit, the days a week and the acceptable
+discomfort. When it is ready, the routine comes back to the form by itself. A routine made at [app.jepyso.com](https://app.jepyso.com) can be pasted
 too, as a link or as its code.
 
 <picture>
@@ -106,11 +106,10 @@ player closes. Tried on Android with the official app 5.2.
 
 ## The exercises
 
-The plugin comes with a free sample of twelve exercises for the whole body, in both figures: sit to stand, glute
+The plugin comes with twelve exercises for the whole body, in both figures: sit to stand, glute
 bridge, shoulder external rotation with a band, half squat, heel raises, single-leg balance, knee plank, opposite arm
-and leg on all fours, cat-camel, clamshell, seated knee extension and knee to chest. The full library of Jepyso (97
-exercises, with the Otago and Vivifrail programmes) will be served by Oksigenia with a key per site, for a fee; this
-version does not include it yet. If a routine has exercises the site does not have, the teacher sees which.
+and leg on all fours, cat-camel, clamshell, seated knee extension and knee to chest. If a routine has exercises the
+site does not have, the teacher sees which.
 
 ## Languages
 
@@ -137,19 +136,21 @@ exported and deleted with it; backup and restore include them with user data, an
 
 ## For developers
 
-- The player in `reproductor/` is the web app of Jepyso, built from its repository with
-  `tools/construir-moodle.sh <this folder>`. It is not edited here.
-- The player reads its start from `sesion.php` and saves through the web services
-  `mod_oksigeniajepyso_save_sessions` and `mod_oksigeniajepyso_get_sessions`.
-- PHPUnit covers routines, sessions, web services, completion, grades, privacy, backup and the page in the app.
+- The player in `reproductor/` is the web app of Jepyso with only what a course uses, built from its repository with
+  `tools/construir-moodle.sh <this folder>`, which also writes `templates/player.mustache`. They are not edited here.
+- `player.php` and `builder.php` are its pages. It reads and saves the sessions through the external functions
+  `mod_oksigeniajepyso_get_sessions` and `mod_oksigeniajepyso_save_sessions`.
+- The script of the activity form is in `amd/src/form.js`; after a change, `grunt amd`.
+- PHPUnit covers routines, sessions, web services, completion, grades, privacy, backup, the page in the app, and that
+  the player stays in the site.
 
 ## Licence
 
 GNU GPL v3 or later (`LICENSE`). Copyright 2026 Oksigenia SL. The player is the web app of Jepyso
 ([OksigeniaSL/jepyso](https://github.com/OksigeniaSL/jepyso)), GPL v3 or later, with three.js (MIT) and the Red Hat
-fonts (OFL). Its content (the two figures and the twelve exercises of the sample, the plaster headers, the icon, the
+fonts (OFL). Its content (the two figures and the twelve exercises, the plaster headers, the icon, the
 body map and the recorded voice) is under CC BY-SA 4.0, in `reproductor/modelos/LICENSE.md`, with the sheets the
-movements are built from in `reproductor/modelos/fichas/`. The full library of Jepyso is not part of this package.
+movements are built from in `reproductor/modelos/fichas/`.
 
 ---
 

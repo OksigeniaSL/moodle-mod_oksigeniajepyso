@@ -47,18 +47,18 @@ if (!$instances) {
     notice(get_string('thereareno', 'moodle', $strplural), new moodle_url('/course/view.php', ['id' => $course->id]));
 }
 
-$table = new html_table();
-$table->attributes['class'] = 'generaltable mod_index';
-$table->head = [get_string('sectionname', 'format_' . $course->format), get_string('name'),
-    get_string('sessions', 'mod_oksigeniajepyso')];
+$activities = [];
 foreach ($instances as $instance) {
-    $attributes = $instance->visible ? [] : ['class' => 'dimmed'];
-    $link = html_writer::link(
-        new moodle_url('/mod/oksigeniajepyso/view.php', ['id' => $instance->coursemodule]),
-        format_string($instance->name, true, ['context' => context_module::instance($instance->coursemodule)]),
-        $attributes
-    );
-    $table->data[] = [get_section_name($course, $instance->section), $link, $instance->sessions ?: '-'];
+    $activities[] = [
+        'section' => get_section_name($course, $instance->section),
+        'url' => (new moodle_url('/mod/oksigeniajepyso/view.php', ['id' => $instance->coursemodule]))->out(false),
+        'name' => format_string($instance->name, true, ['context' => context_module::instance($instance->coursemodule)]),
+        'sessions' => $instance->sessions ?: '-',
+        'dimmed' => !$instance->visible,
+    ];
 }
-echo html_writer::table($table);
+echo $OUTPUT->render_from_template('mod_oksigeniajepyso/index', [
+    'sectionlabel' => get_string('sectionname', 'format_' . $course->format),
+    'activities' => $activities,
+]);
 echo $OUTPUT->footer();

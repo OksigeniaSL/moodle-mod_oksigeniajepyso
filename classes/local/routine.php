@@ -34,6 +34,15 @@ class routine {
     /** @var int[] The rests between sets the app offers, in seconds. */
     public const RESTS = [30, 45, 60, 90];
 
+    /** @var int[] The rounds a circuit can have. */
+    public const ROUNDS = [2, 3, 4, 5, 6];
+
+    /** @var int[] The rests between exercises of a circuit, in seconds. */
+    public const CIRCUITRESTS = [15, 30, 45, 60];
+
+    /** @var int[] The rests between rounds of a circuit, in seconds. */
+    public const ROUNDRESTS = [60, 90, 120, 180];
+
     /** @var int The acceptable discomfort when the routine does not say, out of 10. */
     public const LIMIT = 5;
 
@@ -102,15 +111,18 @@ class routine {
      * A routine code decoded and cleaned as the app cleans it, or null if it is not one.
      *
      * Exercise ids are checked for their form only: whether the catalogue has them is for check() and describe().
+     * In a circuit (k, its rounds; kd, the rest between them) every exercise does one set in each round, so its sets are
+     * the rounds, and d is the rest between exercises.
      *
      * @param string $code The code.
-     * @return array|null With d, x, w, m, c, f, para, de and e (each exercise with i, s, r, t, l, b and n).
+     * @return array|null With d, k, kd, x, w, m, c, f, para, de and e (each exercise with i, s, r, t, l, b and n).
      */
     public static function parse(string $code): ?array {
         $data = self::decode($code);
         if (!$data || !isset($data->e) || !is_array($data->e)) {
             return null;
         }
+        $rounds = self::one_of($data->k ?? null, self::ROUNDS, null);
         $exercises = [];
         foreach (value::items($data->e, self::EXERCISES) as $item) {
             if (!value::is_object($item) || !is_string($item->i ?? null) || !preg_match(catalog::ID, $item->i)) {
@@ -122,7 +134,7 @@ class routine {
             $band = $item->b ?? null;
             $exercises[] = [
                 'i' => $id,
-                's' => value::integer($item->s ?? null, 1, 6, 1),
+                's' => $rounds ?? value::integer($item->s ?? null, 1, 6, 1),
                 'r' => value::integer($item->r ?? null, 1, $exercise && $exercise['unit'] === 'minutos' ? 60 : 30, 10),
                 't' => self::tempo($item->t ?? null),
                 'l' => value::side($item->l ?? null, $id),
@@ -130,12 +142,15 @@ class routine {
                 'n' => $note !== '' ? $note : null,
             ];
         }
-        $rest = $data->d ?? null;
         $week = $data->w ?? null;
         return [
             'para' => value::text($data->para ?? null, self::NAME),
             'de' => value::text($data->de ?? null, self::NAME),
-            'd' => is_int($rest) && in_array($rest, self::RESTS, true) ? $rest : 45,
+            'd' => $rounds
+                ? self::one_of($data->d ?? null, self::CIRCUITRESTS, 30)
+                : self::one_of($data->d ?? null, self::RESTS, 45),
+            'k' => $rounds,
+            'kd' => $rounds ? self::one_of($data->kd ?? null, self::ROUNDRESTS, 120) : null,
             'x' => value::integer($data->x ?? null, 1, 3, 1),
             // Days a week are kept only when they are a number from 1 to 7: none means the professional leaves it free.
             'w' => is_int($week) && $week >= 1 && $week <= 7 ? $week : null,
@@ -251,8 +266,8 @@ class routine {
                 'hasposter' => (bool) $poster,
                 // The picture shows the right side; the left one is its mirror, as in the app.
                 'mirrored' => $exercise['l'] === 'izq',
-                'dosage' => self::dosage($exercise, $item['unit']),
-                'load' => self::load($exercise, $item['unit']),
+                'dosage' => self::dosage($exercise, $item['unit'], (bool) $routine['k']),
+                'load' => self::load($exercise, $item['unit'], (bool) $routine['k']),
                 'tempo' => $item['unit'] === 'reps' ? self::tempo_text($exercise['t']) : '',
                 'side' => $side,
                 'band' => $band,
@@ -262,10 +277,20 @@ class routine {
             ];
         }
         $limit = self::limit($routine);
-        $facts = [[
-            'factlabel' => get_string('factrest', $component),
+        $facts = [];
+        if ($routine['k']) {
+            $facts[] = ['factlabel' => get_string('factrounds', $component), 'factfigure' => (string) $routine['k']];
+        }
+        $facts[] = [
+            'factlabel' => get_string($routine['k'] ? 'factrestexercises' : 'factrest', $component),
             'factfigure' => get_string('amountseconds', $component, $routine['d']),
-        ]];
+        ];
+        if ($routine['k']) {
+            $facts[] = [
+                'factlabel' => get_string('factrestrounds', $component),
+                'factfigure' => get_string('amountseconds', $component, $routine['kd']),
+            ];
+        }
         if ($routine['x'] > 1) {
             $facts[] = ['factlabel' => get_string('facttimes', $component), 'factfigure' => (string) $routine['x']];
         }
@@ -276,9 +301,6 @@ class routine {
             'exercises' => $exercises,
             'hasexercises' => (bool) $exercises,
             'size' => $playable ? self::size($playable, self::seconds($routine)) : '',
-            'rest' => get_string('rest', $component, $routine['d']),
-            'times' => $routine['x'] > 1 ? get_string('timesaday', $component, $routine['x']) : '',
-            'days' => $routine['w'] ? get_string('daysaweek', $component, $routine['w']) : '',
             'limit' => get_string('limit', $component, $limit),
             'facts' => $facts,
             'limitlabel' => get_string('factlimit', $component),
@@ -290,13 +312,15 @@ class routine {
     /**
      * How long a routine takes, in seconds, as the app counts it: every repetition is up, hold and down and a second at
      * rest; a step, the mean of up and down; a lap, up, hold and down; a minute, sixty seconds. Both sides count twice,
-     * and the rest goes between the sets. Only the exercises this site can play.
+     * and the rest goes between the sets; in a circuit, between the exercises, with a longer one between the rounds. Only
+     * the exercises this site can play.
      *
      * @param array $routine As parse() returns it.
      * @return int
      */
     public static function seconds(array $routine): int {
         $total = 0;
+        $turns = 0;
         foreach ($routine['e'] as $exercise) {
             $item = catalog::get($exercise['i']);
             if (!$item || !$item['available']) {
@@ -318,7 +342,14 @@ class routine {
                     $set = $count * ($up + $hold + $down + 1);
             }
             $sides = $exercise['l'] === 'ambos' ? 2 : 1;
-            $total += $sides * ($exercise['s'] * $set + ($exercise['s'] - 1) * $routine['d']);
+            $turns += $sides;
+            $total += $routine['k']
+                ? $sides * $set
+                : $sides * ($exercise['s'] * $set + ($exercise['s'] - 1) * $routine['d']);
+        }
+        if ($routine['k']) {
+            $round = $total + max(0, $turns - 1) * $routine['d'];
+            $total = $routine['k'] * $round + ($routine['k'] - 1) * $routine['kd'];
         }
         return (int) round($total);
     }
@@ -342,14 +373,18 @@ class routine {
     }
 
     /**
-     * The sets and their amount: «3 sets of 10».
+     * The sets and their amount: «3 sets of 10»; in a circuit, what each round has: «10 in each round».
      *
      * @param array $exercise An exercise of the routine.
      * @param string $unit Its unit.
+     * @param bool $circuit Whether the routine is a circuit.
      * @return string
      */
-    public static function load(array $exercise, string $unit): string {
+    public static function load(array $exercise, string $unit, bool $circuit = false): string {
         $amount = self::amount($exercise['r'], $unit);
+        if ($circuit) {
+            return get_string('eachround', 'mod_oksigeniajepyso', $amount);
+        }
         return $exercise['s'] === 1
             ? get_string('setsone', 'mod_oksigeniajepyso', $amount)
             : get_string('sets', 'mod_oksigeniajepyso', (object) ['sets' => $exercise['s'], 'amount' => $amount]);
@@ -375,10 +410,11 @@ class routine {
      *
      * @param array $exercise An exercise as parse() returns it.
      * @param string $unit What one repetition is (see catalog::UNITS).
+     * @param bool $circuit Whether the routine is a circuit.
      * @return string
      */
-    public static function dosage(array $exercise, string $unit): string {
-        $parts = [self::load($exercise, $unit)];
+    public static function dosage(array $exercise, string $unit, bool $circuit = false): string {
+        $parts = [self::load($exercise, $unit, $circuit)];
         if ($unit === 'reps') {
             $parts[] = self::tempo_text($exercise['t']);
         }
@@ -407,6 +443,18 @@ class routine {
             default:
                 return (string) $count;
         }
+    }
+
+    /**
+     * A number when it is one of those allowed, or the default.
+     *
+     * @param mixed $value The number given.
+     * @param int[] $allowed The numbers allowed.
+     * @param int|null $default What it is otherwise.
+     * @return int|null
+     */
+    private static function one_of($value, array $allowed, ?int $default): ?int {
+        return is_int($value) && in_array($value, $allowed, true) ? $value : $default;
     }
 
     /**

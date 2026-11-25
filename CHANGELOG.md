@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.0 (2026-11-25)
+
+After the review of the Moodle Marketplace (issues #1, #2 and #3):
+
+- The player that comes with the plugin has only what a course uses. The people, plans, licences and cloud storage of
+  the web app, with their help, their texts and their links, are not in it: no screen leads out of the site, and the
+  content policy of the page lets it load and call nothing outside it. The QR library is gone too. A test looks for
+  any of it in every file of the player.
+- The player and the builder are now pages of Moodle (`player.php`, `builder.php`), with their login and capability
+  checks, painted from a template (`templates/player.mustache`, `classes/output/player_page.php`). The static
+  `reproductor/index.html` is gone, and the builder opens only for who can set up the activity.
+- `sesion.php` is gone: the page says who is there, and the sessions are read and saved through the external functions
+  `mod_oksigeniajepyso_get_sessions` and `mod_oksigeniajepyso_save_sessions`. An expired session key is asked again,
+  so nothing noted is lost.
+- The script of the activity form is an AMD module (`amd/src/form.js`), and the HTML that was in PHP is in templates.
+
+And besides:
+
+- Circuits: a routine can go in rounds, with every exercise once in each, a short rest between exercises and a longer
+  one between rounds. The builder offers it, and the activity, the form and the app show it.
+- The help of the builder answers what a teacher asks, and its steps say what they are in an activity.
+- A browser never mixes the files of two versions of the player after an update.
+
 ## 0.1.12 (2026-11-20)
 
 - The figures wear light sportswear, and the working muscles are drawn over it as in an anatomy plate: their shape
